@@ -53,14 +53,6 @@ namespace DragonSRP
 		
 		res.resize(hash.outputLen());
 		hash.hash(&toHash[0], hash.outputLen(), &res[0]);
-
-		toHash.clear();
-		toHash.reserve(okeypad.size() + res.size());
-		Conversion::append(toHash, okeypad);
-		Conversion::append(toHash, res);
-
-		mac.resize(hash.outputLen());
-		hash.hash(&toHash[0], hash.outputLen(), &mac[0]);
 	
 		mac.resize(hash.outputLen());
 		hmac(&data[0], data.size(), &mac[0]);
@@ -80,6 +72,7 @@ namespace DragonSRP
 		memcpy(toHash + okeypad.size(), &res[0], hash.outputLen());
 		hash.hash(toHash, okeypad.size() + hash.outputLen(), mac);
 	}
+
 	#endif
 	
 	unsigned int Hmac::outputLen()

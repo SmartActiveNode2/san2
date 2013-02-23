@@ -37,6 +37,7 @@ namespace DragonSRP
 			//  Incremented initialization vector
 			//  starts with one
 			//  owerflow check needed
+
 			std::uint64_t mIv;
 			
 			// Packet counter
