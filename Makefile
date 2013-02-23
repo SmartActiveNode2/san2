@@ -1,8 +1,11 @@
 
 CCC = g++
-CCFLAGS = -Wall -I$(CURDIR) -O3 -ggdb -std=c++0x -DUNIX -DLINUX -pthread -I.
+CCFLAGS = -Wall -I$(CURDIR) -O3 -ggdb -std=c++0x -DUNIX -DLINUX -pthread -I. -DDSRP_DANGEROUS_TESTING
 LDFLAGS = -pthread
 LIBS = -lpthread
+ASM = yasm
+
+
 
 OBJS-UTILS = utils/cthread.o \
 			 utils/platform/sleep.o \
@@ -79,7 +82,114 @@ OBJS-EXAMPLES-RPC-TCPCLIENT = examples/rpc/tcpclient/main.o \
 OBJS-TEST-FUNC = examples/rpc/testfuncin.o  examples/rpc/multiplyin.o \
 		 examples/rpc/testfuncout.o examples/rpc/multiplyout.o
 
-all:: components examples node
+# DragonSRP
+OBJ-DSRP =  crypto/dsrp/conversionexception.o \
+            crypto/dsrp/conversion.o \
+            crypto/dsrp/srpclient.o \
+            crypto/dsrp/user.o \
+            crypto/dsrp/ng.o \
+            crypto/dsrp/dsrpexception.o \
+            crypto/dsrp/lookupinterface.o \
+            crypto/dsrp/hashinterface.o \
+            crypto/dsrp/mathinterface.o \
+            crypto/dsrp/randominterface.o \
+            crypto/dsrp/srpverificator.o \
+            crypto/dsrp/srpserver.o \
+            crypto/dsrp/usernotfoundexception.o \
+            crypto/dsrp/srpclientauthenticator.o \
+            crypto/dsrp/memorylookup.o
+
+OBJ-OSSL =  crypto/ossl/osslmd5.o \
+            crypto/ossl/osslsha1.o \
+            crypto/ossl/osslsha256.o \
+            crypto/ossl/osslsha512.o \
+            crypto/ossl/osslrandom.o \
+            crypto/ossl/osslmathimpl.o \
+            crypto/ossl/osslconversion.o
+
+OBJ-AES =   crypto/aes/aeskey.o \
+            crypto/aes/aes_modes.o \
+            crypto/aes/aestab.o \
+	    crypto/aes/aescrypt.o
+
+OBJ-MAC  =  crypto/mac/hmac.o \
+            crypto/mac/macexception.o
+
+OBJ-DREL =  crypto/drel/aescounter.o \
+            crypto/drel/aesexception.o \
+            crypto/drel/simplekeyderivator.o \
+            crypto/drel/datagramencryptor.o \
+            crypto/drel/datagramdecryptor.o
+				
+
+LIBS-OSSL = -lssl -lcrypto
+
+#  ====== end of DragonSRP variables ======
+
+all:: components examples node dragonsrpall
+
+
+#  ====== begin DragonSRP targets ======
+dragonsrpall: dsrp ossl app-dragonsrp-all mac aes drel
+
+#build the object files for dsrp
+dsrp: $(OBJ-DSRP)
+
+#to build ossl we first need to have build dsrp
+ossl: dsrp $(OBJ-OSSL)
+
+#build mac
+mac: dsrp $(OBJ-MAC)
+
+#build drel DRagon Encryption Layer
+drel: dsrp ossl aes mac $(OBJ-DREL)
+
+#compile aes object files
+aes: $(OBJ-AES)
+
+# APPLICATION SECTION
+
+#build the app
+app-dragonsrp-all:  app-srp app-hmac app-drel app-aes
+
+app-srp: app-srp-server-test app-srp-client-test app-srp-create-user app-srp-benchmark app-srp-rfctest app-srp-qtest
+
+app-hmac: mac app-hmac-testvector
+
+app-aes: aes app-aes-rfc3686
+
+app-drel: drel app-drel-cryptotest
+
+
+app-srp-server-test: dsrp ossl crypto/apps/server_test.o
+	$(CCC) crypto/apps/server_test.o $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/server_test $(LIBS-OSSL)
+	
+app-srp-client-test: dsrp ossl crypto/apps/client_test.o
+	$(CCC) crypto/apps/client_test.o $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/client_test $(LIBS-OSSL)
+	
+app-srp-create-user: dsrp ossl crypto/apps/create_user.o
+	$(CCC) crypto/apps/create_user.o $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/create_user $(LIBS-OSSL)
+	
+app-srp-benchmark: dsrp ossl crypto/apps/benchmark.o
+	$(CCC) crypto/apps/benchmark.o $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/benchmark $(LIBS-OSSL)
+
+app-srp-rfctest: dsrp ossl crypto/apps/rfc_test.o
+	$(CCC) crypto/apps/rfc_test.o $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/rfc_test $(LIBS-OSSL)
+
+app-srp-qtest: dsrp ossl crypto/apps/qtest.o
+	$(CCC) crypto/apps/qtest.o $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/qtest $(LIBS-OSSL)
+	
+app-hmac-testvector: dsrp ossl mac crypto/apps/hmac_md5_testvector.o
+	$(CCC) crypto/apps/hmac_md5_testvector.o $(OBJ-DSRP) $(OBJ-MAC) $(OBJ-OSSL) -o crypto/apps/hmac_md5_testvector $(LIBS-OSSL)
+
+app-aes-rfc3686: aes crypto/aes/rfc3686.o
+	$(CCC) crypto/aes/rfc3686.o $(OBJ-AES) -o crypto/aes/rfc3686
+	
+app-drel-cryptotest: drel crypto/apps/cryptotest.o
+	$(CCC) crypto/apps/cryptotest.o $(OBJ-AES) $(OBJ-DREL) $(OBJ-MAC) $(OBJ-DSRP) $(OBJ-OSSL) -o crypto/apps/cryptotest $(LIBS-OSSL)
+
+#end DragonSRP targets
+
 
 components: utils cppl stream network rpc comm tcp interfaces
 
@@ -167,6 +277,19 @@ clean::
 	rm -f rpc_client
 	rm -f tcprpc_server
 	rm -f tcprpc_client
-	rm -f pctest	
+	rm -f pctest
+	rm -f crypto/*.o
+	rm -f crypto/dsrp/*.o
+	rm -f crypto/ossl/*.o
+	rm -f crypto/apps/server_test
+	rm -f crypto/apps/client_test
+	rm -f crypto/apps/create_user
+	rm -f crypto/apps/benchmark
+	rm -f crypto/apps/hmac_md5_testvector
+	rm -f crypto/apps/*.o
+	rm -f crypto/mac/*.o
+	rm -f crypto/aes/*.o
+	rm -f crypto/aes/rfc3686
+	
 
 	

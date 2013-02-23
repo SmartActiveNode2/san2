@@ -27,6 +27,41 @@
     <ClCompile Include="..\..\cppl\pipechannel.cpp" />
     <ClCompile Include="..\..\cppl\pipeclient.cpp" />
     <ClCompile Include="..\..\cppl\pipeserver.cpp" />
+    <ClCompile Include="..\..\crypto\aes\aescrypt.c" />
+    <ClCompile Include="..\..\crypto\aes\aeskey.c" />
+    <ClCompile Include="..\..\crypto\aes\aestab.c" />
+    <ClCompile Include="..\..\crypto\aes\aes_modes.c" />
+    <ClCompile Include="..\..\crypto\aes\rfc3686.cpp" />
+    <ClCompile Include="..\..\crypto\aes\tablegen.c" />
+    <ClCompile Include="..\..\crypto\drel\aescounter.cpp" />
+    <ClCompile Include="..\..\crypto\drel\aesexception.cpp" />
+    <ClCompile Include="..\..\crypto\drel\datagramdecryptor.cpp" />
+    <ClCompile Include="..\..\crypto\drel\datagramencryptor.cpp" />
+    <ClCompile Include="..\..\crypto\drel\simplekeyderivator.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\conversion.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\conversionexception.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\dsrpexception.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\hashinterface.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\lookupinterface.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\mathinterface.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\memorylookup.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\ng.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\randominterface.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\srpclient.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\srpclientauthenticator.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\srpserver.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\srpverificator.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\user.cpp" />
+    <ClCompile Include="..\..\crypto\dsrp\usernotfoundexception.cpp" />
+    <ClCompile Include="..\..\crypto\mac\hmac.cpp" />
+    <ClCompile Include="..\..\crypto\mac\macexception.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslconversion.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslmathimpl.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslmd5.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslrandom.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslsha1.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslsha256.cpp" />
+    <ClCompile Include="..\..\crypto\ossl\osslsha512.cpp" />
     <ClCompile Include="..\..\interfaces\alivefuncin.cpp" />
     <ClCompile Include="..\..\interfaces\alivefuncout.cpp" />
     <ClCompile Include="..\..\interfaces\sendcapsulefuncin.cpp" />
@@ -66,6 +101,45 @@
     <ClInclude Include="..\..\cppl\pipechannel.hpp" />
     <ClInclude Include="..\..\cppl\pipeclient.hpp" />
     <ClInclude Include="..\..\cppl\pipeserver.hpp" />
+    <ClInclude Include="..\..\crypto\aes\aes.h" />
+    <ClInclude Include="..\..\crypto\aes\aescpp.h" />
+    <ClInclude Include="..\..\crypto\aes\aesopt.h" />
+    <ClInclude Include="..\..\crypto\aes\aestab.h" />
+    <ClInclude Include="..\..\crypto\aes\aes_via_ace.h" />
+    <ClInclude Include="..\..\crypto\aes\brg_endian.h" />
+    <ClInclude Include="..\..\crypto\aes\brg_types.h" />
+    <ClInclude Include="..\..\crypto\aes\rdtsc.h" />
+    <ClInclude Include="..\..\crypto\drel\aescounter.hpp" />
+    <ClInclude Include="..\..\crypto\drel\aesexception.hpp" />
+    <ClInclude Include="..\..\crypto\drel\datagramdecryptor.hpp" />
+    <ClInclude Include="..\..\crypto\drel\datagramencryptor.hpp" />
+    <ClInclude Include="..\..\crypto\drel\encparams.hpp" />
+    <ClInclude Include="..\..\crypto\drel\simplekeyderivator.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\common.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\conversion.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\conversionexception.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\dsrpexception.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\hashinterface.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\lookupinterface.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\mathinterface.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\memorylookup.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\ng.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\randominterface.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\srpclient.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\srpclientauthenticator.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\srpserver.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\srpverificator.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\user.hpp" />
+    <ClInclude Include="..\..\crypto\dsrp\usernotfoundexception.hpp" />
+    <ClInclude Include="..\..\crypto\mac\hmac.hpp" />
+    <ClInclude Include="..\..\crypto\mac\macexception.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslconversion.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslmathimpl.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslmd5.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslrandom.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslsha1.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslsha256.hpp" />
+    <ClInclude Include="..\..\crypto\ossl\osslsha512.hpp" />
     <ClInclude Include="..\..\interfaces\alivefuncin.hpp" />
     <ClInclude Include="..\..\interfaces\alivefuncout.hpp" />
     <ClInclude Include="..\..\interfaces\sendcapsulefuncin.hpp" />
@@ -107,6 +181,11 @@
     <ClInclude Include="..\..\utils\log.h" />
     <ClInclude Include="..\..\utils\platform\basictypes.hpp" />
     <ClInclude Include="..\..\utils\platform\sleep.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\crypto\aes\aes_amd64.asm" />
+    <None Include="..\..\crypto\aes\aes_x86_v1.asm" />
+    <None Include="..\..\crypto\aes\aes_x86_v2.asm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D57D6A15-FE5F-42F8-BD92-FDAA3958444A}</ProjectGuid>
@@ -157,16 +236,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)../;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)../;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)../;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)../;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

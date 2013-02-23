@@ -49,6 +49,24 @@
     <Filter Include="rpc\syncFunction\out">
       <UniqueIdentifier>{68b0c5a5-888a-435c-80ca-062476a3010e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="crypto">
+      <UniqueIdentifier>{a610629f-1f5a-44bd-8aa1-ea5b3d81a335}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto\aes">
+      <UniqueIdentifier>{cc9adac4-f1ff-485a-840f-557607fa5d47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto\drel">
+      <UniqueIdentifier>{3287c6b9-ca44-4a73-b91d-3ef2951c0f1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto\dsrp">
+      <UniqueIdentifier>{13344cc9-4e31-4062-85fb-cf7079712075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto\mac">
+      <UniqueIdentifier>{68adbda4-8a99-451f-a60d-0721e3e5dc81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto\ossl">
+      <UniqueIdentifier>{fbbfa452-c188-4794-8e6c-6ba4258e4967}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\comm\cpplstreamrw.cpp">
@@ -161,6 +179,111 @@
     </ClCompile>
     <ClCompile Include="..\..\rpc\cirpcsyncfunctionout.cpp">
       <Filter>rpc\syncFunction\out</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\aes\aes_modes.c">
+      <Filter>crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\aes\aescrypt.c">
+      <Filter>crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\aes\aeskey.c">
+      <Filter>crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\aes\aestab.c">
+      <Filter>crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\aes\tablegen.c">
+      <Filter>crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\aes\rfc3686.cpp">
+      <Filter>crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\drel\aescounter.cpp">
+      <Filter>crypto\drel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\drel\aesexception.cpp">
+      <Filter>crypto\drel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\drel\datagramdecryptor.cpp">
+      <Filter>crypto\drel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\drel\datagramencryptor.cpp">
+      <Filter>crypto\drel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\drel\simplekeyderivator.cpp">
+      <Filter>crypto\drel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\conversion.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\conversionexception.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\dsrpexception.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\hashinterface.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\lookupinterface.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\mathinterface.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\memorylookup.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\ng.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\randominterface.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\srpclient.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\srpclientauthenticator.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\srpserver.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\srpverificator.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\user.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\dsrp\usernotfoundexception.cpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\mac\hmac.cpp">
+      <Filter>crypto\mac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\mac\macexception.cpp">
+      <Filter>crypto\mac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslconversion.cpp">
+      <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslmathimpl.cpp">
+      <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslmd5.cpp">
+      <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslrandom.cpp">
+      <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslsha1.cpp">
+      <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslsha256.cpp">
+      <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\crypto\ossl\osslsha512.cpp">
+      <Filter>crypto\ossl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -311,5 +434,133 @@
     <ClInclude Include="..\..\rpc\cirpcsyncfunctionout.hpp">
       <Filter>rpc\syncFunction\out</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\aes.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\aes_via_ace.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\aescpp.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\aesopt.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\aestab.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\brg_endian.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\brg_types.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\aes\rdtsc.h">
+      <Filter>crypto\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\aescounter.hpp">
+      <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\aesexception.hpp">
+      <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\datagramdecryptor.hpp">
+      <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\datagramencryptor.hpp">
+      <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\encparams.hpp">
+      <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\simplekeyderivator.hpp">
+      <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\common.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\conversion.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\conversionexception.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\dsrpexception.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\hashinterface.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\lookupinterface.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\mathinterface.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\memorylookup.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\ng.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\randominterface.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\srpclient.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\srpclientauthenticator.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\srpserver.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\srpverificator.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\user.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\dsrp\usernotfoundexception.hpp">
+      <Filter>crypto\dsrp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\mac\hmac.hpp">
+      <Filter>crypto\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\mac\macexception.hpp">
+      <Filter>crypto\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslconversion.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslmathimpl.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslmd5.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslrandom.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslsha1.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslsha256.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\ossl\osslsha512.hpp">
+      <Filter>crypto\ossl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\crypto\aes\aes_amd64.asm">
+      <Filter>crypto\aes</Filter>
+    </None>
+    <None Include="..\..\crypto\aes\aes_x86_v1.asm">
+      <Filter>crypto\aes</Filter>
+    </None>
+    <None Include="..\..\crypto\aes\aes_x86_v2.asm">
+      <Filter>crypto\aes</Filter>
+    </None>
   </ItemGroup>
 </Project>
