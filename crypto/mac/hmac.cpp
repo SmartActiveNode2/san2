@@ -41,8 +41,6 @@ namespace DragonSRP
 		}
 	}
 	
-	#ifdef WINDOWS
-	// slower dynamic C90 version
 	void Hmac::hmac(const bytes &data, bytes &mac)
 	{
 		bytes toHash, res;
@@ -57,7 +55,6 @@ namespace DragonSRP
 		mac.resize(hash.outputLen());
 		hmac(&data[0], data.size(), &mac[0]);
 	}
-	#endif
 	
 	#ifdef LINUX
 		// Faster C99 linux version
