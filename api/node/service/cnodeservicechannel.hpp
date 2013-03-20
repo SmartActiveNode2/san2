@@ -5,24 +5,25 @@
 
 #include "network/ccapsule.hpp"
 
-
 #include "cppl/pipechannel.hpp"
 #include "cppl/pipeserver.hpp"
 
-#include "cnode.hpp"
-#include "comm/streamrpcchannel.hpp"
+#include "node/cnode.hpp"
+
 #include "rpc/crpcexecutor.hpp"
+
+#include "comm/streamrpcchannel.hpp"
 #include "comm/streamrpcchannel.hpp"
 
 namespace San2 
 {
-	namespace Node
+	namespace Api
 	{
-		class CNodeApiChannel : public San2::Cppl::PipeChannel
+		class CNodeServiceChannel : public San2::Cppl::PipeChannel
 		{
 		public:
-			CNodeApiChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, CNode &node);
-			virtual ~CNodeApiChannel();
+			CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Node::CNode &node);
+			virtual ~CNodeServiceChannel();
 			San2::Cppl::ErrorCode receive();
             
         protected:
@@ -32,11 +33,11 @@ namespace San2
 		private:
 			 // another msvc fix
 			#ifdef LINUX
-				CNodeApiChannel(const CNodeApiChannel& copyFromMe)=delete;
-				CNodeApiChannel& operator=(const CNodeApiChannel& copyFromMe)=delete;
+				CNodeServiceChannel(const CNodeServiceChannel& copyFromMe)=delete;
+				CNodeServiceChannel& operator=(const CNodeServiceChannel& copyFromMe)=delete;
 			#endif
 			
-			CNode &m_node;
+			San2::Node::CNode &m_node;
 
 		};
 	}

@@ -57,9 +57,9 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/tcp/ctcpinterface.o
 
 
-OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o node/cnodeapichannel.o
+OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o
 
-OBJS-CLIENTAPI = clientapi/capichannel.o
+OBJS-API = api/node/service/cnodeservicechannel.o
 
 OBJS-EXAMPLES-CPPL-SERVER = examples/cppl/server/server.o \
 							examples/cppl/server/cchannel.o
@@ -193,7 +193,7 @@ app-drel-cryptotest: drel crypto/apps/cryptotest.o
 #end DragonSRP targets
 
 
-components: utils cppl stream network rpc comm tcp interfaces clientapi
+components: utils cppl stream network rpc comm tcp interfaces api
 
 utils: $(OBJS-UTILS)
 cppl: $(OBJS-CPPL)
@@ -203,7 +203,7 @@ rpc: $(OBJS-RPC)
 comm: $(OBJS-COMM)
 tcp: $(OBJS-TCP)
 interfaces: $(OBJS-INTERFACES)
-clientapi: $(OBJS-CLIENTAPI)
+api: $(OBJS-API)
 
 examples: examples-utils examples-cppl examples-rpc
 
