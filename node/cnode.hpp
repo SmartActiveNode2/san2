@@ -5,6 +5,7 @@
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <string>
 #include "utils/cproducerconsumer.hpp"
 #include "utils/cthread.hpp"
 #include "network/cnetinterface.hpp"
@@ -17,7 +18,7 @@ namespace San2
 		class CNode : public San2::Utils::CThread
 		{
 		public:
-			CNode(unsigned int inputQueueMaxSize, std::string nodeName, unsigned int timePOP);
+			CNode(unsigned int inputQueueMaxSize, std::string nodeName, unsigned int timePOP, std::string apiAddress);
 		
 			void run(); // start receiving capsules
 			int addInterface(std::shared_ptr<San2::Network::CNetInterface> iface);
@@ -45,6 +46,9 @@ namespace San2
 			std::mutex m_mutexInterfaces;
 			const std::string m_nodeName; // used for orientation in terminal, nothing else
             unsigned int m_timePOP;
+            std::string m_apiAddress;
+            
+            CNode& self(){return *this;}
 		};
 	}
 

@@ -57,8 +57,6 @@ San2::Cppl::ErrorCode CNodeApiChannel::receive()
 	
 	bool ret = m_rpcexec->registerFunction([&inputQueue, this](){return new San2::Interfaces::SendCapsuleFuncIn(San2::Network::sanDefaultAddress, &inputQueue, this);});
 
-	
-	
 	if (!ret)
 	{
 		FILE_LOG(logERROR) << "CNodeApiChannel::receive(): registrer function *FAILED*";

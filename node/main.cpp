@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
 	// ---- setup InterProcessComunnication to terminal application
 	
 	std::string ipcAddress = cfg.getValue("ipcAddress");
+	std::string apiAddress = cfg.getValue("apiAddress");
 	
 	if (!ipcAddress.compare(std::string("")))
 	{
@@ -100,7 +101,7 @@ int main(int argc, char *argv[])
 	}
 	
 
-	San2::Node::CNode node(INPUT_QUEUE_SIZE, cfg.getValue("nodeName"), TIME_POP_NODE);
+	San2::Node::CNode node(INPUT_QUEUE_SIZE, cfg.getValue("nodeName"), TIME_POP_NODE, apiAddress);
 
 	San2::Cppl::PipeServer ps(ipcAddress.c_str(), [&node] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new San2::Node::CIpcChannel(handle, timRX, timTX, node);}, TIME_CON, TIME_RX, TIME_TX);
 	
