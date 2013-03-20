@@ -59,6 +59,8 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 
 OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o node/cnodeapichannel.o
 
+OBJS-CLIENTAPI = clientapi/capichannel.o
+
 OBJS-EXAMPLES-CPPL-SERVER = examples/cppl/server/server.o \
 							examples/cppl/server/cchannel.o
 					 
@@ -191,7 +193,7 @@ app-drel-cryptotest: drel crypto/apps/cryptotest.o
 #end DragonSRP targets
 
 
-components: utils cppl stream network rpc comm tcp interfaces
+components: utils cppl stream network rpc comm tcp interfaces clientapi
 
 utils: $(OBJS-UTILS)
 cppl: $(OBJS-CPPL)
@@ -201,6 +203,7 @@ rpc: $(OBJS-RPC)
 comm: $(OBJS-COMM)
 tcp: $(OBJS-TCP)
 interfaces: $(OBJS-INTERFACES)
+clientapi: $(OBJS-CLIENTAPI)
 
 examples: examples-utils examples-cppl examples-rpc
 
@@ -237,7 +240,6 @@ examples-rpc-tcpclient: utils cppl tcp stream comm rpc $(OBJS-EXAMPLES-RPC-TCPCL
 	
 node: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE)
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-NODE)  -o ./sanode $(LIBS) $(LDFLAGS)
-
 
 #tells how to make an *.o object file from an *.c file
 %.o: %.cpp
