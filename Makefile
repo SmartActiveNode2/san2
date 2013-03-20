@@ -57,7 +57,7 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/tcp/ctcpinterface.o
 
 
-OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o
+OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o node/cnodeapichannel.o
 
 OBJS-EXAMPLES-CPPL-SERVER = examples/cppl/server/server.o \
 							examples/cppl/server/cchannel.o
