@@ -4,7 +4,6 @@
 
 #include "cnode.hpp"
 #include "utils/log.h"
-#include "cnodeapichannel.hpp"
 
 #define TIME_CON 2000
 #define TIME_RX  2000
@@ -29,10 +28,9 @@ void CNode::run()
 	// there should be a router implementation
 	
 	// Node api
-	CNode &me = self();
-	San2::Cppl::PipeServer apiServer(m_apiAddress.c_str(), [&me] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new CNodeApiChannel(handle, timRX, timTX, me);}, TIME_CON, TIME_RX, TIME_TX);
-	
-	apiServer.start();
+	// CNode &me = self();
+	//San2::Cppl::PipeServer apiServer(m_apiAddress.c_str(), [&me] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new CNodeApiChannel(handle, timRX, timTX, me);}, TIME_CON, TIME_RX, TIME_TX);
+	//apiServer.start();
 	
 	
 	std::shared_ptr<San2::Network::CCapsule> capsule;

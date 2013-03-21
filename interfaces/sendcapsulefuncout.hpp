@@ -16,6 +16,7 @@ namespace San2 {
 		
 			SendCapsuleFuncOut();
 			bool setCapsuleToSend(std::shared_ptr<San2::Network::CCapsule> capsule);
+			void setCapsuleToSend(San2::Utils::bytes &packedCaplsule);
 			unsigned int getUniqueId()const;
 			bool operator()(void);
 			

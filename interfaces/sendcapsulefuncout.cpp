@@ -22,6 +22,11 @@ bool SendCapsuleFuncOut::setCapsuleToSend(std::shared_ptr<San2::Network::CCapsul
 	return true;
 }
 
+void SendCapsuleFuncOut::setCapsuleToSend(San2::Utils::bytes &packedCaplsule)
+{
+	m_SerializedCapsule = packedCaplsule;
+}
+
 unsigned int SendCapsuleFuncOut::getUniqueId()const
 {
     // FuncIn must match FunOut ID
