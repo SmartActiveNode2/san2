@@ -29,7 +29,7 @@ namespace San2
 				CPortmap& operator=(const CPortmap& copyFromMe)=delete;
 			#endif
 			
-			//std::map<std::uint16_t port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >&> mapPorts;
+			std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >&> mapPorts;
 
 		};
 	}
