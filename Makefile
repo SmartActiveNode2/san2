@@ -56,7 +56,9 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/alivefuncout.o \
 				  interfaces/tcp/ctcpinterface.o \
 				  interfaces/registerin.o \
-				  interfaces/registerout.o
+				  interfaces/registerout.o \
+				  interfaces/waitforcapsuleout.o \
+				  interfaces/waitforcapsulein.o
 
 
 OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o
