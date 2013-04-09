@@ -10,6 +10,7 @@
 #include "utils/cthread.hpp"
 #include "network/cnetinterface.hpp"
 #include "network/ccapsule.hpp"
+#include "cportmap.hpp"
 
 #include "api/node/service/cnodeservicechannel.hpp"
 
@@ -49,6 +50,8 @@ namespace San2
 			const std::string m_nodeName; // used for orientation in terminal, nothing else
             unsigned int m_timePOP;
             std::string m_apiAddress;
+            
+            San2::Node::CPortmap m_portmap;
             
             CNode& self(){return *this;}
 		};

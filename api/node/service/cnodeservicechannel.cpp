@@ -17,6 +17,8 @@
 #include "interfaces/sendcapsulefuncin.hpp"
 #include "interfaces/sendcapsulefuncout.hpp"
 #include "interfaces/alivefuncout.hpp"
+#include "interfaces/waitforcapsulein.hpp"
+#include "interfaces/registerin.hpp"
 
 // rpc
 #include "rpc/crpcexecutor.hpp"
@@ -28,11 +30,15 @@
 #define SAN2_CIPCCHANNEL_MAX_HOPCOUNT 65535
 #define SAN2_CIPCCHANNEL_INJECTTIMEOUT_MSEC 2000
 
+#define SAN2_CNODESERVICECHANNEL_APPQUEMAXLEN 20
+
 namespace San2 { namespace Api {
 
-CNodeServiceChannel::CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Node::CNode &node) :
+CNodeServiceChannel::CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& nodeQueue, San2::Node::CPortmap& portmap) :
 	San2::Cppl::PipeChannel(handle, timRX, timTX),
-	m_node(node)
+	m_nodeQueue(nodeQueue),
+	m_portmap(portmap),
+	m_applicationQueue(SAN2_CNODESERVICECHANNEL_APPQUEMAXLEN)
 {
 
 }
@@ -50,8 +56,25 @@ San2::Cppl::ErrorCode CNodeServiceChannel::receive() // required
 	San2::Comm::CpplStreamRW stream(2000, this);
 	m_rpcChannel = new San2::Comm::StreamRpcChannel(stream);
 	m_rpcexec = new San2::Rpc::CRpcExecutor(*m_rpcChannel, 5000);
-	San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue = m_node.getInputQueue();
-	bool ret = m_rpcexec->registerFunction([&inputQueue, this](){return new San2::Interfaces::SendCapsuleFuncIn(San2::Network::sanDefaultAddress, &inputQueue, this);});
+
+	bool ret = m_rpcexec->registerFunction([&, this](){return new San2::Interfaces::SendCapsuleFuncIn(San2::Network::sanDefaultAddress, &m_nodeQueue, this);});
+
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeApiChannel::receive(): registrer function *FAILED*";
+		return San2::Cppl::ErrorCode::FAILURE;
+	}	
+	
+	CThread *thr = this;
+	ret = m_rpcexec->registerSyncFunction([&, thr](){return new San2::Interfaces::WaitForCapsuleIn(&m_applicationQueue, thr);});
+
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeApiChannel::receive(): registrer function *FAILED*";
+		return San2::Cppl::ErrorCode::FAILURE;
+	}	
+	
+	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::RegisterIn(m_portmap, m_applicationQueue);});
 
 	if (!ret)
 	{

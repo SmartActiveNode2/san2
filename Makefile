@@ -61,7 +61,7 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/waitforcapsulein.o
 
 
-OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o
+OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o node/cportmap.o
 
 OBJS-API = 	api/node/service/cnodeservicechannel.o \
 			api/node/connector/cnodeconnector.o \

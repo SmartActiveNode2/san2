@@ -10,6 +10,13 @@
 #define TIME_RX  2000
 #define TIME_TX  2000
 
+namespace San2 
+{
+	namespace Node
+	{
+		class CPortmap; // forward decalaration
+	}
+}
 
 namespace San2 { namespace Node {
 
@@ -29,7 +36,7 @@ void CNode::run()
 	
 	// Node api
 	CNode &me = self();
-	San2::Cppl::PipeServer apiServer(m_apiAddress.c_str(), [&me] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new San2::Api::CNodeServiceChannel(handle, timRX, timTX, me);}, TIME_CON, TIME_RX, TIME_TX);
+	San2::Cppl::PipeServer apiServer(m_apiAddress.c_str(), [&] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new San2::Api::CNodeServiceChannel(handle, timRX, timTX, m_inputQueue, m_portmap);}, TIME_CON, TIME_RX, TIME_TX);
 	apiServer.start();
 	
 	

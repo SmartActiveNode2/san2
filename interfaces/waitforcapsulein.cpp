@@ -26,7 +26,7 @@ unsigned int WaitForCapsuleIn::getUniqueId() const
 bool WaitForCapsuleIn::operator()(void)
 {	
 	// register m_port
-	// set m_response
+	
 	
 	
 	std::shared_ptr<San2::Network::CCapsule> capsule;
@@ -39,9 +39,11 @@ bool WaitForCapsuleIn::operator()(void)
 		return false;
 	}
 	
-	// set response
+	// set m_response
 	// 3 = OK
 	// 4 = TIMEOUT
+	
+	
 	
 	SAN_INT32 returnValue;
 	

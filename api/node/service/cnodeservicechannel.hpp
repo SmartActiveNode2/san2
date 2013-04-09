@@ -14,13 +14,14 @@
 #include "comm/streamrpcchannel.hpp"
 
 #include "node/cnode.hpp"
+#include "node/cportmap.hpp"
 
 namespace San2 
 {
 	namespace Node 
 	{
 	  class CNode;
-
+	  class CPortmap;
 	}
 }
 
@@ -31,7 +32,7 @@ namespace San2
 		class CNodeServiceChannel : public San2::Cppl::PipeChannel
 		{
 		public:
-			CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Node::CNode &node);
+			CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue, San2::Node::CPortmap& portmap);
 			virtual ~CNodeServiceChannel();
 			San2::Cppl::ErrorCode receive();
             
@@ -45,9 +46,12 @@ namespace San2
 				CNodeServiceChannel(const CNodeServiceChannel& copyFromMe)=delete;
 				CNodeServiceChannel& operator=(const CNodeServiceChannel& copyFromMe)=delete;
 			#endif
-			
-			San2::Node::CNode &m_node;
 
+			San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& m_nodeQueue;
+			
+			San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > m_applicationQueue;
+			
+			San2::Node::CPortmap& m_portmap;
 		};
 	}
 }

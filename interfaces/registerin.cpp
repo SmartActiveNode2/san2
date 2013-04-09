@@ -11,8 +11,9 @@ namespace San2 { namespace Interfaces {
 
 const int RegisterIn::timeoutMilisec = 3000;
 
-RegisterIn::RegisterIn(San2::Node::CPortmap& portmapper):
-	m_portmapper(portmapper)
+RegisterIn::RegisterIn(San2::Node::CPortmap& portmapper, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& applicationQueue):
+	m_portmapper(portmapper),
+	m_applicationQueue(applicationQueue)
 {
 	
 }

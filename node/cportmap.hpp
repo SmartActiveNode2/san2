@@ -5,7 +5,8 @@
 #include <map>
 #include <memory>
 #include "utils/platform/basictypes.hpp"
-#include "api/node/service/cnodeservicechannel.hpp"
+#include "utils/cproducerconsumer.hpp"
+#include "network/ccapsule.hpp"
 
 namespace San2 
 {
@@ -17,14 +18,10 @@ namespace San2
 			CPortmap();
 			virtual ~CPortmap();
 			
-			// Request connection Node------>Application
-			// Allowed only one registration per connection (must be ensured inside the rpc interface function)
-			bool registerApplicationProcess(San2::Api::CNodeServiceChannel& channel);
-			bool unregisterApplicationProcess(San2::Api::CNodeServiceChannel& channel);
+			bool registerPort(SAN_UINT32 port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& applicationQueue);
+			bool unregisterPort(SAN_UINT32 port);
+			void getPortQueue(SAN_UINT16 port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& queue);
 			
-			// bindPort(SAN_UINT16 port, std::string capiAddress);
-			// freePort(SAN_UINT16 port);
-			San2::Api::CNodeServiceChannel& getChannelPort(SAN_UINT16 port);
 		private:
 			 // another msvc fix
 			#ifdef LINUX
@@ -32,7 +29,7 @@ namespace San2
 				CPortmap& operator=(const CPortmap& copyFromMe)=delete;
 			#endif
 			
-			//std::map<std::uint16_t port, San2::Api::CNodeServiceChannel> mapPorts;
+			//std::map<std::uint16_t port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >&> mapPorts;
 
 		};
 	}
