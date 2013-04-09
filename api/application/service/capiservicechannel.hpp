@@ -13,13 +13,13 @@
 
 namespace San2 
 {
-	namespace ClientApi
+	namespace Api
 	{
-		class CApiChannel : public San2::Cppl::PipeChannel
+		class CApiServiceChannel : public San2::Cppl::PipeChannel
 		{
 		public:
-			CApiChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue);
-			virtual ~CApiChannel();
+			CApiServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue);
+			virtual ~CApiServiceChannel();
 			San2::Cppl::ErrorCode receive();
             
         protected:
@@ -29,8 +29,8 @@ namespace San2
 		private:
 			 // another msvc fix
 			#ifdef LINUX
-				CApiChannel(const CApiChannel& copyFromMe)=delete;
-				CApiChannel& operator=(const CApiChannel& copyFromMe)=delete;
+				CApiServiceChannel(const CApiServiceChannel& copyFromMe)=delete;
+				CApiServiceChannel& operator=(const CApiServiceChannel& copyFromMe)=delete;
 			#endif
 
 			San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& m_inputQueue;

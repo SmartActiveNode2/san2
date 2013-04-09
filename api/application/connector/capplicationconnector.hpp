@@ -9,16 +9,17 @@
 #include "utils/cproducerconsumer.hpp"
 #include "rpc/crpcinvoker.hpp"
 
-namespace San2 { namespace ClientApi {
+namespace San2 { namespace Api {
 	
-	class CApiClient : public San2::Cppl::PipeClient
+	class CApplicationConnector : public San2::Cppl::PipeClient
 	{
 	public:
-		CApiClient(const char *pipeName, unsigned int timCON, unsigned int timRX, unsigned int timTX, unsigned int timRPC_RX);
-		virtual ~CApiClient();
+		CApplicationConnector(const char *pipeName, unsigned int timCON, unsigned int timRX, unsigned int timTX, unsigned int timRPC_RX);
+		virtual ~CApplicationConnector();
 		
 		San2::Cppl::ErrorCode receive();
-		
+		San2::Cppl::ErrorCode connect();
+		bool sendCapsule(San2::Utils::bytes &capsuleData);
 	protected:
 		// Sender part
 		San2::Comm::StreamRpcChannel *m_rpcChannel;

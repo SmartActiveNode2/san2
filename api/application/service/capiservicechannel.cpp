@@ -2,7 +2,7 @@
 #include <string>
 #include <string.h>
 
-#include "capichannel.hpp"
+#include "capiservicechannel.hpp"
 #include "utils/log.h"
 #include "utils/address.hpp"
 #include "utils/cstringutils.hpp"
@@ -30,22 +30,22 @@
  * 
 */
 
-namespace San2 { namespace ClientApi {
+namespace San2 { namespace Api {
 
-CApiChannel::CApiChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue) :
+CApiServiceChannel::CApiServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue) :
 	San2::Cppl::PipeChannel(handle, timRX, timTX),
 	m_inputQueue(inputQueue)
 {
 
 }
 
-CApiChannel::~CApiChannel()
+CApiServiceChannel::~CApiServiceChannel()
 {
 	// empty
 }
 
 
-San2::Cppl::ErrorCode CApiChannel::receive()
+San2::Cppl::ErrorCode CApiServiceChannel::receive()
 {	
 	San2::Comm::CpplStreamRW stream(2000, this);
 	m_rpcChannel = new San2::Comm::StreamRpcChannel(stream);
