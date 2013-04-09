@@ -5,6 +5,7 @@
 #include "utils/platform/basictypes.hpp"
 
 #define SAN_FLAGPOS_DX_POSITION 0
+#define SAN_FLAGPOS_DS_POSITION 1
 
 namespace San2
 {
@@ -30,6 +31,7 @@ namespace San2
 			void setDestinationAddress(SanAddress dstAddress);
 			void setHop(SAN_UINT16 hop);
 			void setDX(bool dx); // Destination eXecute
+			void setDS(bool ds); // Destination Send
 			void setApplicationId(SanApplicationId appId);
 			
 			SanAddress getFromInterfaceAddress();
@@ -37,6 +39,7 @@ namespace San2
 			SanAddress getDestinationAddress();
 			SAN_UINT16 getHop();
 			bool getDX();
+			bool getDS();
 			SanApplicationId getAppId();
 			
 			// NOTE: this is qutie safe as the only
@@ -69,6 +72,7 @@ namespace San2
 			void parseFlags(unsigned char flags);
 		
 			bool m_flagDX;
+			bool m_flagDS;
 		
 			SanAddress m_interfaceAddress; // used on localhost only for determining source interface
 			SanAddress m_srcAddress;

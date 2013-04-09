@@ -22,11 +22,21 @@ void CCapsule::setHop(SAN_UINT16 hop)
 void CCapsule::setDX(bool dx)
 {
 	m_flagDX = dx;
-}							
+}		
+
+void CCapsule::setDS(bool ds)
+{
+	m_flagDX = ds;
+}					
 	
 bool CCapsule::getDX()
 {
 	return m_flagDX;
+}		
+
+bool CCapsule::getDS()
+{
+	return m_flagDS;
 }		
 
 SanAddress CCapsule::getSourceAddress()
@@ -119,12 +129,14 @@ unsigned char CCapsule::constructFlags()
 {
 	unsigned char flags = 0; // 0 - null all flags
 	San2::Utils::Flag::setFlag(flags, SAN_FLAGPOS_DX_POSITION, m_flagDX);
+	San2::Utils::Flag::setFlag(flags, SAN_FLAGPOS_DS_POSITION, m_flagDS);
 	return flags;
 }
 
 void CCapsule::parseFlags(unsigned char flags)
 {
 	m_flagDX = San2::Utils::Flag::getFlag(flags, SAN_FLAGPOS_DX_POSITION);
+	m_flagDS = San2::Utils::Flag::getFlag(flags, SAN_FLAGPOS_DS_POSITION);
 }
 
 void CCapsule::setFromInterfaceAddress(SanAddress interfaceAddress)
