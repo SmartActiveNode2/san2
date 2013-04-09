@@ -1,7 +1,6 @@
 
 
 #include "cnodeconnector.hpp"
-#include "comm/cpplstreamrw.hpp"
 #include "cppl/pipeclient.hpp"
 #include "utils/platform/sigignore.hpp"
 #include "network/nettypedef.hpp"
@@ -18,14 +17,24 @@ namespace San2 { namespace Api {
 	
 CNodeConnector::CNodeConnector(const char *pipeName, unsigned int timCON, unsigned int timRX, unsigned int timTX, unsigned int timRPC_RX) :
 	San2::Cppl::PipeClient(pipeName, timCON, timRX, timTX),
-	m_timRPC_RX(timRPC_RX)
+	m_timRPC_RX(timRPC_RX),
+	m_stream(NULL),
+	m_rpcChannel(NULL),
+	m_rpci(NULL)
 {
 	
 }
 
+void CNodeConnector::cleanup()
+{
+	if (m_stream != NULL) free(m_stream);
+	if (m_rpcChannel != NULL) free(m_rpcChannel);
+	if (m_rpci != NULL) free(m_rpci);
+}
+
 CNodeConnector::~CNodeConnector()
 {
-	
+	cleanup();
 }
 	
 San2::Cppl::ErrorCode CNodeConnector::receive()
@@ -36,12 +45,14 @@ San2::Cppl::ErrorCode CNodeConnector::receive()
 // returns true on success
 bool CNodeConnector::connect()
 {
+	cleanup();
+	
 	#ifdef LINUX
 		San2::Utils::san_ignore_sigpipe();
 	#endif
 	
-	San2::Comm::CpplStreamRW stream(SAN2_CNODECONNECTOR_MAXSINGLEREADSIZE, this);
-	m_rpcChannel = new San2::Comm::StreamRpcChannel(stream);
+	m_stream = new San2::Comm::CpplStreamRW(SAN2_CNODECONNECTOR_MAXSINGLEREADSIZE, this);
+	m_rpcChannel = new San2::Comm::StreamRpcChannel(*m_stream);
 	m_rpci = new San2::Rpc::CRpcInvoker(*m_rpcChannel, m_timRPC_RX);
 
     

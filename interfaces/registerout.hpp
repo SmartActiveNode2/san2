@@ -11,7 +11,7 @@
 namespace San2 {
 	namespace Interfaces
 	{
-		class RegisterOut : San2::Rpc::CIRpcSyncFunctionOut
+		class RegisterOut : public San2::Rpc::CIRpcSyncFunctionOut
 		{
 		public:
 			static const int timeoutMilisec;
@@ -22,7 +22,7 @@ namespace San2 {
 			bool operator()(void);
 			
 			bool parseResponse(const San2::Utils::bytes &in);
-			bool getResult();
+			bool wasRegistered();
 			
 			bool pack(San2::Utils::bytes &out);
 		

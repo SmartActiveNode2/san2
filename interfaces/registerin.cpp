@@ -26,7 +26,16 @@ unsigned int RegisterIn::getUniqueId() const
 bool RegisterIn::operator()(void)
 {	
 	// register m_port
+	bool registered = m_portmapper.registerPort(m_port, &m_applicationQueue);
+	
+	SAN_INT32 returnValue;
+	
+	if (registered) returnValue = 3; // SUCCESS
+	else if (registered) returnValue = 2; // ALREADY TAKEN
+	
 	// set m_response
+	m_response = San2::Utils::CDataPack::pack(returnValue);
+	
 	return true;
 }
 

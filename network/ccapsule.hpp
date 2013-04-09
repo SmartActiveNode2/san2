@@ -3,6 +3,7 @@
 
 #include "nettypedef.hpp"
 #include "utils/platform/basictypes.hpp"
+#include "utils/cdatapack.hpp"
 
 #define SAN_FLAGPOS_DX_POSITION 0
 #define SAN_FLAGPOS_DS_POSITION 1
@@ -63,6 +64,7 @@ namespace San2
 			// TRUE = success
 			bool unpack(const San2::Utils::bytes &capsule);
 			
+			bool getPortsDS(SAN_UINT16 &dstport, SAN_UINT16 &srcport);
 			
 		protected:
 		

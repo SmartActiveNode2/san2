@@ -131,11 +131,13 @@ OBJ-DREL =  crypto/drel/aescounter.o \
             crypto/drel/datagramdecryptor.o
 				
 
+OBJS-APPTEST = api/apptest.o
+
 LIBS-OSSL = -lssl -lcrypto
 
 #  ====== end of DragonSRP variables ======
 
-all:: components examples node dragonsrpall
+all:: components examples node dragonsrpall apptest
 
 
 #  ====== begin DragonSRP targets ======
@@ -247,6 +249,9 @@ examples-rpc-tcpclient: utils cppl tcp stream comm rpc $(OBJS-EXAMPLES-RPC-TCPCL
 	
 node: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API)
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-NODE) $(OBJS-API) -o ./sanode $(LIBS) $(LDFLAGS)
+
+apptest: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTEST) node/cportmap.o
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPTEST) $(OBJS-API) node/cportmap.o -o ./apptest $(LIBS) $(LDFLAGS)
 
 #tells how to make an *.o object file from an *.c file
 %.o: %.cpp

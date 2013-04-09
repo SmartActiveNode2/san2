@@ -11,7 +11,7 @@
 namespace San2 {
 	namespace Interfaces
 	{
-		class WaitForCapsuleOut : San2::Rpc::CIRpcSyncFunctionOut
+		class WaitForCapsuleOut : public San2::Rpc::CIRpcSyncFunctionOut
 		{
 		public:
 			static const int timeoutMilisec;

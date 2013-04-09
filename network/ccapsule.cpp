@@ -1,7 +1,8 @@
 			
 #include "ccapsule.hpp"
 #include "utils/flag.hpp"												
-			
+#include "utils/cdatapack.hpp"
+
 namespace San2 { namespace Network {			
 						
 void CCapsule::setSourceAddress(SanAddress srcAddress)
@@ -147,6 +148,14 @@ void CCapsule::setFromInterfaceAddress(SanAddress interfaceAddress)
 SanAddress CCapsule::getFromInterfaceAddress()
 {
 	return m_interfaceAddress;
+}
+
+bool CCapsule::getPortsDS(SAN_UINT16 &dstport, SAN_UINT16 &srcport)
+{
+	if (m_data.size() < 4) return false;
+	dstport = San2::Utils::CDataPack::unpackUint16(m_data, 0);
+	srcport = San2::Utils::CDataPack::unpackUint16(m_data, 2);
+	return true;
 }
 
 }} // ns

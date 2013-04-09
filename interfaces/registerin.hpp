@@ -7,7 +7,7 @@
 #include "utils/cvector.hpp"
 #include "rpc/cirpcsyncfunctionin.hpp"
 #include "utils/platform/basictypes.hpp"
-#include "cportmap.hpp"
+#include "node/cportmap.hpp"
 
 namespace San2 {
 	namespace Interfaces

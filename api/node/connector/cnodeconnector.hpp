@@ -4,6 +4,7 @@
 #include "cppl/pipeclient.hpp"
 #include "comm/streamrpcchannel.hpp"
 #include "rpc/crpcinvoker.hpp"
+#include "comm/cpplstreamrw.hpp"
 
 namespace San2 { namespace Api {
 	
@@ -14,6 +15,7 @@ namespace San2 { namespace Api {
 		virtual ~CNodeConnector();
 		San2::Cppl::ErrorCode receive(); // leave empty?
 		
+		void cleanup();
 		bool connect();
 		bool sendCapsule(San2::Utils::bytes &capsuleData);
 	protected:	
@@ -22,6 +24,7 @@ namespace San2 { namespace Api {
 		unsigned int m_timRPC_RX;
 	
 		// Sender part
+		San2::Comm::CpplStreamRW *m_stream;
 		San2::Comm::StreamRpcChannel *m_rpcChannel;
 		San2::Rpc::CRpcInvoker *m_rpci;
 	};

@@ -42,9 +42,9 @@ bool RegisterOut::parseResponse(const San2::Utils::bytes &in)
 	return true;
 }
 
-bool RegisterOut::getResult()
+bool RegisterOut::wasRegistered()
 {
-	return m_result;
+	return m_result == 3;
 }
 			
 

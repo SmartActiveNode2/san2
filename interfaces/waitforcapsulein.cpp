@@ -43,8 +43,6 @@ bool WaitForCapsuleIn::operator()(void)
 	// 3 = OK
 	// 4 = TIMEOUT
 	
-	
-	
 	SAN_INT32 returnValue;
 	
 	if (rval == 0) // SUCCESS
