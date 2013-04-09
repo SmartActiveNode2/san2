@@ -11,6 +11,8 @@
 #include "network/cnetinterface.hpp"
 #include "network/ccapsule.hpp"
 
+#include "api/node/service/cnodeservicechannel.hpp"
+
 namespace San2
 {
 	namespace Node

@@ -8,17 +8,26 @@
 #include "cppl/pipechannel.hpp"
 #include "cppl/pipeserver.hpp"
 
-#include "node/cnode.hpp"
-
 #include "rpc/crpcexecutor.hpp"
 
 #include "comm/streamrpcchannel.hpp"
 #include "comm/streamrpcchannel.hpp"
 
+#include "node/cnode.hpp"
+
+namespace San2 
+{
+	namespace Node 
+	{
+	  class CNode;
+
+	}
+}
+
 namespace San2 
 {
 	namespace Api
-	{
+	{	
 		class CNodeServiceChannel : public San2::Cppl::PipeChannel
 		{
 		public:

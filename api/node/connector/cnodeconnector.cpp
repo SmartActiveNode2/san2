@@ -19,6 +19,11 @@ CNodeConnector::CNodeConnector(const char *pipeName, unsigned int timCON, unsign
 {
 	
 }
+
+CNodeConnector::~CNodeConnector()
+{
+	
+}
 	
 San2::Cppl::ErrorCode CNodeConnector::receive()
 {

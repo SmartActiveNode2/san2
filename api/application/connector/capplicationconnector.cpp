@@ -32,6 +32,10 @@ CApplicationConnector::CApplicationConnector(const char *pipeName, unsigned int 
 
 }
 
+CApplicationConnector::~CApplicationConnector()
+{
+	
+}
 
 San2::Cppl::ErrorCode CApplicationConnector::receive()
 {

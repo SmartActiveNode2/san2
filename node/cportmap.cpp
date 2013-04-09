@@ -15,6 +15,15 @@ CPortmap::~CPortmap()
 	// empty
 }
 
+bool CPortmap::registerApplicationProcess(std::string apiIpcAddress)
+{
+	
+}
+
+bool CPortmap::unregisterApplicationProcess(std::string apiIpcAddress)
+{
+	
+}
 
 
 }} // ns

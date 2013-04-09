@@ -1,6 +1,6 @@
 
 CCC = g++
-CCFLAGS = -Wall -I$(CURDIR) -O3 -ggdb -std=c++0x -DUNIX -DLINUX -pthread -I. -DDSRP_DANGEROUS_TESTING
+CCFLAGS = -Wall -I$(CURDIR) -O3 -ggdb -std=c++0x -DUNIX -DLINUX -pthread -I. -DDSRP_DANGEROUS_TESTING -Wreorder
 LDFLAGS = -pthread
 LIBS = -lpthread
 ASM = yasm
@@ -54,7 +54,9 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/sendcapsulefuncout.o \
 				  interfaces/alivefuncin.o \
 				  interfaces/alivefuncout.o \
-				  interfaces/tcp/ctcpinterface.o
+				  interfaces/tcp/ctcpinterface.o \
+				  interfaces/registerin.o \
+				  interfaces/registerout.o
 
 
 OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o
@@ -241,8 +243,8 @@ examples-rpc-tcpserver: utils cppl tcp stream comm rpc $(OBJS-EXAMPLES-RPC-TCPSE
 examples-rpc-tcpclient: utils cppl tcp stream comm rpc $(OBJS-EXAMPLES-RPC-TCPCLIENT) $(OBJS-TEST-FUNC)
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-EXAMPLES-RPC-TCPCLIENT) $(OBJS-TEST-FUNC)  -o ./tcprpc_client $(LIBS) $(LDFLAGS)
 	
-node: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE)
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-NODE)  -o ./sanode $(LIBS) $(LDFLAGS)
+node: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API)
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-NODE) $(OBJS-API) -o ./sanode $(LIBS) $(LDFLAGS)
 
 #tells how to make an *.o object file from an *.c file
 %.o: %.cpp

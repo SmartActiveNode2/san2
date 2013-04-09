@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include "cppl/pipeserver.hpp"
 #include "cnode.hpp"
 #include "utils/log.h"
 
@@ -23,14 +24,13 @@ CNode::CNode(unsigned int inputQueueMaxSize, std::string nodeName, unsigned int 
 
 void CNode::run()
 {
-	// there should be capsule executor/worker implementation
-	
-	// there should be a router implementation
+	// here should be capsule executor/worker implementation
+	// here should be a router implementation
 	
 	// Node api
-	// CNode &me = self();
-	//San2::Cppl::PipeServer apiServer(m_apiAddress.c_str(), [&me] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new CNodeApiChannel(handle, timRX, timTX, me);}, TIME_CON, TIME_RX, TIME_TX);
-	//apiServer.start();
+	CNode &me = self();
+	San2::Cppl::PipeServer apiServer(m_apiAddress.c_str(), [&me] (CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX) {return new San2::Api::CNodeServiceChannel(handle, timRX, timTX, me);}, TIME_CON, TIME_RX, TIME_TX);
+	apiServer.start();
 	
 	
 	std::shared_ptr<San2::Network::CCapsule> capsule;
