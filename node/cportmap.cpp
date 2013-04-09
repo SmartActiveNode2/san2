@@ -1,6 +1,8 @@
 
 #include <string>
 #include <string.h>
+#include <utility>
+#include <iterator>
 
 #include "cportmap.hpp"
 
@@ -16,21 +18,24 @@ CPortmap::~CPortmap()
 	// empty
 }
 
-bool CPortmap::registerPort(SAN_UINT32 port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& applicationQueue)
+bool CPortmap::registerPort(unsigned short int port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* applicationQueue)
 {
-	
-	return true;
+	std::pair<std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* >::iterator, bool> pair = mapPorts.insert(std::pair<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >*>(port, applicationQueue));
+	return pair.second;
 }
 
-bool CPortmap::unregisterPort(SAN_UINT32 port)
+bool CPortmap::unregisterPort(unsigned short int port)
 {
-	
-	return true;
+	return mapPorts.erase(port);
 }
 
-void CPortmap::getPortQueue(SAN_UINT16 port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& queue)
+San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* CPortmap::getPortQueue(unsigned short int port)
 {
+	std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* >::iterator iter;
 	
+	iter = mapPorts.find(port);
+	if (iter == mapPorts.end()) return NULL;
+	return iter->second;
 }
 
 

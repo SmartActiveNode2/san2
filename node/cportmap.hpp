@@ -18,9 +18,9 @@ namespace San2
 			CPortmap();
 			virtual ~CPortmap();
 			
-			bool registerPort(SAN_UINT32 port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& applicationQueue);
-			bool unregisterPort(SAN_UINT32 port);
-			void getPortQueue(SAN_UINT16 port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& queue);
+			bool registerPort(unsigned short int port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue);
+			bool unregisterPort(unsigned short int port);
+			San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* getPortQueue(unsigned short int port);
 			
 		private:
 			 // another msvc fix
@@ -29,7 +29,7 @@ namespace San2
 				CPortmap& operator=(const CPortmap& copyFromMe)=delete;
 			#endif
 			
-			std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >&> mapPorts;
+			std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >*> mapPorts;
 
 		};
 	}
