@@ -6,8 +6,11 @@
 #include "utils/platform/sigignore.hpp"
 #include "network/nettypedef.hpp"
 #include "utils/address.hpp"
-#include "interfaces/sendcapsulefuncout.hpp"
 #include "utils/log.h"
+
+#include "interfaces/sendcapsulefuncout.hpp"
+#include "interfaces/registerout.hpp"
+#include "interfaces/waitforcapsuleout.hpp"
 
 #define SAN2_CNODECONNECTOR_MAXSINGLEREADSIZE 2048
 
@@ -48,6 +51,21 @@ bool CNodeConnector::connect()
 		FILE_LOG(logERROR) << "CNodeConnector::run(): registrer function FAILED";
 		return false;
 	}	
+	
+	ret = m_rpci->registerSyncFunction([](){return new San2::Interfaces::RegisterOut;});
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeConnector::run(): registrer function FAILED";
+		return false;
+	}	
+
+	ret = m_rpci->registerSyncFunction([](){return new San2::Interfaces::WaitForCapsuleOut;});
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeConnector::run(): registrer function FAILED";
+		return false;
+	}	
+
 
 	return true;
 }
