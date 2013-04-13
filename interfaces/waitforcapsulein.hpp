@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <memory>
 
 #include "utils/cproducerconsumer.hpp"
@@ -8,6 +10,7 @@
 #include "rpc/cirpcsyncfunctionin.hpp"
 #include "utils/platform/basictypes.hpp"
 #include "node/cportmap.hpp"
+#include "waitforcapsule.hpp"
 
 namespace San2 {
 	namespace Interfaces

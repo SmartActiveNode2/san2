@@ -6,6 +6,8 @@
 #include "rpc/crpcinvoker.hpp"
 #include "comm/cpplstreamrw.hpp"
 #include "utils/platform/basictypes.hpp"
+#include "network/ccapsule.hpp"
+#include "interfaces/waitforcapsule.hpp"
 
 namespace San2 { namespace Api {
 	
@@ -20,6 +22,8 @@ namespace San2 { namespace Api {
 		bool connect();
 		bool sendCapsule(San2::Utils::bytes &capsuleData);
 		bool registerPort(SAN_UINT16 port);
+		
+		SAN_INT32 waitForCapsule(San2::Network::CCapsule &capsule, SAN_UINT32 timeout);
 	protected:	
 		
 	private:

@@ -96,4 +96,12 @@ bool CNodeConnector::registerPort(SAN_UINT16 port)
 	return func.wasRegistered();
 }
 	
+SAN_INT32 CNodeConnector::waitForCapsule(San2::Network::CCapsule &capsule, SAN_UINT32 timeout)
+{
+	San2::Interfaces::WaitForCapsuleOut func;
+	func.setTimeout(timeout);
+	if (m_rpci->invokeSyncFunction(func) == false) return SAN2_WAITFORCAPSULE_ERROR_INVOKE_FAILED;
+	return func.getCapsule(capsule);
+}	
+	
 }} // ns

@@ -24,43 +24,50 @@ unsigned int WaitForCapsuleIn::getUniqueId() const
 }
 
 bool WaitForCapsuleIn::operator()(void)
-{	
-	// register m_port
-	
-	
+{		
+	FILE_LOG(logDEBUG4) << "WaitForCapsuleIn::operator() invoked";
 	
 	std::shared_ptr<San2::Network::CCapsule> capsule;
 	// pop timeout from queue
 	int rval = m_queue->try_pop(&capsule, m_thr, m_requestedTimeout);
 	
+	FILE_LOG(logDEBUG4) << "WaitForCapsuleIn::operator() rval: " << rval;
+	
 	if (rval == -1)
 	{
-		printf("try_pop() fatal\n");
-		return false;
+		printf("WaitForCapsuleIn::operator(): try_pop() fatal\n");
 	}
 	
 	// set m_response
-	// 3 = OK
-	// 4 = TIMEOUT
-	
 	SAN_INT32 returnValue;
 	
-	if (rval == 0) // SUCCESS
+	
+	
+	switch(rval)
 	{
-		returnValue = 3;
+		case 0:
+			returnValue = SAN2_WAITFORCAPSULE_SUCCESS;
+			break;
+		case -2:
+			returnValue = SAN2_WAITFORCAPSULE_TIMEOUT;
+			break;
+		default:
+			returnValue = SAN2_WAITFORCAPSULE_ERROR;
+			break;
 	}
 	
-	if (rval == -2)
+	if (returnValue == SAN2_WAITFORCAPSULE_SUCCESS)
 	{
-		returnValue = 4; // Timeout
+		San2::Utils::bytes serializedCapsule;
+		capsule->pack(serializedCapsule);
+		m_response = San2::Utils::CDataPack::pack(returnValue) + serializedCapsule;
+	}
+	else
+	{
+		m_response = San2::Utils::CDataPack::pack(returnValue);
 	}
 	
-	San2::Utils::bytes serializedCapsule;
-	
-	capsule->pack(serializedCapsule);
-	
-	m_response = San2::Utils::CDataPack::pack(returnValue) + serializedCapsule;
-	
+	FILE_LOG(logDEBUG4) << "WaitForCapsuleIn::operator() success; returnValue: " << returnValue;
 	return true;
 }
 
@@ -68,7 +75,7 @@ bool WaitForCapsuleIn::operator()(void)
 bool WaitForCapsuleIn::unpack(const San2::Utils::bytes &in)
 {	
 	if (in.size() != 4) return false;
-	m_requestedTimeout = San2::Utils::CDataPack::unpackInt32(in, 0);
+	m_requestedTimeout = San2::Utils::CDataPack::unpackUint32(in, 0);
 	return true;
 }
 

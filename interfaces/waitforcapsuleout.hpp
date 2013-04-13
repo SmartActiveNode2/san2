@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <memory>
 
 #include "rpc/cirpcsyncfunctionout.hpp"
@@ -7,6 +9,7 @@
 #include "network/nettypedef.hpp"
 #include "utils/cvector.hpp"
 #include "utils/platform/basictypes.hpp"
+#include "waitforcapsule.hpp"
 
 namespace San2 {
 	namespace Interfaces
@@ -21,8 +24,10 @@ namespace San2 {
 			unsigned int getUniqueId()const;
 			bool operator()(void);
 			
-			bool parseResponse(const San2::Utils::bytes &in);
-			bool getCapsule(San2::Network::CCapsule &capsule);
+			bool parseResponse(const San2::Utils::bytes &in); // do not use outside this class
+			
+			
+			SAN_INT32 getCapsule(San2::Network::CCapsule &capsule);
 			
 			bool pack(San2::Utils::bytes &out);
 		
