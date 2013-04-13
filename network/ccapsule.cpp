@@ -152,6 +152,7 @@ SanAddress CCapsule::getFromInterfaceAddress()
 
 bool CCapsule::getPortsDS(SAN_UINT16 &dstport, SAN_UINT16 &srcport)
 {
+	if (!getDS()) return false;
 	if (m_data.size() < 4) return false;
 	dstport = San2::Utils::CDataPack::unpackUint16(m_data, 0);
 	srcport = San2::Utils::CDataPack::unpackUint16(m_data, 2);
