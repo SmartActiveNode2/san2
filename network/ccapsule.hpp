@@ -48,6 +48,7 @@ namespace San2
 			// and that is what we want in producer-consumer
 			// multi-thread environment
 			void setData(San2::Utils::bytes data);
+			void setDSdata(SAN_UINT16 dstport, SAN_UINT16 srcport, San2::Utils::bytes data);
 			
 			// NOTE: Only one thread must access the
 			// const data reference only as there is

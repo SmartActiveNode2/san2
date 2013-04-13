@@ -133,11 +133,14 @@ OBJ-DREL =  crypto/drel/aescounter.o \
 
 OBJS-APPTEST = api/apptest.o
 
+OBJS-APPTX = api/apptx.o
+OBJS-APPRX = api/apprx.o
+
 LIBS-OSSL = -lssl -lcrypto
 
 #  ====== end of DragonSRP variables ======
 
-all:: components examples node dragonsrpall apptest
+all:: components examples node dragonsrpall apptest apprx apptx
 
 
 #  ====== begin DragonSRP targets ======
@@ -252,6 +255,13 @@ node: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API)
 
 apptest: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTEST) node/cportmap.o
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPTEST) $(OBJS-API) node/cportmap.o -o ./apptest $(LIBS) $(LDFLAGS)
+
+apptx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPRX) node/cportmap.o
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPRX) $(OBJS-API) node/cportmap.o -o ./apprx $(LIBS) $(LDFLAGS)
+
+apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTX) node/cportmap.o
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPTX) $(OBJS-API) node/cportmap.o -o ./apptx $(LIBS) $(LDFLAGS)
+
 
 #tells how to make an *.o object file from an *.c file
 %.o: %.cpp

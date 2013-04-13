@@ -60,6 +60,12 @@ void CCapsule::setData(San2::Utils::bytes data)
 	m_data = data; // so nice
 }
 
+void CCapsule::setDSdata(SAN_UINT16 dstport, SAN_UINT16 srcport, San2::Utils::bytes data)
+{
+	setDS(true);
+	m_data = San2::Utils::CDataPack::pack(dstport) + San2::Utils::CDataPack::pack(srcport) + data;
+}
+
 const San2::Utils::bytes& CCapsule::getData()
 {
 	return m_data;
