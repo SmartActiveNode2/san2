@@ -20,6 +20,7 @@ CPortmap::~CPortmap()
 
 bool CPortmap::registerPort(unsigned short int port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* applicationQueue)
 {
+	FILE_LOG(logDEBUG4) << "CPortmap::registerPort():: attemting to register port " << port << "\n";
 	std::pair<std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* >::iterator, bool> pair = mapPorts.insert(std::pair<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >*>(port, applicationQueue));
 	return pair.second;
 }

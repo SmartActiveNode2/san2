@@ -5,6 +5,7 @@
 #include "comm/streamrpcchannel.hpp"
 #include "rpc/crpcinvoker.hpp"
 #include "comm/cpplstreamrw.hpp"
+#include "utils/platform/basictypes.hpp"
 
 namespace San2 { namespace Api {
 	
@@ -18,6 +19,7 @@ namespace San2 { namespace Api {
 		void cleanup();
 		bool connect();
 		bool sendCapsule(San2::Utils::bytes &capsuleData);
+		bool registerPort(SAN_UINT16 port);
 	protected:	
 		
 	private:

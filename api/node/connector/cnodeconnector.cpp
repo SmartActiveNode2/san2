@@ -88,4 +88,12 @@ bool CNodeConnector::sendCapsule(San2::Utils::bytes &capsuleData)
 	return m_rpci->invokeFunction(func);
 }
 	
+bool CNodeConnector::registerPort(SAN_UINT16 port)
+{
+	San2::Interfaces::RegisterOut func;
+	func.setPort(port);
+	if (m_rpci->invokeSyncFunction(func) == false) return false;
+	return func.wasRegistered();
+}
+	
 }} // ns

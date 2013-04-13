@@ -7,6 +7,7 @@
 #include "utils/platform/basictypes.hpp"
 #include "utils/cproducerconsumer.hpp"
 #include "network/ccapsule.hpp"
+#include "utils/log.h"
 
 namespace San2 
 {

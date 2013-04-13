@@ -39,5 +39,15 @@ int main(int argc, char *argv[])
 	connector.sendCapsule(serial);
 	connector.sendCapsule(serial);
 	connector.sendCapsule(serial);
+	
+	if (connector.registerPort(2345) == true)
+	{
+		printf("port register: OK\n");
+	}
+	else
+	{
+		printf("port register: FAILURE\n");
+	}
+	
 	return 0;
 }
