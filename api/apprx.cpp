@@ -12,7 +12,7 @@
 #include "utils/log.h"
 #include "utils/platform/basictypes.hpp"
 
-#define PIPENAME "/tmp/sanode1api"
+#define PIPENAME "/tmp/sanode2api"
 
 int main(int argc, char *argv[])
 {

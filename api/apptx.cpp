@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	
 	San2::Network::SanAddress dstaddr;
 	
-	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF11", dstaddr) != true)
+	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF21", dstaddr) != true)
 	{
 		FILE_LOG(logDEBUG4) << "failed to parse destination address";
 		return -1;
