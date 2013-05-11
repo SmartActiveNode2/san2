@@ -94,6 +94,7 @@ namespace San2
 			San2::Rpc::CRpcInvoker *m_rpci;
 			
 			std::mutex m_mutexPeerAddress;
+			std::mutex m_mutexInterfaceAddress;
 			
 			CTcpInterface& self(){return *this;}
 			

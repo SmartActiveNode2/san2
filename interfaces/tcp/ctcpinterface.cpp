@@ -201,6 +201,7 @@ San2::Network::SanAddress CTcpInterface::getPeerAddress()
 
 San2::Network::SanAddress CTcpInterface::getInterfaceAddress()
 {
+	std::lock_guard<std::mutex> lock(m_mutexInterfaceAddress);
 	return m_sanaddr;
 }
 

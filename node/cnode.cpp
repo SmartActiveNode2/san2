@@ -29,6 +29,11 @@ CNode::CNode(unsigned int inputQueueMaxSize, std::string nodeName, unsigned int 
 
 }
 
+CNode::~CNode()
+{
+	// apiServer->terminate(); !!!!!
+}
+
 void CNode::run()
 {
 	// here should be capsule executor/worker implementation
@@ -184,7 +189,6 @@ int CNode::addInterface(std::shared_ptr<San2::Network::CNetInterface> iface)
 	return 0;
 }
 
-
 San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& CNode::getInputQueue()
 {
 	return m_inputQueue;
@@ -214,7 +218,7 @@ std::string CNode::getNodeName() const
 	return m_nodeName;
 }
 
-std::set<std::shared_ptr<San2::Network::CNetInterface> > CNode::getInterafces()
+std::set<std::shared_ptr<San2::Network::CNetInterface> > CNode::getInterfaces()
 {
     std::lock_guard<std::mutex> lock(m_mutexInterfaces);
     return m_interfaces;

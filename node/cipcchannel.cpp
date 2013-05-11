@@ -321,7 +321,7 @@ San2::Cppl::ErrorCode CIpcChannel::lineParser(const std::vector<std::string> &ar
 
     if (!args[0].compare("peers"))
     {
-        std::set<std::shared_ptr<San2::Network::CNetInterface> > ifaces = m_node.getInterafces();
+        std::set<std::shared_ptr<San2::Network::CNetInterface> > ifaces = m_node.getInterfaces();
        
         for(auto s: ifaces)
         {

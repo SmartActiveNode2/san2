@@ -58,7 +58,9 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/registerin.o \
 				  interfaces/registerout.o \
 				  interfaces/waitforcapsuleout.o \
-				  interfaces/waitforcapsulein.o
+				  interfaces/waitforcapsulein.o \
+				  interfaces/getaddressesin.o \
+				  interfaces/getaddressesout.o
 
 
 OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o node/cportmap.o
@@ -253,14 +255,14 @@ examples-rpc-tcpclient: utils cppl tcp stream comm rpc $(OBJS-EXAMPLES-RPC-TCPCL
 node: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API)
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-NODE) $(OBJS-API) -o ./sanode $(LIBS) $(LDFLAGS)
 
-apptest: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTEST) node/cportmap.o
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPTEST) $(OBJS-API) node/cportmap.o -o ./apptest $(LIBS) $(LDFLAGS)
+apptest: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTEST) node/cportmap.o node/cnode.o
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-APPTEST) $(OBJS-API) node/cportmap.o -o ./apptest $(LIBS) $(LDFLAGS)
 
-apptx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPRX) node/cportmap.o
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPRX) $(OBJS-API) node/cportmap.o -o ./apprx $(LIBS) $(LDFLAGS)
+apptx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPRX) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-APPRX) $(OBJS-API) node/cportmap.o -o ./apprx $(LIBS) $(LDFLAGS)
 
-apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTX) node/cportmap.o
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) $(OBJS-APPTX) $(OBJS-API) node/cportmap.o -o ./apptx $(LIBS) $(LDFLAGS)
+apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTX) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-APPTX) $(OBJS-API) node/cportmap.o -o ./apptx $(LIBS) $(LDFLAGS)
 
 
 #tells how to make an *.o object file from an *.c file

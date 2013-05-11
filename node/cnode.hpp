@@ -22,6 +22,7 @@ namespace San2
 		{
 		public:
 			CNode(unsigned int inputQueueMaxSize, std::string nodeName, unsigned int timePOP, std::string apiAddress);
+			~CNode();
 		
 			void run(); // start receiving capsules
 			int addInterface(std::shared_ptr<San2::Network::CNetInterface> iface);
@@ -39,7 +40,7 @@ namespace San2
             //   so the CNode cannot later affect return value(the set and pointers) be removing/adding interfaces
             //   >> changes to CNode interface list does not affect return value
             //   >> changes to interfaces themselves are shared between copy and CNode
-            std::set<std::shared_ptr<San2::Network::CNetInterface> > getInterafces();
+            std::set<std::shared_ptr<San2::Network::CNetInterface> > getInterfaces();
 		protected:
 		 
 		private:
