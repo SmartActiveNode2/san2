@@ -16,6 +16,8 @@ crypto/apps/client_test
 crypto/apps/create_user
 crypto/apps/server_test
 crypto/apps/cryptotest
+crypto/apps/qtest
+crypto/apps/rfc_test
 apprx
 apptest
 apptx

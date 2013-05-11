@@ -290,7 +290,14 @@ clean::
 	rm -f crypto/apps/create_user
 	rm -f crypto/apps/benchmark
 	rm -f crypto/apps/hmac_md5_testvector
+	rm -f crypto/apps/cryptotest
+	rm -f crypto/apps/qtest
+	rm -f crypto/apps/rfc_test
 	rm -f crypto/aes/rfc3686
+	rm -f apptx
+	rm -f apprx
+	rm -f apptest
+	rm -f terminal
 	
 
 	
