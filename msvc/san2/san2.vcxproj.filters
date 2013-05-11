@@ -612,15 +612,4 @@
       <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\crypto\aes\aes_amd64.asm">
-      <Filter>crypto\aes</Filter>
-    </None>
-    <None Include="..\..\crypto\aes\aes_x86_v1.asm">
-      <Filter>crypto\aes</Filter>
-    </None>
-    <None Include="..\..\crypto\aes\aes_x86_v2.asm">
-      <Filter>crypto\aes</Filter>
-    </None>
-  </ItemGroup>
 </Project>

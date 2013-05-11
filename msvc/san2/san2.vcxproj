@@ -195,11 +195,6 @@
     <ClInclude Include="..\..\utils\platform\basictypes.hpp" />
     <ClInclude Include="..\..\utils\platform\sleep.hpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\crypto\aes\aes_amd64.asm" />
-    <None Include="..\..\crypto\aes\aes_x86_v1.asm" />
-    <None Include="..\..\crypto\aes\aes_x86_v2.asm" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D57D6A15-FE5F-42F8-BD92-FDAA3958444A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -249,16 +244,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenSSL-Win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\OpenSSL-Win64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenSSL-Win64\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)../;C:\openssl\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../;C:\OpenSSL-Win64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenSSL-Win64\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
