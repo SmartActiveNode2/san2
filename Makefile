@@ -273,29 +273,8 @@ apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API
 	
 	
 clean::
-	rm -f *.o
+	find . -type f -name "*.o" -exec rm -f {} \;
 	rm -f sanode
-	rm -f rpc/*.o
-	rm -f comm/*.o
-	rm -f utils/*.o
-	rm -f utils/platform/*.o
-	rm -f cppl/*.o
-	rm -f network/*.o
-	rm -f stream/*.o
-	rm -f tcp/*.o
-	rm -f interafces/*.o
-	rm -f interafces/tcp/*.o
-	rm -f node/*.o
-	rm -f examples/*.o
-	rm -f examples/utils/*.o
-	rm -f examples/utils/vector/*.o
-	rm -f examples/utils/producerconsumer/*.o
-	rm -f examples/cppl/*.o
-	rm -f examples/rpc/*.o
-	rm -f examples/rpc/server/*.o
-	rm -f examples/rpc/client/*.o
-	rm -f examples/rpc/tcpserver/*.o
-	rm -f examples/rpc/tcpclient/*.o
 	rm -f cppl_server
 	rm -f cppl_client
 	rm -f utils_vector
@@ -306,17 +285,11 @@ clean::
 	rm -f tcprpc_server
 	rm -f tcprpc_client
 	rm -f pctest
-	rm -f crypto/*.o
-	rm -f crypto/dsrp/*.o
-	rm -f crypto/ossl/*.o
 	rm -f crypto/apps/server_test
 	rm -f crypto/apps/client_test
 	rm -f crypto/apps/create_user
 	rm -f crypto/apps/benchmark
 	rm -f crypto/apps/hmac_md5_testvector
-	rm -f crypto/apps/*.o
-	rm -f crypto/mac/*.o
-	rm -f crypto/aes/*.o
 	rm -f crypto/aes/rfc3686
 	
 
