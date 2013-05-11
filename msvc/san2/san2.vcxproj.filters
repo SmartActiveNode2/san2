@@ -67,6 +67,27 @@
     <Filter Include="crypto\ossl">
       <UniqueIdentifier>{fbbfa452-c188-4794-8e6c-6ba4258e4967}</UniqueIdentifier>
     </Filter>
+    <Filter Include="api">
+      <UniqueIdentifier>{358d0c1a-580a-411c-ac8d-57f534f14cfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\application">
+      <UniqueIdentifier>{05caacab-4f35-4a9e-8ccf-0f78b18eea71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\node">
+      <UniqueIdentifier>{f0bba10c-07ba-4867-b234-ee7ec498673d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\node\connector">
+      <UniqueIdentifier>{13e584e3-7857-4f6b-8005-7a7d3b578dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\node\service">
+      <UniqueIdentifier>{d739d716-a954-4598-bab4-0c32aa7b9e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\application\connector">
+      <UniqueIdentifier>{47adafbd-5aef-4a63-b367-5692c4161e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\application\service">
+      <UniqueIdentifier>{50acb31b-e7db-44ce-8fff-eb2193324a97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\comm\cpplstreamrw.cpp">
@@ -284,6 +305,24 @@
     </ClCompile>
     <ClCompile Include="..\..\crypto\ossl\osslsha512.cpp">
       <Filter>crypto\ossl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\api\node\connector\cnodeconnector.cpp">
+      <Filter>api\node\connector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\api\node\service\cnodeservicechannel.cpp">
+      <Filter>api\node\service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\registerin.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\registerout.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\waitforcapsulein.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\waitforcapsuleout.cpp">
+      <Filter>interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -550,6 +589,27 @@
     </ClInclude>
     <ClInclude Include="..\..\crypto\ossl\osslsha512.hpp">
       <Filter>crypto\ossl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\api\node\connector\cnodeconnector.hpp">
+      <Filter>api\node\connector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\api\node\service\cnodeservicechannel.hpp">
+      <Filter>api\node\service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\registerin.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\registerout.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\waitforcapsule.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\waitforcapsulein.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\waitforcapsuleout.hpp">
+      <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

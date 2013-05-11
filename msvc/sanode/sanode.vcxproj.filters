@@ -4,9 +4,11 @@
     <ClCompile Include="..\..\node\cipcchannel.cpp" />
     <ClCompile Include="..\..\node\cnode.cpp" />
     <ClCompile Include="..\..\node\main.cpp" />
+    <ClCompile Include="..\..\node\cportmap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\node\cipcchannel.hpp" />
     <ClInclude Include="..\..\node\cnode.hpp" />
+    <ClInclude Include="..\..\node\cportmap.hpp" />
   </ItemGroup>
 </Project>

@@ -153,11 +153,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\node\cipcchannel.cpp" />
     <ClCompile Include="..\..\node\cnode.cpp" />
+    <ClCompile Include="..\..\node\cportmap.cpp" />
     <ClCompile Include="..\..\node\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\node\cipcchannel.hpp" />
     <ClInclude Include="..\..\node\cnode.hpp" />
+    <ClInclude Include="..\..\node\cportmap.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\san2\san2.vcxproj">

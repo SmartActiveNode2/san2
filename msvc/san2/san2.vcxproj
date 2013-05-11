@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\api\node\connector\cnodeconnector.cpp" />
+    <ClCompile Include="..\..\api\node\service\cnodeservicechannel.cpp" />
     <ClCompile Include="..\..\comm\cpplstreamrw.cpp" />
     <ClCompile Include="..\..\comm\streamrpcchannel.cpp" />
     <ClCompile Include="..\..\comm\tcpstreamrw.cpp" />
@@ -64,10 +66,14 @@
     <ClCompile Include="..\..\crypto\ossl\osslsha512.cpp" />
     <ClCompile Include="..\..\interfaces\alivefuncin.cpp" />
     <ClCompile Include="..\..\interfaces\alivefuncout.cpp" />
+    <ClCompile Include="..\..\interfaces\registerin.cpp" />
+    <ClCompile Include="..\..\interfaces\registerout.cpp" />
     <ClCompile Include="..\..\interfaces\sendcapsulefuncin.cpp" />
     <ClCompile Include="..\..\interfaces\sendcapsulefuncout.cpp" />
     <ClCompile Include="..\..\interfaces\tcp\ccapsulereceiver.cpp" />
     <ClCompile Include="..\..\interfaces\tcp\ctcpinterface.cpp" />
+    <ClCompile Include="..\..\interfaces\waitforcapsulein.cpp" />
+    <ClCompile Include="..\..\interfaces\waitforcapsuleout.cpp" />
     <ClCompile Include="..\..\network\ccapsule.cpp" />
     <ClCompile Include="..\..\rpc\cirpcchannel.cpp" />
     <ClCompile Include="..\..\rpc\cirpcfunctionin.cpp" />
@@ -93,6 +99,8 @@
     <ClCompile Include="..\..\utils\platform\sleep.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\api\node\connector\cnodeconnector.hpp" />
+    <ClInclude Include="..\..\api\node\service\cnodeservicechannel.hpp" />
     <ClInclude Include="..\..\comm\cpplstreamrw.hpp" />
     <ClInclude Include="..\..\comm\streamrpcchannel.hpp" />
     <ClInclude Include="..\..\comm\tcpstreamrw.hpp" />
@@ -142,10 +150,15 @@
     <ClInclude Include="..\..\crypto\ossl\osslsha512.hpp" />
     <ClInclude Include="..\..\interfaces\alivefuncin.hpp" />
     <ClInclude Include="..\..\interfaces\alivefuncout.hpp" />
+    <ClInclude Include="..\..\interfaces\registerin.hpp" />
+    <ClInclude Include="..\..\interfaces\registerout.hpp" />
     <ClInclude Include="..\..\interfaces\sendcapsulefuncin.hpp" />
     <ClInclude Include="..\..\interfaces\sendcapsulefuncout.hpp" />
     <ClInclude Include="..\..\interfaces\tcp\ccapsulereceiver.hpp" />
     <ClInclude Include="..\..\interfaces\tcp\ctcpinterface.hpp" />
+    <ClInclude Include="..\..\interfaces\waitforcapsule.hpp" />
+    <ClInclude Include="..\..\interfaces\waitforcapsulein.hpp" />
+    <ClInclude Include="..\..\interfaces\waitforcapsuleout.hpp" />
     <ClInclude Include="..\..\network\ccapsule.hpp" />
     <ClInclude Include="..\..\network\cnetinterface.hpp" />
     <ClInclude Include="..\..\network\nettypedef.hpp" />
