@@ -14,6 +14,7 @@ crypto/aes/rfc3686
 crypto/apps/benchmark
 crypto/apps/client_test
 crypto/apps/create_user
+crypto/apps/hmac_md5_testvector
 crypto/apps/server_test
 crypto/apps/cryptotest
 crypto/apps/qtest
