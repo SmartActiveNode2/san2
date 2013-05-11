@@ -1,4 +1,3 @@
-// Dragon Encryption Layer
 
 #ifndef DREL_DATAGRAMDECRYPTOR_HPP
 #define DREL_DATAGRAMDECRYPTOR_HPP

@@ -1,4 +1,3 @@
-// Dragon Encryption Layer
 
 #ifndef DREL_AESCOUNTER_HPP
 #define DREL_AESCOUNTER_HPP
