@@ -89,6 +89,15 @@ SAN_INT64 CDataPack::unpackInt64(const San2::Utils::bytes &data, unsigned int po
 
 //-------
 
+SAN_UINT8 CDataPack::unpackUint8(const San2::Utils::bytes &data, unsigned int position)
+{
+	if (data.size() < position + sizeof(SAN_UINT8)) return 0; // error
+	SAN_UINT8 num;
+	memcpy(&num, &data[position], sizeof(SAN_UINT8));
+	return num;
+}
+
+
 SAN_UINT16 CDataPack::unpackUint16(const San2::Utils::bytes &data, unsigned int position)
 {
 	if (data.size() < position + sizeof(SAN_UINT16)) return 0; // error

@@ -58,7 +58,6 @@ unsigned int GetAddressesOut::getAddresses(std::list<San2::Network::SanAddress> 
 		adrs.push_back(address);
 	}
 	
-	
 	return items;
 }
 			

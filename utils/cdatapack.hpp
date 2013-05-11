@@ -24,6 +24,7 @@ namespace San2
 			static SAN_INT32 unpackInt32(const San2::Utils::bytes &data, unsigned int position);
 			static SAN_INT64 unpackInt64(const San2::Utils::bytes &data, unsigned int position);
 			
+			static SAN_UINT8  unpackUint8 (const San2::Utils::bytes &data, unsigned int position);
 			static SAN_UINT16 unpackUint16(const San2::Utils::bytes &data, unsigned int position);
 			static SAN_UINT32 unpackUint32(const San2::Utils::bytes &data, unsigned int position);
 			static SAN_UINT64 unpackUint64(const San2::Utils::bytes &data, unsigned int position);

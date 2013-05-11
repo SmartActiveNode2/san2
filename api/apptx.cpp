@@ -12,8 +12,11 @@
 #include "utils/log.h"
 #include "utils/platform/basictypes.hpp"
 #include "utils/address.hpp"
+#include "utils/cvector.hpp"
 
 #define PIPENAME "/tmp/sanode1api"
+
+
 
 int main(int argc, char *argv[])
 {
@@ -46,6 +49,14 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+	San2::Network::SanAddress srcaddr;
+	
+	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF12", dstaddr) != true)
+	{
+		FILE_LOG(logDEBUG4) << "failed to parse destination address";
+		return -1;
+	}
+	
 	
 	San2::Utils::bytes payload;
 	payload.append("Ahoj, jak se mas");
@@ -53,6 +64,7 @@ int main(int argc, char *argv[])
 	San2::Network::CCapsule capsule;
 	capsule.setDSdata(2201, 2200, payload);
 	capsule.setDestinationAddress(dstaddr);
+	capsule.setSourceAddress(srcaddr);
 	
 	San2::Utils::bytes serial;
 	capsule.pack(serial);

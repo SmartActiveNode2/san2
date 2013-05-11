@@ -138,11 +138,13 @@ OBJS-APPTEST = api/apptest.o
 OBJS-APPTX = api/apptx.o
 OBJS-APPRX = api/apprx.o
 
+OBJS-TRANSPORT = api/stopwait.o
+
 LIBS-OSSL = -lssl -lcrypto
 
 #  ====== end of DragonSRP variables ======
 
-all:: components examples node dragonsrpall apptest apprx apptx
+all:: components examples node dragonsrpall apptest apprx apptx $(OBJS-TRANSPORT)
 
 
 #  ====== begin DragonSRP targets ======
