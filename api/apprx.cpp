@@ -50,34 +50,39 @@ int main(int argc, char *argv[])
 		printf("port register: FAILURE\n");
 	}
 	
-	San2::Network::CCapsule rxcapsule;
 	
-	printf("awaiting capsule\n");
-	SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 50000);
-	
-	switch(rval)
+	while(1)
 	{
-		case SAN2_WAITFORCAPSULE_SUCCESS:
-			printf("got: rxcapsule\n");
-			break;
-		case SAN2_WAITFORCAPSULE_TIMEOUT:
-			printf("got: timeout\n");
-			break;
-		case SAN2_WAITFORCAPSULE_ERROR_INVALID_RESPONSE:
-			printf("got: error invalid response\n");
-			break;	
-		case SAN2_WAITFORCAPSULE_ERROR_CAPSULE_UNPACK:
-			printf("got: error capsule unpack\n");
-			break;	
-		case SAN2_WAITFORCAPSULE_ERROR_INVOKE_FAILED:	
-			printf("got: error INVOKE FAILED\n");
-			break;	
-		case SAN2_WAITFORCAPSULE_ERROR:
-			printf("got: GENERAL ERROR\n");
-			break;	
-		default:
-			printf("got: UNKNOWN ERROR\n");
-			break;
+	
+		San2::Network::CCapsule rxcapsule;
+		
+		printf("awaiting capsule\n");
+		SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 50000);
+		
+		switch(rval)
+		{
+			case SAN2_WAITFORCAPSULE_SUCCESS:
+				printf("got: rxcapsule\n");
+				break;
+			case SAN2_WAITFORCAPSULE_TIMEOUT:
+				printf("got: timeout\n");
+				break;
+			case SAN2_WAITFORCAPSULE_ERROR_INVALID_RESPONSE:
+				printf("got: error invalid response\n");
+				break;	
+			case SAN2_WAITFORCAPSULE_ERROR_CAPSULE_UNPACK:
+				printf("got: error capsule unpack\n");
+				break;	
+			case SAN2_WAITFORCAPSULE_ERROR_INVOKE_FAILED:	
+				printf("got: error INVOKE FAILED\n");
+				break;	
+			case SAN2_WAITFORCAPSULE_ERROR:
+				printf("got: GENERAL ERROR\n");
+				break;	
+			default:
+				printf("got: UNKNOWN ERROR\n");
+				break;
+		}
 	}
 	
 	return 0;
