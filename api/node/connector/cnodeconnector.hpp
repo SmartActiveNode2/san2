@@ -22,6 +22,7 @@ namespace San2 { namespace Api {
 		bool connect();
 		bool sendCapsule(San2::Utils::bytes &capsuleData);
 		bool registerPort(SAN_UINT16 port);
+		SAN_UINT16 getEphemeralPort();
 		
 		SAN_INT32 waitForCapsule(San2::Network::CCapsule &capsule, SAN_UINT32 timeout);
 	protected:	

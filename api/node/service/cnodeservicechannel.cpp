@@ -19,6 +19,7 @@
 #include "interfaces/alivefuncout.hpp"
 #include "interfaces/waitforcapsulein.hpp"
 #include "interfaces/registerin.hpp"
+#include "interfaces/registerephemeralin.hpp"
 
 // rpc
 #include "rpc/crpcexecutor.hpp"
@@ -75,6 +76,14 @@ San2::Cppl::ErrorCode CNodeServiceChannel::receive() // required
 	}	
 	
 	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::RegisterIn(m_portmap, m_applicationQueue);});
+
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeApiChannel::receive(): registrer function *FAILED*";
+		return San2::Cppl::ErrorCode::FAILURE;
+	}	
+	
+	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::RegisterEphemeralIn(m_portmap, m_applicationQueue);});
 
 	if (!ret)
 	{

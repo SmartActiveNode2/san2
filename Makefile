@@ -60,7 +60,9 @@ OBJS-INTERFACES = interfaces/tcp/ccapsulereceiver.o \
 				  interfaces/waitforcapsuleout.o \
 				  interfaces/waitforcapsulein.o \
 				  interfaces/getaddressesin.o \
-				  interfaces/getaddressesout.o
+				  interfaces/getaddressesout.o \
+				  interfaces/registerephemeralin.o \
+				  interfaces/registerephemeralout.o
 
 
 OBJS-NODE = node/cnode.o node/main.o node/cipcchannel.o node/cportmap.o

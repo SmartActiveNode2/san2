@@ -70,4 +70,40 @@ void CPortmap::freePorts(San2::Utils::CProducerConsumer<std::shared_ptr<San2::Ne
 	}	
 }
 
+unsigned short int CPortmap::getEphemeralPort(San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue)
+{	
+	unsigned short port;
+	bool registered = false;
+	
+	for (port = m_ephemeralPort; port < 65535; port++)
+	{
+		registered = registerPort(port, applicationQueue);
+		if (registered) break;
+	}
+		
+	if (registered)
+	{
+		if (port + 1 > 65535) m_ephemeralPort = SAN2_BEGIN_EPHEMERAL_PORT;
+		else m_ephemeralPort = port + 1;
+		
+		return port;
+	}
+	
+	for (port = SAN2_BEGIN_EPHEMERAL_PORT; port < m_ephemeralPort; port++)
+	{
+		registered = registerPort(port, applicationQueue);
+		if (registered) break;
+	}
+	
+	if (registered)
+	{
+		if (port + 1 > 65535) m_ephemeralPort = SAN2_BEGIN_EPHEMERAL_PORT;
+		else m_ephemeralPort = port + 1;
+		
+		return port;
+	}
+	
+	return 0;
+}
+
 }} // ns

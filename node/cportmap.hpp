@@ -9,6 +9,8 @@
 #include "network/ccapsule.hpp"
 #include "utils/log.h"
 
+#define SAN2_BEGIN_EPHEMERAL_PORT 40000
+
 namespace San2 
 {
 	namespace Node
@@ -20,7 +22,10 @@ namespace San2
 			virtual ~CPortmap();
 			
 			bool registerPort(unsigned short int port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue);
+			unsigned short int getEphemeralPort(San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue);
+			
 			bool unregisterPort(unsigned short int port);
+			
 			
 			void freePorts(San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue);
 			
@@ -34,7 +39,8 @@ namespace San2
 			#endif
 			
 			std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >*> mapPorts;
-
+			
+			unsigned short m_ephemeralPort = SAN2_BEGIN_EPHEMERAL_PORT;
 		};
 	}
 }

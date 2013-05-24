@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 
 	connector.connect();
 	
+	/*
 	if (connector.registerPort(2200) == true)
 	{
 		printf("port register: OK\n");
@@ -37,6 +38,13 @@ int main(int argc, char *argv[])
 	{
 		printf("port register: FAILURE\n");
 	}
+	*/
+	
+	SAN_UINT16 port = connector.getEphemeralPort();
+	
+	FILE_LOG(logDEBUG4) << "ephemeral port: " << port;
+	
+	if (port == 0) return -1;
 	
 	San2::Network::SanAddress dstaddr;
 	

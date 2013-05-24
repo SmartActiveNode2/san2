@@ -9,6 +9,7 @@
 
 #include "interfaces/sendcapsulefuncout.hpp"
 #include "interfaces/registerout.hpp"
+#include "interfaces/registerephemeralout.hpp"
 #include "interfaces/waitforcapsuleout.hpp"
 
 #define SAN2_CNODECONNECTOR_MAXSINGLEREADSIZE 2048
@@ -102,6 +103,13 @@ SAN_INT32 CNodeConnector::waitForCapsule(San2::Network::CCapsule &capsule, SAN_U
 	func.setTimeout(timeout);
 	if (m_rpci->invokeSyncFunction(func) == false) return SAN2_WAITFORCAPSULE_ERROR_INVOKE_FAILED;
 	return func.getCapsule(capsule);
+}
+
+SAN_UINT16 CNodeConnector::getEphemeralPort()
+{
+	San2::Interfaces::RegisterEphemeralOut func;
+	if (m_rpci->invokeSyncFunction(func) == false) return 0;
+	return func.getPort();
 }	
 	
 }} // ns
