@@ -84,6 +84,8 @@ San2::Cppl::ErrorCode CNodeServiceChannel::receive() // required
 	
 	m_rpcexec->run();
 	
+	// Unregister all ports, that application registred
+	m_portmap.freePorts(&m_applicationQueue);
 	return San2::Cppl::ErrorCode::SUCCESS;
 }
 

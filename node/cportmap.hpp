@@ -21,6 +21,9 @@ namespace San2
 			
 			bool registerPort(unsigned short int port, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue);
 			bool unregisterPort(unsigned short int port);
+			
+			void freePorts(San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > *applicationQueue);
+			
 			San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >* getPortQueue(unsigned short int port);
 			
 		private:
