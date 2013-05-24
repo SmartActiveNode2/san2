@@ -138,13 +138,18 @@ OBJS-APPTEST = api/apptest.o
 OBJS-APPTX = api/apptx.o
 OBJS-APPRX = api/apprx.o
 
+
+OBJS-SHELL = shell/session.o shell/sessionmanager.o
+OBJS-SHELLSERVER = shell/shell_server.o
+OBJS-SHELLCLIENT = shell/shell_client.o
+
 OBJS-TRANSPORT = api/stopwait.o
 
 LIBS-OSSL = -lssl -lcrypto
 
 #  ====== end of DragonSRP variables ======
 
-all:: components examples node dragonsrpall apptest apprx apptx $(OBJS-TRANSPORT)
+all:: components examples node dragonsrpall apptest apprx apptx shellserver shellclient $(OBJS-TRANSPORT)
 
 
 #  ====== begin DragonSRP targets ======
@@ -266,6 +271,12 @@ apptx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API
 apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTX) node/cportmap.o node/cnode.o 
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-APPTX) $(OBJS-API) node/cportmap.o -o ./apptx $(LIBS) $(LDFLAGS)
 
+shellserver: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLSERVER) $(OBJS-SHELL) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLSERVER) $(OBJS-API) $(OBJS-SHELL) node/cportmap.o -o ./shell_server $(LIBS) $(LDFLAGS)
+
+shellclient: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLCLIENT) $(OBJS-SHELL) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLCLIENT) $(OBJS-API) $(OBJS-SHELL) node/cportmap.o -o ./shell_client $(LIBS) $(LDFLAGS)
+
 
 #tells how to make an *.o object file from an *.c file
 %.o: %.cpp
@@ -285,6 +296,8 @@ clean::
 	rm -f tcprpc_server
 	rm -f tcprpc_client
 	rm -f pctest
+	rm -f shell_server
+	rm -f shell_client
 	rm -f crypto/apps/server_test
 	rm -f crypto/apps/client_test
 	rm -f crypto/apps/create_user
