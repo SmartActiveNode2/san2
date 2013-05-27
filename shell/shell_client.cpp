@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
 {
 	FILELog::ReportingLevel() = logDEBUG4;
 	
+	San2::Utils::bytes payload;
+	San2::Utils::bytes serializedCapsule;
+	San2::Network::CCapsule capsule;
 	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
@@ -28,18 +31,7 @@ int main(int argc, char *argv[])
 	}
 
 	connector.connect();
-	
-	/*
-	if (connector.registerPort(2200) == true)
-	{
-		printf("port register: OK\n");
-	}
-	else
-	{
-		printf("port register: FAILURE\n");
-	}
-	*/
-	
+		
 	SAN_UINT16 port = connector.getEphemeralPort();
 	
 	FILE_LOG(logDEBUG4) << "ephemeral port: " << port;
@@ -54,23 +46,40 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+	San2::Network::SanAddress srcaddr;
 	
-	San2::Utils::bytes payload;
-	payload.append("Ahoj, jak se mas");
+	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF12", srcaddr) != true)
+	{
+		FILE_LOG(logDEBUG4) << "failed to parse source address";
+		return -2;
+	}
 	
-	San2::Network::CCapsule capsule;
-	capsule.setDSdata(2201, 2200, payload);
-	capsule.setDestinationAddress(dstaddr);
 	
-	San2::Utils::bytes serial;
-	capsule.pack(serial);
+	
+	
+	
+	payload.append("Ahoj, jak se mas?");
 
-	connector.sendCapsule(serial);
+	capsule.setDSdata(2201, port, payload);
+	capsule.setDestinationAddress(dstaddr);
+	capsule.setSourceAddress(srcaddr);
+	capsule.pack(serializedCapsule);
+
+
+	San2::Network::CCapsule testcap;
+	if (testcap.unpack(serializedCapsule) == false)
+	{
+		printf("UNPACKING CAPSULE FAILED\n");
+		return -5;
+	}
+	std::cout << "srcaddr: " << San2::Utils::address2string(testcap.getSourceAddress()) << std::endl;
+
+	connector.sendCapsule(serializedCapsule);
 	
-	/*
+	
 	San2::Network::CCapsule rxcapsule;
 	
-	printf("awaiting capsule\n");
+	printf("awaiting response\n");
 	SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 5000);
 	
 	switch(rval)
@@ -97,7 +106,7 @@ int main(int argc, char *argv[])
 			printf("got: UNKNOWN ERROR\n");
 			break;
 	}
-	*/
+	
 	
 	return 0;
 }

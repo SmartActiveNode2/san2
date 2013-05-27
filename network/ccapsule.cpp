@@ -83,23 +83,16 @@ bool CCapsule::unpack(const San2::Utils::bytes &capsule)
 	
 	if (capsule.size() < headerSize) return false;
 	
-	San2::Utils::bytes::const_iterator from = capsule.begin();
-	// dstAddr
-	std::copy(from, capsule.begin() + sanAddressSize, m_dstAddress.begin());
-	from += sanAddressSize;
-	
-	// srcAddr
-	std::copy(from, capsule.begin() + sanAddressSize, m_srcAddress.begin());
-	from += sanAddressSize;
+	memcpy(&(m_dstAddress[0]), &(capsule[0]), sanAddressSize);
+	memcpy(&(m_srcAddress[0]), &(capsule[sanAddressSize]), sanAddressSize);
 	
 	// hops
 	memcpy(&m_hop, &capsule[0] + 2 * sanAddressSize, sizeof(SAN_UINT16));
 	m_hop = San2::Utils::Endian::san_u_be16toh(m_hop);
-	from += sizeof(SAN_UINT16);
 	
-	// flags
 	parseFlags(capsule[2 * sanAddressSize + sizeof(SAN_UINT16)]);
-	from += sizeof(unsigned char);
+	
+	San2::Utils::bytes::const_iterator from = capsule.cbegin() + 2 * sanAddressSize + sizeof(SAN_UINT16) + sizeof(unsigned char);
 	
 	// hash
 	std::copy(from, from + sanHashSize, m_appId.begin());

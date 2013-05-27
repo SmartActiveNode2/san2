@@ -11,13 +11,21 @@
 #include "network/ccapsule.hpp"
 #include "utils/log.h"
 #include "utils/platform/basictypes.hpp"
+#include "utils/address.hpp"
+#include "utils/cvector.hpp"
 
 #define PIPENAME "/tmp/sanode2api"
+
+#define APPLICATION_PORT 2201
 
 int main(int argc, char *argv[])
 {
 	FILELog::ReportingLevel() = logDEBUG4;
+	San2::Utils::bytes serializedCapsule;
 	
+	SAN_UINT16 fromPort, toPort;
+	San2::Utils::bytes payload;
+	San2::Network::CCapsule capsule;
 	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
@@ -28,26 +36,24 @@ int main(int argc, char *argv[])
 
 	connector.connect();
 	
-	San2::Utils::bytes payload;
-	payload.append("Ahoj, jak se mas");
 	
-	San2::Network::CCapsule capsule;
+	// payload.append("Ahoj, jak se mas");
+	/*
+	payload = "Ahoj, jak se mas";
 	capsule.setData(payload);
 	
-	San2::Utils::bytes serial;
-	capsule.pack(serial);
-
-	connector.sendCapsule(serial);
-	connector.sendCapsule(serial);
-	connector.sendCapsule(serial);
+	capsule.pack(serializedCapsule);
+	connector.sendCapsule(serializedCapsule);
+	* */
 	
-	if (connector.registerPort(2201) == true)
+	if (connector.registerPort(APPLICATION_PORT) == true)
 	{
 		printf("port register: OK\n");
 	}
 	else
 	{
 		printf("port register: FAILURE\n");
+		return -1;
 	}
 	
 	
@@ -62,7 +68,31 @@ int main(int argc, char *argv[])
 		switch(rval)
 		{
 			case SAN2_WAITFORCAPSULE_SUCCESS:
-				printf("got: rxcapsule\n");
+				if (rxcapsule.getPortsDS(toPort, fromPort))
+				{
+					printf("got: rxcapsule, from port %ud", fromPort);
+					
+					std::cout << " from address " << San2::Utils::address2string(rxcapsule.getSourceAddress()) << std::endl;
+					std::cout << "   to address " << San2::Utils::address2string(rxcapsule.getDestinationAddress()) << std::endl;
+					
+					
+					San2::Utils::bytes data = rxcapsule.getData();
+					char *message = (char*) malloc(sizeof(char) * (data.size() - 4));
+					memcpy(message, &data[4], data.size() - 4);
+					message[data.size() - 5] = 0;
+					printf("message:%s\n", message);
+					
+					// echo
+					capsule.setSourceAddress(rxcapsule.getDestinationAddress());
+					capsule.setDestinationAddress(rxcapsule.getSourceAddress());
+					capsule.setDSdata(fromPort, APPLICATION_PORT, rxcapsule.getData());
+					capsule.pack(serializedCapsule);
+					connector.sendCapsule(serializedCapsule);
+				}
+				else
+				{
+					printf("got: rxcapsule, from port ?\n");	
+				}
 				break;
 			case SAN2_WAITFORCAPSULE_TIMEOUT:
 				printf("got: timeout\n");
