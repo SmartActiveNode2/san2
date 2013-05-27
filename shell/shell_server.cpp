@@ -87,6 +87,9 @@ int main(int argc, char *argv[])
 					capsule.setDestinationAddress(rxcapsule.getSourceAddress());
 					capsule.setDSdata(fromPort, APPLICATION_PORT, rxcapsule.getData());
 					capsule.pack(serializedCapsule);
+					
+					std::cout << "DSTADDR: " << San2::Utils::address2string(capsule.getDestinationAddress()) << std::endl;
+					
 					connector.sendCapsule(serializedCapsule);
 				}
 				else

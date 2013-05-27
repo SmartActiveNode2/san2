@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	
 	San2::Network::SanAddress srcaddr;
 	
-	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF12", srcaddr) != true)
+	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF11", srcaddr) != true)
 	{
 		FILE_LOG(logDEBUG4) << "failed to parse source address";
 		return -2;
