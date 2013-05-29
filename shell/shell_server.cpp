@@ -13,6 +13,9 @@
 #include "utils/platform/basictypes.hpp"
 #include "utils/address.hpp"
 #include "utils/cvector.hpp"
+#include "session.hpp"
+#include "sessionmanager.hpp"
+
 
 #define PIPENAME "/tmp/sanode2api"
 
@@ -27,6 +30,8 @@ int main(int argc, char *argv[])
 	San2::Utils::bytes payload;
 	San2::Network::CCapsule capsule;
 	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
+	
+	SessionManager<Session> sman([](){return new Session();}, 3600);
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
 	{

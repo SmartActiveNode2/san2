@@ -2,21 +2,40 @@
 
 #include <map>
 #include <memory>
-#include <utils/cvector.hpp>
+#include <utility>
 
-#include "session.hpp"
+#include "utils/cvector.hpp"
 #include "utils/platform/basictypes.hpp"
 #include "network/nettypedef.hpp"
 
-class SessionManager
+template <class T> class SessionManager
 {
-public:
-	SessionManager();
-	std::shared_ptr<Session> getSession(const San2::Network::SanAddress &sourceAddress, SAN_UINT16 sourcePort);
-	std::size_t sessionCount();
+private:
+	std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> > sessionStorage;
+	std::function<T* ()> m_createT;
+	unsigned int m_sessionTimeoutSeconds;
 protected:
 
-private:
-	std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<Session> > sessionStorage;
+public:
+	SessionManager(std::function<T* ()> createT, unsigned int sessionTimeoutSeconds) :
+		m_createT(createT),
+		m_sessionTimeoutSeconds(sessionTimeoutSeconds)
+	{
+		
+	}
 	
+	std::shared_ptr<T> getSession(const San2::Network::SanAddress &sourceAddress, SAN_UINT16 sourcePort)
+	{	
+		std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator iter = sessionStorage.find(std::make_pair(sourceAddress, sourcePort));
+		if (iter != sessionStorage.end()) return iter->second;
+		std::shared_ptr<T> createdSession(m_createT());
+		std::pair<std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator, bool> ret = sessionStorage.insert(std::make_pair(std::make_pair(sourceAddress, sourcePort), createdSession));
+		if (ret.second == false) return iter->second;
+		return createdSession;
+	}
+	
+	std::size_t sessionCount()
+	{
+		return sessionStorage.size();
+	}
 };
