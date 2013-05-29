@@ -16,6 +16,7 @@
 #include "node/cnode.hpp"
 #include "node/cportmap.hpp"
 
+
 namespace San2 
 {
 	namespace Node 
@@ -32,7 +33,7 @@ namespace San2
 		class CNodeServiceChannel : public San2::Cppl::PipeChannel
 		{
 		public:
-			CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue, San2::Node::CPortmap& portmap);
+			CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& inputQueue, San2::Node::CPortmap& portmap, San2::Node::CNode &node);
 			virtual ~CNodeServiceChannel();
 			San2::Cppl::ErrorCode receive();
             
@@ -52,6 +53,7 @@ namespace San2
 			San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> > m_applicationQueue;
 			
 			San2::Node::CPortmap& m_portmap;
+			San2::Node::CNode & m_node;
 		};
 	}
 }

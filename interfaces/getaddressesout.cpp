@@ -26,7 +26,6 @@ unsigned int GetAddressesOut::getUniqueId()const
 
 bool GetAddressesOut::pack(San2::Utils::bytes &out)
 {
-	out.resize(0);
 	out.clear();
 	return true;
 }
@@ -39,6 +38,8 @@ bool GetAddressesOut::parseResponse(const San2::Utils::bytes &in)
 
 unsigned int GetAddressesOut::getAddresses(std::list<San2::Network::SanAddress> &adrs)
 {	
+	FILE_LOG(logDEBUG4) << "begin GetAddressesOut::getAddresses()";
+	
 	adrs.clear();
 	if (m_response.size() % sizeof(San2::Network::SanAddress)) return -1;
 	

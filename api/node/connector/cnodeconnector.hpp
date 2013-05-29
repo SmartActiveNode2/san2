@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <list>
+
 #include "cppl/pipeclient.hpp"
 #include "comm/streamrpcchannel.hpp"
 #include "rpc/crpcinvoker.hpp"
@@ -23,6 +25,8 @@ namespace San2 { namespace Api {
 		bool sendCapsule(San2::Utils::bytes &capsuleData);
 		bool registerPort(SAN_UINT16 port);
 		SAN_UINT16 getEphemeralPort();
+		unsigned int getInterfaceAddresses(std::list<San2::Network::SanAddress> &adrs);
+		
 		
 		SAN_INT32 waitForCapsule(San2::Network::CCapsule &capsule, SAN_UINT32 timeout);
 	protected:	

@@ -20,6 +20,7 @@
 #include "interfaces/waitforcapsulein.hpp"
 #include "interfaces/registerin.hpp"
 #include "interfaces/registerephemeralin.hpp"
+#include "interfaces/getaddressesin.hpp"
 
 // rpc
 #include "rpc/crpcexecutor.hpp"
@@ -35,11 +36,12 @@
 
 namespace San2 { namespace Api {
 
-CNodeServiceChannel::CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& nodeQueue, San2::Node::CPortmap& portmap) :
+CNodeServiceChannel::CNodeServiceChannel(CPPL_PIPETYPE handle, unsigned int timRX, unsigned int timTX, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >& nodeQueue, San2::Node::CPortmap& portmap, San2::Node::CNode &node) :
 	San2::Cppl::PipeChannel(handle, timRX, timTX),
 	m_nodeQueue(nodeQueue),
 	m_portmap(portmap),
-	m_applicationQueue(SAN2_CNODESERVICECHANNEL_APPQUEMAXLEN)
+	m_applicationQueue(SAN2_CNODESERVICECHANNEL_APPQUEMAXLEN),
+	m_node(node)
 {
 
 }
@@ -84,6 +86,14 @@ San2::Cppl::ErrorCode CNodeServiceChannel::receive() // required
 	}	
 	
 	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::RegisterEphemeralIn(m_portmap, m_applicationQueue);});
+
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeApiChannel::receive(): registrer function *FAILED*";
+		return San2::Cppl::ErrorCode::FAILURE;
+	}	
+	
+	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::GetAddressesIn(m_node);});
 
 	if (!ret)
 	{

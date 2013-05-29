@@ -11,6 +11,7 @@
 #include "interfaces/registerout.hpp"
 #include "interfaces/registerephemeralout.hpp"
 #include "interfaces/waitforcapsuleout.hpp"
+#include "interfaces/getaddressesout.hpp"
 
 #define SAN2_CNODECONNECTOR_MAXSINGLEREADSIZE 2048
 
@@ -111,5 +112,13 @@ SAN_UINT16 CNodeConnector::getEphemeralPort()
 	if (m_rpci->invokeSyncFunction(func) == false) return 0;
 	return func.getPort();
 }	
+
+
+unsigned int CNodeConnector::getInterfaceAddresses(std::list<San2::Network::SanAddress> &adrs)
+{
+	San2::Interfaces::GetAddressesOut func;
+	if (m_rpci->invokeSyncFunction(func) == false) return -2;
+	return func.getAddresses(adrs);
+}
 	
 }} // ns

@@ -26,11 +26,14 @@ unsigned int GetAddressesIn::getUniqueId() const
 
 bool GetAddressesIn::operator()(void)
 {	
+	FILE_LOG(logDEBUG4) << "begin GetAddressesIn::operator()";
 	m_response.clear();
 	for (std::shared_ptr<San2::Network::CNetInterface> x: m_node.getInterfaces()) 
 	{	
 		m_response += San2::Utils::bytes::array2bytes((const unsigned char *)&((x->getInterfaceAddress())[0]), sizeof(San2::Network::SanAddress));
 	}
+	
+	FILE_LOG(logDEBUG4) << "end GetAddressesIn::operator()";
 	return true;
 }
 

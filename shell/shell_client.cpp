@@ -6,6 +6,7 @@
 #include <string.h>
 #include <string>
 #include <iostream>
+#include <list>
 
 #include "api/node/connector/cnodeconnector.hpp"
 #include "network/ccapsule.hpp"
@@ -46,17 +47,32 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+	
 	San2::Network::SanAddress srcaddr;
 	
+	/*
 	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF11", srcaddr) != true)
 	{
 		FILE_LOG(logDEBUG4) << "failed to parse source address";
 		return -2;
 	}
+	*/
 	
+	std::list<San2::Network::SanAddress> adrs;
 	
+	std::cout << "before getInterfaceAddresses()" << std::endl;
+	unsigned int addressCount = connector.getInterfaceAddresses(adrs);
+	std::cout << "after getInterfaceAddresses()" << std::endl;
 	
+	if (addressCount < 1)
+	{
+		printf("Could not determine source address. No interface found.\n");
+		return -3;
+	}
 	
+	srcaddr = *(adrs.cbegin());
+	
+	std::cout << "Using source address: " << San2::Utils::address2string(srcaddr) << std::endl	;
 	
 	payload.append("Ahoj, jak se mas?");
 
