@@ -12,12 +12,12 @@ template <class T> class SessionManager
 {
 private:
 	std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> > sessionStorage;
-	std::function<T* ()> m_createT;
+	std::function<T* (const San2::Network::SanAddress&, SAN_UINT16)> m_createT;
 	unsigned int m_sessionTimeoutSeconds;
 protected:
 
 public:
-	SessionManager(std::function<T* ()> createT, unsigned int sessionTimeoutSeconds) :
+	SessionManager(std::function<T* (const San2::Network::SanAddress&, SAN_UINT16)> createT, unsigned int sessionTimeoutSeconds) :
 		m_createT(createT),
 		m_sessionTimeoutSeconds(sessionTimeoutSeconds)
 	{
@@ -28,7 +28,7 @@ public:
 	{	
 		std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator iter = sessionStorage.find(std::make_pair(sourceAddress, sourcePort));
 		if (iter != sessionStorage.end()) return iter->second;
-		std::shared_ptr<T> createdSession(m_createT());
+		std::shared_ptr<T> createdSession(m_createT(sourceAddress, sourcePort));
 		std::pair<std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator, bool> ret = sessionStorage.insert(std::make_pair(std::make_pair(sourceAddress, sourcePort), createdSession));
 		if (ret.second == false) return iter->second;
 		return createdSession;

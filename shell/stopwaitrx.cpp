@@ -29,7 +29,7 @@ bool StopWaitRx::incommingDatagram(const San2::Utils::bytes& request, San2::Util
 	San2::Utils::bytes dataIn;
 	std::copy(request.cbegin() + 9, request.cend(), std::back_inserter(dataIn));
 	
-	bool ret = processDatagram(dataIn, response);
+	bool ret = processDatagram(rxseq, dataIn, response);
 	lastDatagram = response;
 	m_expectedSeqNum++;
 	return ret;

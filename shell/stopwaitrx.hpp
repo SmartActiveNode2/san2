@@ -15,7 +15,7 @@ class StopWaitRx
 			
 	protected:
 		virtual bool incommingDatagram(const San2::Utils::bytes& request, San2::Utils::bytes& response);
-		virtual bool processDatagram(const San2::Utils::bytes& request, San2::Utils::bytes& response)=0;
+		virtual bool processDatagram(SAN_UINT64 sequenceNummber, const San2::Utils::bytes& request, San2::Utils::bytes& response)=0;
 	
 	private:
 		SAN_UINT64 m_expectedSeqNum;

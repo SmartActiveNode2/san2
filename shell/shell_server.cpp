@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	San2::Network::CCapsule capsule;
 	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
 	
-	SessionManager<Session> sman([](){return new Session();}, 3600);
+	SessionManager<Session> sman([](const San2::Network::SanAddress& srcAddr, SAN_UINT16 srcPort){return new Session(srcAddr, srcPort);}, 3600);
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
 	{
