@@ -18,5 +18,5 @@ class StopWait
 	private:
 		unsigned int m_repetitions;
 		unsigned int m_timeout;
-		SAN_UINT8 m_expectedSeqNum;
+		SAN_UINT64 m_expectedSeqNum;
 };

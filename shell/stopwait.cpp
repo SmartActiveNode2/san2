@@ -19,7 +19,7 @@ bool StopWait::sendReliableMessage(const San2::Utils::bytes& request, San2::Util
 	// Form the stop & wait packet format
 	
 	// SOF: ASCII "S"
-	// SEQ: UINT8 . Starting with one!
+	// SEQ: UINT64 . Starting with one!
 	// PAYLOAD
 	San2::Utils::bytes data;
 	unsigned char sof = 0x53;
@@ -33,25 +33,27 @@ bool StopWait::sendReliableMessage(const San2::Utils::bytes& request, San2::Util
 	{
 		if (sendDatagram(data) == false)
 		{
-			tries--;
-			continue;
+			printf("StopWait::sendDatagram failed\n");
+			return false;
 		}
 		
 		if (awaitDatagram(response, m_timeout) == false)
 		{
 			tries--;
+			printf("StopWait: Datagram lost; resending\n");
 			continue;
 		} 
 		
 		// Check structure of response
-		if (response.size() < 2) return false;
+		if (response.size() < 9) return false;
 		if (response[0] != 0x53) return false;
 		
-		SAN_UINT8 rxseq = San2::Utils::CDataPack::unpackUint8(response, 1);
+		SAN_UINT64 rxseq = San2::Utils::CDataPack::unpackUint64(response, 1);
 		
 		if (rxseq != m_expectedSeqNum)
 		{
 			tries--;
+			printf("StopWait: incomming sequence number missmatch\n");
 			continue;
 		}
 		

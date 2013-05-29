@@ -141,17 +141,16 @@ OBJS-APPTX = api/apptx.o
 OBJS-APPRX = api/apprx.o
 
 
-OBJS-SHELL = shell/session.o shell/sessionmanager.o
+OBJS-SHELL = shell/session.o shell/sessionmanager.o shell/stopwait.o shell/stopwaitrx.o
 OBJS-SHELLSERVER = shell/shell_server.o
 OBJS-SHELLCLIENT = shell/shell_client.o
 
-OBJS-TRANSPORT = api/stopwait.o
 
 LIBS-OSSL = -lssl -lcrypto
 
 #  ====== end of DragonSRP variables ======
 
-all:: components examples node dragonsrpall apptest apprx apptx shellserver shellclient $(OBJS-TRANSPORT)
+all:: components examples node dragonsrpall apptest apprx apptx shellserver shellclient
 
 
 #  ====== begin DragonSRP targets ======
