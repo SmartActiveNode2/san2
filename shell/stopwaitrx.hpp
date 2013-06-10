@@ -12,9 +12,9 @@ class StopWaitRx
 {
 	public:
 		StopWaitRx();		
-			
+		virtual bool incommingDatagram(const San2::Utils::bytes& request, San2::Utils::bytes& response);	
+	
 	protected:
-		virtual bool incommingDatagram(const San2::Utils::bytes& request, San2::Utils::bytes& response);
 		virtual bool processDatagram(SAN_UINT64 sequenceNummber, const San2::Utils::bytes& request, San2::Utils::bytes& response)=0;
 	
 	private:

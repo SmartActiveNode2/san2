@@ -13,6 +13,7 @@
 #include "utils/log.h"
 #include "utils/platform/basictypes.hpp"
 #include "utils/address.hpp"
+#include "stopwaittx.hpp"
 
 #define PIPENAME "/tmp/sanode1api"
 
@@ -74,8 +75,12 @@ int main(int argc, char *argv[])
 	
 	std::cout << "Using source address: " << San2::Utils::address2string(srcaddr) << std::endl	;
 	
+	
+	StopWaitTx swtx(3,3000, connector, dstaddr, 2201, srcaddr, port);
+	
 	payload.append("Ahoj, jak se mas?");
 
+	/*
 	capsule.setDSdata(2201, port, payload);
 	capsule.setDestinationAddress(dstaddr);
 	capsule.setSourceAddress(srcaddr);
@@ -91,8 +96,10 @@ int main(int argc, char *argv[])
 	std::cout << "srcaddr: " << San2::Utils::address2string(testcap.getSourceAddress()) << std::endl;
 
 	connector.sendCapsule(serializedCapsule);
+	*/
 	
 	
+	/*
 	San2::Network::CCapsule rxcapsule;
 	
 	printf("awaiting response\n");
@@ -122,7 +129,10 @@ int main(int argc, char *argv[])
 			printf("got: UNKNOWN ERROR\n");
 			break;
 	}
+	*/
 	
+	San2::Utils::bytes response;
+	swtx.sendReliableMessage(payload, response);
 	
 	return 0;
 }

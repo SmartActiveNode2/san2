@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "api/node/connector/cnodeconnector.hpp"
 #include "utils/cvector.hpp"
 #include "utils/platform/basictypes.hpp"
 
@@ -12,7 +13,7 @@ class StopWait
 		bool sendReliableMessage(const San2::Utils::bytes& request, San2::Utils::bytes& response);
 		
 	protected:
-		virtual bool sendDatagram(const San2::Utils::bytes& data)=0;
+		virtual bool sendDatagram(San2::Utils::bytes& data)=0;
 		virtual bool awaitDatagram(San2::Utils::bytes& data, unsigned int maxWaitMsec)=0;
 	
 	private:

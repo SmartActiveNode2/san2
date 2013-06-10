@@ -24,14 +24,17 @@ public:
 		
 	}
 	
-	std::shared_ptr<T> getSession(const San2::Network::SanAddress &sourceAddress, SAN_UINT16 sourcePort)
+	std::shared_ptr<T> getSession(San2::Network::SanAddress sourceAddress, SAN_UINT16 sourcePort)
 	{	
-		std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator iter = sessionStorage.find(std::make_pair(sourceAddress, sourcePort));
+		typename std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator iter;
+		iter = sessionStorage.find(std::make_pair(sourceAddress, sourcePort));
 		if (iter != sessionStorage.end()) return iter->second;
 		std::shared_ptr<T> createdSession(m_createT(sourceAddress, sourcePort));
-		std::pair<std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator, bool> ret = sessionStorage.insert(std::make_pair(std::make_pair(sourceAddress, sourcePort), createdSession));
+		// std::pair<std::map<std::pair<San2::Network::SanAddress, SAN_UINT16>, std::shared_ptr<T> >::iterator, bool> ret;
+		auto ret = sessionStorage.insert(std::make_pair(std::make_pair(sourceAddress, sourcePort), createdSession));
 		if (ret.second == false) return iter->second;
 		return createdSession;
+		
 	}
 	
 	std::size_t sessionCount()

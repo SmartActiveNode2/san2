@@ -141,7 +141,7 @@ OBJS-APPTX = api/apptx.o
 OBJS-APPRX = api/apprx.o
 
 
-OBJS-SHELL = shell/session.o shell/stopwait.o shell/stopwaitrx.o
+OBJS-SHELL = shell/session.o shell/stopwait.o shell/stopwaitrx.o shell/stopwaittx.o
 OBJS-SHELLSERVER = shell/shell_server.o
 OBJS-SHELLCLIENT = shell/shell_client.o
 

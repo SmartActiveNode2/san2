@@ -6,6 +6,7 @@
 #include <string.h>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include "api/node/connector/cnodeconnector.hpp"
 #include "network/ccapsule.hpp"
@@ -64,16 +65,42 @@ int main(int argc, char *argv[])
 	
 	while(1)
 	{
-	
+		bool portsok;
+		San2::Utils::bytes response;
 		San2::Network::CCapsule rxcapsule;
+		std::shared_ptr<Session> ses;
 		
 		printf("awaiting capsule\n");
 		SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 50000);
 		
+		San2::Utils::bytes data;
+		
 		switch(rval)
 		{
 			case SAN2_WAITFORCAPSULE_SUCCESS:
-				if (rxcapsule.getPortsDS(toPort, fromPort))
+				
+			
+				
+				
+				portsok = rxcapsule.getPortsDS(toPort, fromPort);
+				ses = sman.getSession(rxcapsule.getSourceAddress(), fromPort);
+			
+				if (portsok)
+				{
+					printf("got: rxcapsule, from port %ud", fromPort);
+					std::cout << " from address " << San2::Utils::address2string(rxcapsule.getSourceAddress()) << std::endl;
+					std::cout << "   to address " << San2::Utils::address2string(rxcapsule.getDestinationAddress()) << std::endl;
+				}
+				
+				response.clear();
+				data = rxcapsule.getData();
+				data.erase(data.begin(), data.begin() + 4); // remove ports
+				
+				San2::Utils::bytes::printBytes(data);
+				ses->incommingDatagram(data, response);
+			
+				/*
+				if (rval)
 				{
 					printf("got: rxcapsule, from port %ud", fromPort);
 					
@@ -101,6 +128,8 @@ int main(int argc, char *argv[])
 				{
 					printf("got: rxcapsule, from port ?\n");	
 				}
+				*/ 
+				
 				break;
 			case SAN2_WAITFORCAPSULE_TIMEOUT:
 				printf("got: timeout\n");
