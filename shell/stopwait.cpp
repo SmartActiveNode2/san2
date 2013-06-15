@@ -58,7 +58,7 @@ bool StopWait::sendReliableMessage(const San2::Utils::bytes& request, San2::Util
 		}
 		
 		// success
-		response.erase(response.begin(), response.begin() + 2); // trim header
+		response.erase(response.begin(), response.begin() + 9); // trim header
 		m_expectedSeqNum++;
 		return true;
 	}

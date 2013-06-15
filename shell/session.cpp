@@ -3,9 +3,8 @@
 #include <iostream>
 #include "session.hpp"
 
-Session::Session(const San2::Network::SanAddress& srcAddress, SAN_UINT16 srcPort) :
-	m_srcAddress(srcAddress),
-	m_srcPort(srcPort)
+Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort) :
+	StopWaitRx(connector, serverAddress, serverPort, clientAddress, clientPort)
 {
 	
 }

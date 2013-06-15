@@ -21,6 +21,7 @@
 #define PIPENAME "/tmp/sanode2api"
 
 #define APPLICATION_PORT 2201
+#define SH_SRV_SESSION_TIMEOUT 3600
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
 	San2::Network::CCapsule capsule;
 	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
 	
-	SessionManager<Session> sman([](const San2::Network::SanAddress& srcAddr, SAN_UINT16 srcPort){return new Session(srcAddr, srcPort);}, 3600);
+	
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
 	{
@@ -40,17 +41,11 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	connector.connect();
-	
-	
-	// payload.append("Ahoj, jak se mas");
-	/*
-	payload = "Ahoj, jak se mas";
-	capsule.setData(payload);
-	
-	capsule.pack(serializedCapsule);
-	connector.sendCapsule(serializedCapsule);
-	* */
+	if (connector.connect() == false)
+	{
+		printf("Failed to connect to local node API listener. (Is the server running?)\n");
+		return -1;
+	}
 	
 	if (connector.registerPort(APPLICATION_PORT) == true)
 	{
@@ -62,12 +57,28 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
+	San2::Network::SanAddress serverAddress;
+	std::list<San2::Network::SanAddress> adrs;
+	
+	unsigned int addressCount = connector.getInterfaceAddresses(adrs);	
+	
+	if (addressCount < 1)
+	{
+		printf("Could not determine source address. No interfaces found.\n");
+		return -3;
+	}
+	
+	serverAddress = *(adrs.cbegin());
+	std::cout << "Using source address (serverAddress): " << San2::Utils::address2string(serverAddress) << std::endl;
+	
+	SessionManager<Session> sman([serverAddress, &connector](const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort){return new Session(connector, serverAddress, APPLICATION_PORT, clientAddress, clientPort);}, SH_SRV_SESSION_TIMEOUT);
 	
 	while(1)
 	{
 		bool portsok;
-		San2::Utils::bytes response;
+		
 		San2::Network::CCapsule rxcapsule;
+		San2::Network::CCapsule txcapsule;
 		std::shared_ptr<Session> ses;
 		
 		printf("awaiting capsule\n");
@@ -78,10 +89,6 @@ int main(int argc, char *argv[])
 		switch(rval)
 		{
 			case SAN2_WAITFORCAPSULE_SUCCESS:
-				
-			
-				
-				
 				portsok = rxcapsule.getPortsDS(toPort, fromPort);
 				ses = sman.getSession(rxcapsule.getSourceAddress(), fromPort);
 			
@@ -92,43 +99,11 @@ int main(int argc, char *argv[])
 					std::cout << "   to address " << San2::Utils::address2string(rxcapsule.getDestinationAddress()) << std::endl;
 				}
 				
-				response.clear();
-				data = rxcapsule.getData();
-				data.erase(data.begin(), data.begin() + 4); // remove ports
-				
-				San2::Utils::bytes::printBytes(data);
-				ses->incommingDatagram(data, response);
-			
-				/*
-				if (rval)
+				if (ses->incommingCapsule(rxcapsule) == false)
 				{
-					printf("got: rxcapsule, from port %ud", fromPort);
-					
-					std::cout << " from address " << San2::Utils::address2string(rxcapsule.getSourceAddress()) << std::endl;
-					std::cout << "   to address " << San2::Utils::address2string(rxcapsule.getDestinationAddress()) << std::endl;
-					
-					
-					San2::Utils::bytes data = rxcapsule.getData();
-					char *message = (char*) malloc(sizeof(char) * (data.size() - 4));
-					memcpy(message, &data[4], data.size() - 4);
-					message[data.size() - 5] = 0;
-					printf("message:%s\n", message);
-					
-					// echo
-					capsule.setSourceAddress(rxcapsule.getDestinationAddress());
-					capsule.setDestinationAddress(rxcapsule.getSourceAddress());
-					capsule.setDSdata(fromPort, APPLICATION_PORT, rxcapsule.getData());
-					capsule.pack(serializedCapsule);
-					
-					std::cout << "DSTADDR: " << San2::Utils::address2string(capsule.getDestinationAddress()) << std::endl;
-					
-					connector.sendCapsule(serializedCapsule);
+					printf("Failed to generate response\n");
+					return -6;
 				}
-				else
-				{
-					printf("got: rxcapsule, from port ?\n");	
-				}
-				*/ 
 				
 				break;
 			case SAN2_WAITFORCAPSULE_TIMEOUT:

@@ -16,6 +16,10 @@
 #include "stopwaittx.hpp"
 
 #define PIPENAME "/tmp/sanode1api"
+#define SH_SRV_PORT 2201
+#define SH_SRV_ADDRESS "000000000000000000000000000000000000000000000000000000000000FF21"
+#define SH_CLI_ARQ_REPETITIONS 3
+#define SH_CLI_ARQ_TIMEOUTMSEC 3000
 
 int main(int argc, char *argv[])
 {
@@ -32,107 +36,50 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	connector.connect();
-		
+	if (connector.connect() == false)
+	{
+		printf("Failed to connect to local node API listener. (Is the server running?)\n");
+		return -1;
+	}
+	
 	SAN_UINT16 port = connector.getEphemeralPort();
 	
-	FILE_LOG(logDEBUG4) << "ephemeral port: " << port;
+	FILE_LOG(logDEBUG4) << "ephemeral port (client port): " << port;
 	
 	if (port == 0) return -1;
 	
-	San2::Network::SanAddress dstaddr;
+	San2::Network::SanAddress serverAddress;
 	
-	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF21", dstaddr) != true)
+	if (San2::Utils::string2address(SH_SRV_ADDRESS, serverAddress) != true)
 	{
 		FILE_LOG(logDEBUG4) << "failed to parse destination address";
 		return -1;
 	}
 	
-	
-	San2::Network::SanAddress srcaddr;
-	
-	/*
-	if (San2::Utils::string2address("000000000000000000000000000000000000000000000000000000000000FF11", srcaddr) != true)
-	{
-		FILE_LOG(logDEBUG4) << "failed to parse source address";
-		return -2;
-	}
-	*/
-	
+	San2::Network::SanAddress clientAddress;
 	std::list<San2::Network::SanAddress> adrs;
-	
-	std::cout << "before getInterfaceAddresses()" << std::endl;
 	unsigned int addressCount = connector.getInterfaceAddresses(adrs);
-	std::cout << "after getInterfaceAddresses()" << std::endl;
 	
 	if (addressCount < 1)
 	{
-		printf("Could not determine source address. No interface found.\n");
+		printf("Could not determine source address. No interfaces found.\n");
 		return -3;
 	}
 	
-	srcaddr = *(adrs.cbegin());
+	clientAddress = *(adrs.cbegin());
+	std::cout << "Using source address: " << San2::Utils::address2string(clientAddress) << std::endl;
 	
-	std::cout << "Using source address: " << San2::Utils::address2string(srcaddr) << std::endl	;
+	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, serverAddress, SH_SRV_PORT, clientAddress, port);
 	
-	
-	StopWaitTx swtx(3,3000, connector, dstaddr, 2201, srcaddr, port);
-	
+	// go
 	payload.append("Ahoj, jak se mas?");
-
-	/*
-	capsule.setDSdata(2201, port, payload);
-	capsule.setDestinationAddress(dstaddr);
-	capsule.setSourceAddress(srcaddr);
-	capsule.pack(serializedCapsule);
-
-
-	San2::Network::CCapsule testcap;
-	if (testcap.unpack(serializedCapsule) == false)
-	{
-		printf("UNPACKING CAPSULE FAILED\n");
-		return -5;
-	}
-	std::cout << "srcaddr: " << San2::Utils::address2string(testcap.getSourceAddress()) << std::endl;
-
-	connector.sendCapsule(serializedCapsule);
-	*/
-	
-	
-	/*
-	San2::Network::CCapsule rxcapsule;
-	
-	printf("awaiting response\n");
-	SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 5000);
-	
-	switch(rval)
-	{
-		case SAN2_WAITFORCAPSULE_SUCCESS:
-			printf("got: rxcapsule\n");
-			break;
-		case SAN2_WAITFORCAPSULE_TIMEOUT:
-			printf("got: timeout\n");
-			break;
-		case SAN2_WAITFORCAPSULE_ERROR_INVALID_RESPONSE:
-			printf("got: error invalid response\n");
-			break;	
-		case SAN2_WAITFORCAPSULE_ERROR_CAPSULE_UNPACK:
-			printf("got: error capsule unpack\n");
-			break;	
-		case SAN2_WAITFORCAPSULE_ERROR_INVOKE_FAILED:	
-			printf("got: error INVOKE FAILED\n");
-			break;	
-		case SAN2_WAITFORCAPSULE_ERROR:
-			printf("got: GENERAL ERROR\n");
-			break;	
-		default:
-			printf("got: UNKNOWN ERROR\n");
-			break;
-	}
-	*/
-	
 	San2::Utils::bytes response;
 	swtx.sendReliableMessage(payload, response);
+	
+	// print result
+	std::cout << "response:";
+	San2::Utils::bytes::printBytesAsString(response);
+	std::cout << std::endl;
 	
 	return 0;
 }

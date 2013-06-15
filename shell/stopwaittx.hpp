@@ -15,8 +15,8 @@ public:
 
 private:
 	San2::Api::CNodeConnector &m_connector;
-	San2::Network::SanAddress m_dstAddress;
-	SAN_UINT16 m_dstPort;
-	San2::Network::SanAddress m_srcAddress;
-	SAN_UINT16 m_srcPort;
+	San2::Network::SanAddress m_serverAddress;
+	SAN_UINT16 m_serverPort;
+	San2::Network::SanAddress m_clientAddress;
+	SAN_UINT16 m_clientPort;
 };
