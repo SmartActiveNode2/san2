@@ -72,14 +72,18 @@ int main(int argc, char *argv[])
 	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, serverAddress, SH_SRV_PORT, clientAddress, port);
 	
 	// go
-	payload.append("Ahoj, jak se mas?");
-	San2::Utils::bytes response;
-	swtx.sendReliableMessage(payload, response);
 	
-	// print result
-	std::cout << "response:";
-	San2::Utils::bytes::printBytesAsString(response);
-	std::cout << std::endl;
+	for (int k = 0; k < 10; k++)
+	{
+		payload.append("Ahoj, jak se mas?");
+		San2::Utils::bytes response;
+		swtx.sendReliableMessage(payload, response);
+		
+		// print result
+		std::cout << "response:";
+		San2::Utils::bytes::printBytesAsString(response);
+		std::cout << std::endl;
+	}
 	
 	return 0;
 }

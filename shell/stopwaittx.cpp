@@ -14,7 +14,8 @@ StopWaitTx::StopWaitTx(unsigned int repetitions, unsigned int timeout, San2::Api
 {
 	
 }
-	
+
+/*
 bool StopWaitTx::sendDatagram(San2::Utils::bytes& data)
 {
 	San2::Network::CCapsule capsule;
@@ -25,7 +26,7 @@ bool StopWaitTx::sendDatagram(San2::Utils::bytes& data)
 	capsule.pack(serializedCapsule);
 	return m_connector.sendCapsule(serializedCapsule);
 }
-
+*/
 
 bool StopWaitTx::awaitDatagram(San2::Utils::bytes& data, unsigned int maxWaitMsec)
 {
@@ -80,11 +81,18 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 	data += San2::Utils::CDataPack::pack(m_expectedSeqNum);
 	data += request;
 	
+	San2::Network::CCapsule capsule;
+	San2::Utils::bytes serializedCapsule;
+	capsule.setDSdata(m_serverPort, m_clientPort, data);
+	capsule.setDestinationAddress(m_serverAddress);
+	capsule.setSourceAddress(m_clientAddress);
+	capsule.pack(serializedCapsule);
+	
 	unsigned int tries = m_repetitions;
 	
 	while(tries > 0)
 	{
-		if (sendDatagram(data) == false)
+		if (m_connector.sendCapsule(serializedCapsule) == false)
 		{
 			printf("StopWait::sendDatagram failed\n");
 			return false;

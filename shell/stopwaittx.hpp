@@ -12,7 +12,7 @@ public:
 	bool sendReliableMessage(const San2::Utils::bytes& request, San2::Utils::bytes& response);
 	
 private:
-	bool sendDatagram(San2::Utils::bytes& data);
+	//bool sendDatagram(San2::Utils::bytes& data);
 	bool awaitDatagram(San2::Utils::bytes& data, unsigned int maxWaitMsec);
 
 	unsigned int m_repetitions;
