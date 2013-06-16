@@ -15,6 +15,11 @@ class StopWaitRx
 		StopWaitRx(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort);
 		virtual bool incommingCapsule(San2::Network::CCapsule &rxcapsule);	
 	
+		San2::Network::SanAddress getServerAddress();
+		SAN_UINT16 getServerPort();
+		San2::Network::SanAddress getClientAddress();
+		SAN_UINT16 getClientPort();
+	
 	protected:
 		virtual bool processDatagram(SAN_UINT64 sequenceNummber, const San2::Utils::bytes& request, San2::Utils::bytes& response)=0;
 	

@@ -1,5 +1,5 @@
 
-
+#include <string>
 #include <iostream>
 #include "session.hpp"
 
@@ -9,10 +9,11 @@ Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanA
 	
 }
 
-bool Session::processDatagram(SAN_UINT64 sequenceNummber, const San2::Utils::bytes& request, San2::Utils::bytes& response)
+bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response)
 {
 	std::cout << "Session::processDatagram()" << std::endl;
-	response = "This is some response";
+	response = "This is some response ";
+	response += std::to_string(sequenceNumber);
 	return true;
 }
 

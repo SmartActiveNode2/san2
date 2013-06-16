@@ -99,3 +99,22 @@ bool StopWaitRx::incommingCapsule(San2::Network::CCapsule &rxcapsule)
 	return ret;
 }
 
+San2::Network::SanAddress StopWaitRx::getServerAddress()
+{
+	return m_serverAddress;
+}
+
+SAN_UINT16 StopWaitRx::getServerPort()
+{
+	return m_serverPort;
+}
+
+San2::Network::SanAddress StopWaitRx::getClientAddress()
+{
+	return m_clientAddress;
+}
+
+SAN_UINT16 StopWaitRx::getClientPort()
+{
+	return m_clientPort;
+}

@@ -15,19 +15,6 @@ StopWaitTx::StopWaitTx(unsigned int repetitions, unsigned int timeout, San2::Api
 	
 }
 
-/*
-bool StopWaitTx::sendDatagram(San2::Utils::bytes& data)
-{
-	San2::Network::CCapsule capsule;
-	San2::Utils::bytes serializedCapsule;
-	capsule.setDSdata(m_serverPort, m_clientPort, data);
-	capsule.setDestinationAddress(m_serverAddress);
-	capsule.setSourceAddress(m_clientAddress);
-	capsule.pack(serializedCapsule);
-	return m_connector.sendCapsule(serializedCapsule);
-}
-*/
-
 bool StopWaitTx::awaitDatagram(San2::Utils::bytes& data, unsigned int maxWaitMsec)
 {
 	SAN_UINT16 dstport, srcport;
@@ -126,3 +113,23 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 	
 	return false;
 }
+
+San2::Network::SanAddress StopWaitTx::getServerAddress()
+{
+	return m_serverAddress;
+}
+
+SAN_UINT16 StopWaitTx::getServerPort()
+{
+	return m_serverPort;
+}
+
+San2::Network::SanAddress StopWaitTx::getClientAddress()
+{
+	return m_clientAddress;
+}
+
+SAN_UINT16 StopWaitTx::getClientPort()
+{
+	return m_clientPort;
+}	
