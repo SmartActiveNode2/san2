@@ -141,7 +141,7 @@ OBJS-APPTX = api/apptx.o
 OBJS-APPRX = api/apprx.o
 
 
-OBJS-SHELL = shell/session.o shell/stopwaitrx.o shell/stopwaittx.o
+OBJS-SHELL = shell/session.o shell/stopwaitrx.o shell/stopwaittx.o shell/messageconstructor.o
 OBJS-SHELLSERVER = shell/shell_server.o
 OBJS-SHELLCLIENT = shell/shell_client.o
 
@@ -272,11 +272,11 @@ apptx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API
 apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTX) node/cportmap.o node/cnode.o 
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-APPTX) $(OBJS-API) node/cportmap.o -o ./apptx $(LIBS) $(LDFLAGS)
 
-shellserver: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLSERVER) $(OBJS-SHELL) node/cportmap.o node/cnode.o 
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLSERVER) $(OBJS-API) $(OBJS-SHELL) node/cportmap.o -o ./shell_server $(LIBS) $(LDFLAGS)
+shellserver: utils cppl tcp stream comm rpc network interfaces dsrp $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLSERVER) $(OBJS-SHELL) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLSERVER) $(OBJS-API) $(OBJS-SHELL) $(OBJ-DSRP) node/cportmap.o -o ./shell_server $(LIBS) $(LDFLAGS)
 
-shellclient: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLCLIENT) $(OBJS-SHELL) node/cportmap.o node/cnode.o 
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLCLIENT) $(OBJS-API) $(OBJS-SHELL) node/cportmap.o -o ./shell_client $(LIBS) $(LDFLAGS)
+shellclient: utils cppl tcp stream comm rpc network interfaces dsrp $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLCLIENT) $(OBJS-SHELL) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLCLIENT) $(OBJS-API) $(OBJS-SHELL) $(OBJ-DSRP) node/cportmap.o -o ./shell_client $(LIBS) $(LDFLAGS)
 
 
 #tells how to make an *.o object file from an *.c file

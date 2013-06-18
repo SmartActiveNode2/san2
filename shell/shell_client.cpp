@@ -15,6 +15,8 @@
 #include "utils/address.hpp"
 #include "stopwaittx.hpp"
 
+#include "messageconstructor.hpp"
+
 #define PIPENAME "/tmp/sanode1api"
 #define SH_SRV_PORT 2201
 #define SH_SRV_ADDRESS "000000000000000000000000000000000000000000000000000000000000FF21"
@@ -23,6 +25,9 @@
 
 int main(int argc, char *argv[])
 {
+	if (enc_testA()) printf("enc_testA success\n");
+	else printf("enc_testA FAIL\n");
+	
 	FILELog::ReportingLevel() = logDEBUG4;
 	
 	San2::Utils::bytes payload;
@@ -87,3 +92,4 @@ int main(int argc, char *argv[])
 	
 	return 0;
 }
+
