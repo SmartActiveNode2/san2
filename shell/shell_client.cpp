@@ -28,6 +28,15 @@ int main(int argc, char *argv[])
 	if (enc_testA()) printf("enc_testA success\n");
 	else printf("enc_testA FAIL\n");
 	
+	if (enc_testP()) printf("enc_testP FAIL\n");
+	else printf("enc_testP success\n");
+	
+	if (enc_testB()) printf("enc_testB FAIL\n");
+	else printf("enc_testB success\n");
+	
+	if (enc_testQ()) printf("enc_testQ FAIL\n");
+	else printf("enc_testQ success\n");
+	
 	FILELog::ReportingLevel() = logDEBUG4;
 	
 	San2::Utils::bytes payload;
