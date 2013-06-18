@@ -25,8 +25,8 @@
 
 int main(int argc, char *argv[])
 {
-	if (enc_testA()) printf("enc_testA success\n");
-	else printf("enc_testA FAIL\n");
+	if (enc_testA()) printf("enc_testA FAIL\n");
+	else printf("enc_testA success\n");
 	
 	if (enc_testP()) printf("enc_testP FAIL\n");
 	else printf("enc_testP success\n");
@@ -36,6 +36,15 @@ int main(int argc, char *argv[])
 	
 	if (enc_testQ()) printf("enc_testQ FAIL\n");
 	else printf("enc_testQ success\n");
+	
+	if (enc_testC()) printf("enc_testC FAIL\n");
+	else printf("enc_testC success\n");
+	
+	if (enc_testR()) printf("enc_testR FAIL\n");
+	else printf("enc_testR success\n");
+	
+	if (enc_testD()) printf("enc_testD FAIL\n");
+	else printf("enc_testD success\n");
 	
 	FILELog::ReportingLevel() = logDEBUG4;
 	

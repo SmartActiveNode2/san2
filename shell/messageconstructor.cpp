@@ -40,6 +40,7 @@
 #define ENC_MSGTYPE_A 0x41
 #define ENC_MSGTYPE_B 0x42
 #define ENC_MSGTYPE_C 0x43
+#define ENC_MSGTYPE_D 0x44
 
 #define ENC_MSGTYPE_P 0x50
 #define ENC_MSGTYPE_Q 0x51
@@ -89,7 +90,7 @@ int enc_parse_A_message(const San2::Utils::bytes &messageIn, San2::Utils::bytes 
 	return 0;
 }
 
-bool enc_testA()
+int enc_testA()
 {
 	std::string username = "a";
 	San2::Utils::bytes srpA;
@@ -106,7 +107,7 @@ bool enc_testA()
 	if (ret)
 	{
 		printf("enc_testA_failed (1): %d\n", ret);
-		return false;
+		return -1;
 	}
 	
 	San2::Utils::bytes username2b;
@@ -116,38 +117,25 @@ bool enc_testA()
 	if (ret)
 	{
 		printf("enc_testA_failed (2): %d\n", ret);
-		return false;
+		return -2;
 	}
 	
 	std::string username2;
 	std::copy(username2b.begin(), username2b.end(), std::back_inserter(username2));
 	
-	std::cout << "username:" << username << "*" << std::endl;
-	std::cout << "username2:" << username2 << "*" << std::endl;
-	
 	if (username != username2)
 	{
 		printf("enc_testA_failed (3) - username comparison failed\n");
-		return false;
+		return -3;
 	}
-	
-	std::cout << "srpA: ";
-	San2::Utils::bytes::printBytes(srpA);
-	
-	std::cout << std::endl << "srpA2:";
-	San2::Utils::bytes::printBytes(srpA);	
-	std::cout << std::endl;
-	
-	std::cout << "srpA.size():" << srpA.size() << std::endl;
-	std::cout << "srpA2.size():" << srpA2.size() << std::endl;
 	
 	if (srpA != srpA2)
 	{
 		printf("enc_testA_failed (4) - A comparison failed\n");
-		return false;
+		return -4;
 	}
 	
-	return true;
+	return 0;
 }
 
 int enc_construct_P_message(unsigned char errorCode, const San2::Utils::bytes& salt, const San2::Utils::bytes& srpB, San2::Utils::bytes &out)
@@ -438,3 +426,182 @@ int enc_testQ()
 	return 0;
 }
 
+int enc_construct_C_message(const San2::Utils::bytes& request, San2::Utils::bytes &out)
+{
+	out.resize(ENC_MIN_CLIENT_HEADER + request.size());
+	
+	out[ENC_PROTOCOL_INDEX] = ENC_PROTOCOL_ID;
+	out[ENC_MSGTYPE_INDEX] = ENC_MSGTYPE_C;
+	
+	std::copy(request.cbegin(), request.cend(), out.begin() + ENC_MIN_CLIENT_HEADER);
+	
+	return 0;
+}
+
+int enc_parse_C_message(const San2::Utils::bytes &messageIn, San2::Utils::bytes &request)
+{
+	if (messageIn.size() < ENC_MIN_CLIENT_HEADER) return -1;
+	if (messageIn[ENC_PROTOCOL_INDEX] != ENC_PROTOCOL_ID) return -2;
+	if (messageIn[ENC_MSGTYPE_INDEX] != ENC_MSGTYPE_C) return -3;
+	
+	std::size_t requestSize = messageIn.size() - ENC_MIN_CLIENT_HEADER;
+	
+	request.resize(requestSize);
+	
+	if (requestSize > 0)
+	{
+		std::copy(messageIn.cend() - requestSize, messageIn.cend(), request.begin());
+	}
+	
+	return 0;
+}
+
+int enc_testC()
+{
+	San2::Utils::bytes request1, request2;
+	San2::Utils::bytes out;
+	
+	request1 += "Sample request";
+
+	int ret;
+	
+	ret = enc_construct_C_message(request1, out);
+	
+	if (ret)
+	{
+		printf("enc_testC(): enc_constuct_C_message_failed FAILED: %d\n", ret);
+		return -1;
+	}
+	
+	ret = enc_parse_C_message(out, request2);
+	
+	if (ret)
+	{
+		printf("enc_testC(): enc_parse_C_message_failed FAILED: %d\n", ret);
+		return -2;
+	}
+	
+	if (request1 != request2)	
+	{
+		printf("enc_testC(): requests do not match FAILED\n");
+		return -3;
+	}
+	
+	printf("enc_test_C() OK\n");
+	return 0;
+}
+
+int enc_construct_R_message(const San2::Utils::bytes& response, unsigned char errorCode, San2::Utils::bytes &out)
+{
+	out.resize(ENC_MIN_SERVER_HEADER + response.size());
+	out[ENC_PROTOCOL_INDEX] = ENC_PROTOCOL_ID;
+	out[ENC_MSGTYPE_INDEX] = ENC_MSGTYPE_R;
+	out[ENC_ERROR_INDEX] = errorCode;
+	
+	std::copy(response.cbegin(), response.cend(), out.begin() + ENC_MIN_SERVER_HEADER);
+	return 0;
+}
+
+int enc_parse_R_message(const San2::Utils::bytes &messageIn, San2::Utils::bytes& response, unsigned char &errorCode)
+{
+	if (messageIn.size() < ENC_MIN_SERVER_HEADER) return -1;
+	if (messageIn[ENC_PROTOCOL_INDEX] != ENC_PROTOCOL_ID) return -2;
+	if (messageIn[ENC_MSGTYPE_INDEX] != ENC_MSGTYPE_R) return -3;
+	errorCode = messageIn[ENC_ERROR_INDEX];
+	
+	std::size_t responseSize = messageIn.size() - ENC_MIN_SERVER_HEADER;
+	
+	response.resize(responseSize);
+	
+	if (responseSize > 0)
+	{
+		std::copy(messageIn.cbegin() + ENC_MIN_SERVER_HEADER, messageIn.cend(), response.begin());
+	}
+	
+	return 0;
+}
+
+int enc_testR()
+{
+	unsigned char errorCode1, errorCode2;
+	San2::Utils::bytes response1, response2;
+	San2::Utils::bytes out;
+	
+	errorCode1 = 91;
+	response1 += "Sample response";
+
+	int ret;
+	
+	ret = enc_construct_R_message(response1, errorCode1, out);
+	
+	if (ret)
+	{
+		printf("enc_testR(): enc_constuct_R_message_failed FAILED: %d\n", ret);
+		return -1;
+	}
+	
+	ret = enc_parse_R_message(out, response2, errorCode2);
+	
+	if (ret)
+	{
+		printf("enc_testR(): enc_parse_R_message_failed FAILED: %d\n", ret);
+		return -2;
+	}
+	
+	if (errorCode1 != errorCode2)	
+	{
+		printf("enc_testR(): errorCodes do not match FAILED\n");
+		return -3;
+	}
+	
+	if (response1 != response2)	
+	{
+		printf("enc_testR(): response do not match FAILED\n");
+		return -3;
+	}
+	
+	printf("enc_test_R() OK\n");
+	return 0;
+	
+}
+
+int enc_construct_D_message(San2::Utils::bytes &out)
+{
+	out.resize(ENC_MIN_CLIENT_HEADER);
+	out[ENC_PROTOCOL_INDEX] = ENC_PROTOCOL_ID;
+	out[ENC_MSGTYPE_INDEX] = ENC_MSGTYPE_D;
+	return 0;
+}
+
+int enc_parse_D_message(const San2::Utils::bytes &messageIn)
+{
+	if (messageIn.size() != ENC_MIN_CLIENT_HEADER) return -1;
+	if (messageIn[ENC_PROTOCOL_INDEX] != ENC_PROTOCOL_ID) return -2;
+	if (messageIn[ENC_MSGTYPE_INDEX] != ENC_MSGTYPE_D) return -3;
+	return 0;
+}
+
+int enc_testD()
+{
+	San2::Utils::bytes out;
+
+	int ret;
+	ret = enc_construct_D_message(out);
+	
+	if (ret)
+	{
+		printf("enc_testD(): enc_constuct_D_message_failed FAILED: %d\n", ret);
+		return -1;
+	}
+	
+	ret = enc_parse_D_message(out);
+	
+	if (ret)
+	{
+		printf("enc_testD(): enc_parse_D_message_failed FAILED: %d\n", ret);
+		return -2;
+	}
+	
+	printf("enc_test_D() OK\n");
+	return 0;
+}
