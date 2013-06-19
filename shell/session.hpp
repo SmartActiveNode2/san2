@@ -7,9 +7,16 @@
 #include "stopwaitrx.hpp"
 #include "api/node/connector/cnodeconnector.hpp"
 
-#define STATE_INITIAL 0
-#define STATE_SRP1_CASB 1
-#define STATE_SRP2_VERIFIED 2
+// initial state
+#define STATE_ZERO 0
+
+// received C, A
+#define STATE_ALPHA 1
+
+// received valid M1
+#define STATE_BETA 2
+
+//	#define STATE_GAMMA 3
 
 // irrecoverable state
 #define STATE_FAULT -1

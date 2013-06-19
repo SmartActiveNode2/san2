@@ -94,6 +94,9 @@ int main(int argc, char *argv[])
 	
 	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, serverAddress, SH_SRV_PORT, clientAddress, port);
 	
+	//ClientSession cses(swtx);
+	//cses.run();
+	
 	// go
 	
 	for (int k = 0; k < 10; k++)

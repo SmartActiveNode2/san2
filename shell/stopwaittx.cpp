@@ -88,7 +88,7 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 		if (awaitDatagram(response, m_timeout) == false)
 		{
 			tries--;
-			printf("StopWait: Datagram lost; resending\n");
+			printf("StopWait: DataSAN_UINT64 getNextSequenceNumber();gram lost; resending\n");
 			continue;
 		} 
 		
@@ -133,3 +133,8 @@ SAN_UINT16 StopWaitTx::getClientPort()
 {
 	return m_clientPort;
 }	
+
+SAN_UINT64 StopWaitTx::getNextSequenceNumber()
+{
+	return m_expectedSeqNum;
+}
