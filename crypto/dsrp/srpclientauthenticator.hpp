@@ -15,6 +15,7 @@ namespace DragonSRP
 		friend class SrpClient; // To set K and M2_calculated
 		
 		public:
+			SrpClientAuthenticator();
 			SrpClientAuthenticator(const bytes &userName, const bytes &passWord, const bytes &aa, const bytes &AA);
 			bytes getA();
 			bytes getSessionKey(bytes M2_from_server);

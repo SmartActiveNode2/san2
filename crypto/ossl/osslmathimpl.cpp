@@ -72,7 +72,9 @@ namespace Ossl
 
     // A = g^a mod N
     bytes OsslMathImpl::calculateA(const bytes &aa)
-    {		
+    {	
+		if (aa.size() == 0) throw DsrpException("OsslMathImpl::calculateA: Zero parameter detected. (aa)");
+			
 		checkNg(); // will throw on error
         BIGNUM *a = BN_new();
         BIGNUM *A = BN_new();
@@ -97,6 +99,13 @@ namespace Ossl
     // K = H(S)
 	void OsslMathImpl::clientChallange(const bytes &salt, const bytes &aa, const bytes &AA, const bytes &BB, const bytes &username, const bytes &password, bytes &M1_out, bytes &M2_out, bytes &K_out, bool interleave)
 	{   
+		if (salt.size() == 0) throw DsrpException("OsslMathImpl::clientChallange: Zero parameter detected. (salt)");
+		if (aa.size() == 0) throw DsrpException("OsslMathImpl::clientChallange: Zero parameter detected. (aa)");
+		if (AA.size() == 0) throw DsrpException("OsslMathImpl::clientChallange: Zero parameter detected. (AA)");
+		if (BB.size() == 0) throw DsrpException("OsslMathImpl::clientChallange: Zero parameter detected. (BB)");
+		if (username.size() == 0) throw DsrpException("OsslMathImpl::clientChallange: Zero parameter detected. (username)");
+		if (password.size() == 0) throw DsrpException("OsslMathImpl::clientChallange: Zero parameter detected. (password)");
+		
 		checkNg(); // will throw on error
 		BIGNUM *B = BN_new();
 		BIGNUM *x = BN_new();
@@ -229,6 +238,12 @@ namespace Ossl
 	
 	void OsslMathImpl::serverChallange(const bytes &username, const bytes &salt, const bytes &verificator, const bytes &AA, const bytes &bb, bytes &B_out, bytes &M1_out, bytes &M2_out, bytes &K_out, bool interleave)
 	{
+		if (username.size() == 0) throw DsrpException("OsslMathImpl::serverChallange: Zero parameter detected. (username)");
+		if (salt.size() == 0) throw DsrpException("OsslMathImpl::serverChallange: Zero parameter detected. (salt)");
+		if (verificator.size() == 0) throw DsrpException("OsslMathImpl::serverChallange: Zero parameter detected. (verificator)");
+		if (AA.size() == 0) throw DsrpException("OsslMathImpl::serverChallange: Zero parameter detected. (AA)");
+		if (bb.size() == 0) throw DsrpException("OsslMathImpl::serverChallange: Zero parameter detected. (bb)");
+		
 		checkNg(); // will throw on error
 		
 		bytes SS;
@@ -347,6 +362,12 @@ namespace Ossl
 	// M = H(H(N) XOR H(g) | H(username) | s | A | B | K)
 	bytes OsslMathImpl::calculateM1(const bytes &username, const bytes &s, const bytes &A, const bytes &B, const bytes &K)
 	{   
+		if (username.size() == 0) throw DsrpException("OsslMathImpl::calculateM1: Zero parameter detected. (username)");
+		if (s.size() == 0) throw DsrpException("OsslMathImpl::calculateM1: Zero parameter detected. (s)");
+		if (A.size() == 0) throw DsrpException("OsslMathImpl::calculateM1: Zero parameter detected. (A)");
+		if (B.size() == 0) throw DsrpException("OsslMathImpl::calculateM1: Zero parameter detected. (B)");
+		if (K.size() == 0) throw DsrpException("OsslMathImpl::calculateM1: Zero parameter detected. (K)");
+		
 		bytes NN;
 		bytes gg;
 		
@@ -440,6 +461,8 @@ namespace Ossl
  
 	void OsslMathImpl::interleaveS(const bytes &S, bytes &K)
 	{
+		if (S.size() == 0) throw DsrpException("OsslMathImpl::interleaveS: Zero parameter detected. (S)");
+		
 		std::vector<unsigned char>::const_iterator it;
 		
 		std::vector<unsigned char>::const_iterator halfit;
