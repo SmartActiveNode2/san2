@@ -78,6 +78,8 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 	
 	capsule.setDestinationAddress(m_serverAddress);
 	capsule.setSourceAddress(m_clientAddress);	
+	capsule.pack(serializedCapsule);
+	
 	
 	if (checkIfDS(serializedCapsule) == false)
 	{

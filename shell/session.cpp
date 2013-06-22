@@ -27,17 +27,19 @@ Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanA
 
 bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response)
 {
-	
-	std::cout << "Session::processDatagram(): got message " << std::to_string(sequenceNumber) << std::endl;;
+	FILE_LOG(logDEBUG4) << "Session::processDatagram(): checkpoint #1";
 	
 	San2::Utils::bytes currentM1;
 	San2::Utils::bytes currentM2;
+	DragonSRP::bytes currentSalt;
+	DragonSRP::bytes currentB;
 	
 	int ret;
 	
 	switch(m_state)
 	{
 		case SH_SRV_STATE_ZERO:
+			FILE_LOG(logDEBUG4) << "Session::processDatagram(): checkpoint #2";
 			resetState();
 
 			// parse A message
@@ -57,65 +59,65 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 					resetState();
 					return false;
 				}
-				
-				try
-				{
-					ver = srpserver.getVerificator(m_srpUsername, m_srpA);
-				}
-				catch (DragonSRP::UserNotFoundException e)
-				{
-					std::cout << "Session::processDatagram():UserNotFoundException: " << e.what() << std::endl;
+			}	
+		
+			FILE_LOG(logDEBUG4) << "Session::processDatagram(): checkpoint #3";
+		
+			try
+			{
+				ver = srpserver.getVerificator(m_srpUsername, m_srpA);
+			}
+			catch (DragonSRP::UserNotFoundException e)
+			{
+				std::cout << "Session::processDatagram():UserNotFoundException: " << e.what() << std::endl;
 					
-					ret = enc_construct_P_message_fail(response, SH_ERRORCODE_USERNOTFOUND);
-				
-					if (ret)
-					{
-						FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_construct_P_message_fail() #2 failed: " << ret;
-						resetState();
-						return false;
-					}
-					
-					resetState();
-					return true;
-				}
-				catch (DragonSRP::DsrpException e)
-				{
-					std::cout << "Session::processDatagram():DsrpException: " << e.what() << std::endl;
-					
-					ret = enc_construct_P_message_fail(response, SH_ERRORCODE_SRPERROR);
-					
-					if (ret)
-					{
-						FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_construct_P_message_fail() #3 failed: " << ret;
-						resetState();
-						return false;
-					}
-					
-					resetState();
-					return true;
-				}
-				
-				DragonSRP::bytes currentSalt = ver.getSalt();
-				DragonSRP::bytes currentB = ver.getB();
-				
-				ret = enc_construct_P_message_success(currentSalt, currentB, response);
-				
+				ret = enc_construct_P_message_fail(response, SH_ERRORCODE_USERNOTFOUND);
+			
 				if (ret)
 				{
-					FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_construct_P_message_fail() #4 failed: " << ret;
+					FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_construct_P_message_fail() #2 failed: " << ret;
 					resetState();
 					return false;
 				}
-				
-				// OK, change state
-				m_state = SH_SRV_STATE_ALPHA;
+					
+				resetState();
 				return true;
 			}
-			
-			// parsing ok
-			
-			
-			break; // end of STATE_ZERO
+			catch (DragonSRP::DsrpException e)
+			{
+				std::cout << "Session::processDatagram():DsrpException: " << e.what() << std::endl;
+					
+				ret = enc_construct_P_message_fail(response, SH_ERRORCODE_SRPERROR);
+					
+				if (ret)
+				{
+					FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_construct_P_message_fail() #3 failed: " << ret;
+					resetState();
+					return false;
+				}
+					
+				resetState();
+				return true;
+			}
+				
+			FILE_LOG(logDEBUG4) << "Session::processDatagram(): checkpoint #4";
+				
+			currentSalt = ver.getSalt();
+			currentB = ver.getB();
+				
+			ret = enc_construct_P_message_success(currentSalt, currentB, response);
+				
+			if (ret)
+			{
+				FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_construct_P_message_fail() #4 failed: " << ret;
+				resetState();
+				return false;
+			}
+				
+			// OK, change state				
+			m_state = SH_SRV_STATE_ALPHA;
+			FILE_LOG(logDEBUG4) << "Session::processDatagram(): STATE ---> APLHA";
+			return true;
 		case SH_SRV_STATE_ALPHA:
 			ret = enc_parse_B_message(request, currentM1);
 		
@@ -171,8 +173,11 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 				return false;
 			}
 			
-			// ok, change state
+			std::cout << "Shared session key: ";
+			San2::Utils::bytes::printBytes(m_sessionK);
+			std::cout << std::endl;
 			
+			// ok, change state
 			m_state = SH_SRV_STATE_BETA;
 			break;
 			

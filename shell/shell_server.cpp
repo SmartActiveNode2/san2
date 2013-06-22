@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
 		
 		printf("awaiting capsule\n");
 		SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 50000);
+		printf("i have got a capsule\n");
 		
 		San2::Utils::bytes data;
 		

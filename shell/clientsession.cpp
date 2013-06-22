@@ -114,6 +114,9 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 		return -10;
 	}
 	
+	std::cout << "Shared session key: ";
+	San2::Utils::bytes::printBytes(K);
+	std::cout << std::endl;
 	std::cout << "Authentication SUCCESSFUL." << std::endl;
 	return 0;
 }

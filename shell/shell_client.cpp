@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, serverAddress, SH_SRV_PORT, clientAddress, port);
 	
 	ClientSession cses(swtx);
-	cses.run("root", "smartactivenode");
+	cses.run("san", "smartactivenode");
 	
 	// go
 	
