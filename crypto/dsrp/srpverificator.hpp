@@ -15,6 +15,7 @@ namespace DragonSRP
 	class SrpVerificator
 	{
 		public:
+			SrpVerificator();
 			SrpVerificator(bytes userName, bytes userSalt, bytes B, bytes calculated_M1, bytes calculated_M2, bytes K);
 			bytes getSalt();
 			bytes getB();

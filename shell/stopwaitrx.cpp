@@ -69,6 +69,8 @@ bool StopWaitRx::incommingCapsule(San2::Network::CCapsule &rxcapsule)
 	San2::Utils::bytes response;
 	bool ret = processDatagram(rxseq, request, response);
 	
+	if (ret == false) return false; // do not pass invalid data
+	
 	// add sof and sequence number to form correct response
 	
 	San2::Utils::bytes dataOut;

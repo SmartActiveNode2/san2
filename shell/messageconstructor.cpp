@@ -138,7 +138,7 @@ int enc_testA()
 	return 0;
 }
 
-int enc_construct_P_message(unsigned char errorCode, const San2::Utils::bytes& salt, const San2::Utils::bytes& srpB, San2::Utils::bytes &out)
+int enc_construct_P_message_success(const San2::Utils::bytes& salt, const San2::Utils::bytes& srpB, San2::Utils::bytes &out)
 {
 	if (salt.size() < ENC_MIN_SALT) return -1;
 	if (salt.size() > ENC_MAX_SALT) return -2;
@@ -155,7 +155,7 @@ int enc_construct_P_message(unsigned char errorCode, const San2::Utils::bytes& s
 	
 	out[ENC_PROTOCOL_INDEX] = ENC_PROTOCOL_ID;
 	out[ENC_MSGTYPE_INDEX] = ENC_MSGTYPE_P;
-	out[ENC_ERROR_INDEX] = errorCode;
+	out[ENC_ERROR_INDEX] = 0;
 	out[ENC_ERROR_INDEX + 1] = (unsigned char) saltSize;
 	
 	San2::Utils::bytes::iterator iter = out.begin() + ENC_MIN_SERVER_HEADER + sizeof(SAN_UINT8);
@@ -166,15 +166,34 @@ int enc_construct_P_message(unsigned char errorCode, const San2::Utils::bytes& s
 	return 0;
 }
 
+int enc_construct_P_message_fail(San2::Utils::bytes &out, unsigned char errorCode)
+{
+	out.resize(ENC_MIN_SERVER_HEADER);	
+	out[ENC_PROTOCOL_INDEX] = ENC_PROTOCOL_ID;
+	out[ENC_MSGTYPE_INDEX] = ENC_MSGTYPE_P;
+	out[ENC_ERROR_INDEX] = errorCode;
+	return 0;
+}
+
 int enc_parse_P_message(const San2::Utils::bytes &messageIn, San2::Utils::bytes &salt, San2::Utils::bytes &srpB, unsigned char& errorCode)
 {
-	if (messageIn.size() < ENC_MIN_SERVER_HEADER + sizeof(SAN_UINT8) + ENC_MIN_SALT + ENC_MIN_SRPB) return -1;
+	if (messageIn.size() < ENC_MIN_SERVER_HEADER) return -1;
 	if (messageIn[ENC_PROTOCOL_INDEX] != ENC_PROTOCOL_ID) return -2;
 	if (messageIn[ENC_MSGTYPE_INDEX] != ENC_MSGTYPE_P) return -3;
 	errorCode = messageIn[ENC_ERROR_INDEX];
+	
+	if (errorCode != 0)
+	{ 
+		salt.clear();
+		srpB.clear();
+		return 0;
+	}
+	
+	if (messageIn.size() < ENC_MIN_SERVER_HEADER + sizeof(SAN_UINT8) + ENC_MIN_SALT + ENC_MIN_SRPB) return -4;
+	
 	unsigned char saltSize = messageIn[ENC_ERROR_INDEX+1];
 	
-	if (saltSize < ENC_MIN_SALT || saltSize > ENC_MAX_SALT) return -4;
+	if (saltSize < ENC_MIN_SALT || saltSize > ENC_MAX_SALT) return -5;
 	
 	San2::Utils::bytes::const_iterator iterSaltBegin = messageIn.cbegin() + ENC_MIN_SERVER_HEADER + sizeof(SAN_UINT8);
 	San2::Utils::bytes::const_iterator iterSaltEnd = messageIn.cbegin() + ENC_MIN_SERVER_HEADER + sizeof(SAN_UINT8) + saltSize;
@@ -186,18 +205,17 @@ int enc_parse_P_message(const San2::Utils::bytes &messageIn, San2::Utils::bytes 
 	srpB.resize(srpBSize);
 	std::copy(iterSaltEnd, messageIn.cend(), srpB.begin());
 	
-	if (salt.size() < ENC_MIN_SALT) return -5;
-	if (salt.size() > ENC_MAX_SALT) return -6;
+	if (salt.size() < ENC_MIN_SALT) return -6;
+	if (salt.size() > ENC_MAX_SALT) return -7;
 	
-	if (srpB.size() < ENC_MIN_SRPB) return -7;
-	if (srpB.size() > ENC_MAX_SRPB) return -8;
+	if (srpB.size() < ENC_MIN_SRPB) return -8;
+	if (srpB.size() > ENC_MAX_SRPB) return -9;
 	
 	return 0;	
 }
 
 int enc_testP()
 {
-	unsigned char errorCode = 23;
 	unsigned char errorCode2;
 	San2::Utils::bytes salt, salt2;
 	San2::Utils::bytes srpB, srpB2;
@@ -208,7 +226,7 @@ int enc_testP()
 	
 	int ret;
 	
-	ret = enc_construct_P_message(errorCode, salt, srpB, out);
+	ret = enc_construct_P_message_success(salt, srpB, out);
 	
 	if (ret)
 	{
@@ -224,7 +242,7 @@ int enc_testP()
 		return -2;
 	}
 	
-	if (errorCode != errorCode2)
+	if (errorCode2 != 0)
 	{
 		printf("enc_testP(): errorCode does not match FAILED\n");
 		return -3;
@@ -509,6 +527,14 @@ int enc_parse_R_message(const San2::Utils::bytes &messageIn, San2::Utils::bytes&
 	if (messageIn[ENC_MSGTYPE_INDEX] != ENC_MSGTYPE_R) return -3;
 	errorCode = messageIn[ENC_ERROR_INDEX];
 	
+	/*
+	if (errorCode != 0)
+	{ 
+		response.clear();
+		return 0;
+	}
+	*/
+	
 	std::size_t responseSize = messageIn.size() - ENC_MIN_SERVER_HEADER;
 	
 	response.resize(responseSize);
@@ -556,6 +582,9 @@ int enc_testR()
 	
 	if (response1 != response2)	
 	{
+		std::cout << "response1.size():" << response1.size() << std::endl;
+		std::cout << "response2.size():" << response2.size() << std::endl;
+		
 		printf("enc_testR(): response do not match FAILED\n");
 		return -3;
 	}

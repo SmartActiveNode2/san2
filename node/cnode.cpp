@@ -52,7 +52,7 @@ void CNode::run()
 		
 		
 		m_inputQueue.pop(&capsule, this, m_timePOP);
-		FILE_LOG(logDEBUG4) << "CNode::run()::pop(): gotCapsule ######";
+		FILE_LOG(logDEBUG4) << "CNode::run()::pop(): gotCapsule###; DS = " << capsule->getDS() << std::endl;
 		
 	
 		// check if we reached destination

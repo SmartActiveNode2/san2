@@ -17,6 +17,8 @@
 
 #include "messageconstructor.hpp"
 
+#include "clientsession.hpp"
+
 #define PIPENAME "/tmp/sanode1api"
 #define SH_SRV_PORT 2201
 #define SH_SRV_ADDRESS "000000000000000000000000000000000000000000000000000000000000FF21"
@@ -25,6 +27,7 @@
 
 int main(int argc, char *argv[])
 {
+	/*
 	if (enc_testA()) printf("enc_testA FAIL\n");
 	else printf("enc_testA success\n");
 	
@@ -45,6 +48,7 @@ int main(int argc, char *argv[])
 	
 	if (enc_testD()) printf("enc_testD FAIL\n");
 	else printf("enc_testD success\n");
+	*/
 	
 	FILELog::ReportingLevel() = logDEBUG4;
 	
@@ -94,11 +98,12 @@ int main(int argc, char *argv[])
 	
 	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, serverAddress, SH_SRV_PORT, clientAddress, port);
 	
-	//ClientSession cses(swtx);
-	//cses.run();
+	ClientSession cses(swtx);
+	cses.run("root", "smartactivenode");
 	
 	// go
 	
+	/*
 	for (int k = 0; k < 10; k++)
 	{
 		payload.append("Ahoj, jak se mas?");
@@ -110,7 +115,8 @@ int main(int argc, char *argv[])
 		San2::Utils::bytes::printBytesAsString(response);
 		std::cout << std::endl;
 	}
-	
+	*/
+	 
 	return 0;
 }
 

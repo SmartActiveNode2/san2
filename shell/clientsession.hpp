@@ -22,10 +22,7 @@
 #include "crypto/ossl/osslmathimpl.hpp"
 #include "crypto/ossl/osslrandom.hpp"
 
-#define SH_CLSESSION_STATE_ONE 1
-
-// must match the server one
-#define SH_CLIENT_SRP_KEYPAIR 1024
+#include "protoconst.hpp"
 
 class ClientSession
 {
@@ -35,7 +32,6 @@ public:
 	
 	bool processDecryptedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response);
 private:
-	int m_state;
 	StopWaitTx &m_swtx;
 	
 	DragonSRP::OsslSha1 hash;

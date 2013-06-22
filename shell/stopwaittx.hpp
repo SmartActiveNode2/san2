@@ -20,6 +20,7 @@ public:
 private:
 	//bool sendDatagram(San2::Utils::bytes& data);
 	bool awaitDatagram(San2::Utils::bytes& data, unsigned int maxWaitMsec);
+	bool checkIfDS(const San2::Utils::bytes &serializedCapsule);
 
 	unsigned int m_repetitions;
 	unsigned int m_timeout;

@@ -1,6 +1,7 @@
 
 #include "stopwaittx.hpp"
 #include "utils/cdatapack.hpp"
+#include <stdio.h>
 
 StopWaitTx::StopWaitTx(unsigned int repetitions, unsigned int timeout, San2::Api::CNodeConnector &connector, San2::Network::SanAddress serverAddress, SAN_UINT16 serverPort, San2::Network::SanAddress clientAddress, SAN_UINT16 clientPort) :
 	m_repetitions(repetitions),
@@ -71,14 +72,29 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 	San2::Network::CCapsule capsule;
 	San2::Utils::bytes serializedCapsule;
 	capsule.setDSdata(m_serverPort, m_clientPort, data);
+	
+	if (capsule.getDS() == true) printf("original DS (0) true\n");
+	else printf("original DS (0) false\n");
+	
 	capsule.setDestinationAddress(m_serverAddress);
-	capsule.setSourceAddress(m_clientAddress);
-	capsule.pack(serializedCapsule);
+	capsule.setSourceAddress(m_clientAddress);	
+	
+	if (checkIfDS(serializedCapsule) == false)
+	{
+		printf("### checkIfDS FAILED !!!!!!!!!!\n");
+	}
 	
 	unsigned int tries = m_repetitions;
 	
 	while(tries > 0)
 	{
+		/*
+		if (checkIfDS(serializedCapsule) == false)
+		{
+			printf("### checkIfDS FAILED !!!!!!!!!!\n");
+		}
+		* */
+		
 		if (m_connector.sendCapsule(serializedCapsule) == false)
 		{
 			printf("StopWait::sendDatagram failed\n");
@@ -104,7 +120,7 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 			printf("StopWait: incomming sequence number missmatch\n");
 			continue;
 		}
-		
+		San2::Utils::bytes data;
 		// success
 		response.erase(response.begin(), response.begin() + 9); // trim header
 		m_expectedSeqNum++;
@@ -137,4 +153,37 @@ SAN_UINT16 StopWaitTx::getClientPort()
 SAN_UINT64 StopWaitTx::getNextSequenceNumber()
 {
 	return m_expectedSeqNum;
+}
+
+bool StopWaitTx::checkIfDS(const San2::Utils::bytes &serializedCapsule)
+{	
+	bool result = true;
+	
+	San2::Network::CCapsule capsule;
+	bool ret = capsule.unpack(serializedCapsule);
+	
+	if (ret == false)
+	{
+		printf("@@@ StopWaitTx::checkIfDS: UNPACK FAILED\n");
+		result = false;
+	}
+
+	SAN_UINT16 dstport, srcport;	
+	ret = capsule.getPortsDS(dstport, srcport);
+	
+	if (ret == false)
+	{
+		printf("@@@ StopWaitTx::checkIfDS: getPortsDS() FAILED\n");
+		result = false;
+	}
+	
+	ret = capsule.getDS();
+
+	if (ret == false)
+	{
+		printf("@@@ StopWaitTx::checkIfDS: getDS() FAILED\n");
+		result = false;
+	}
+
+	return result;
 }

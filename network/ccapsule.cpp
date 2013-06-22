@@ -27,7 +27,7 @@ void CCapsule::setDX(bool dx)
 
 void CCapsule::setDS(bool ds)
 {
-	m_flagDX = ds;
+	m_flagDS = ds;
 }					
 	
 bool CCapsule::getDX()
