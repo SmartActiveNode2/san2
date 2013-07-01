@@ -33,7 +33,7 @@ int sessionKey[128]  =   {0xFE, 0x5B, 0x4A, 0xCC, 0xFE, 0x5B, 0x4A, 0xCC,
 						  0xFE, 0x5B, 0x4A, 0xCC, 0xFE, 0x5B, 0x4A, 0xCC,
 						  0xFE, 0x5B, 0x4A, 0xCC, 0xFE, 0x5B, 0x4A, 0xCC};
 
-unsigned char data[] = "hello";
+unsigned char data[] = "In some ways, taxidermy can be viewed as a precursor to photography — a static, visual representation of life. And while the process itself is fascinating as a morbid half-resurrection, a bridge between the living and the dead, it’s the necromancers themselves who are the subject of photographer Mike McGregor’s series Preserve.";
 
 void printVar(const char *szVarname, const unsigned char *data, unsigned int len)
 {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 		
 		bSessionKey.assign(sessionKey, sessionKey + 128);
 		
-		SimpleKeyDerivator skd(bSessionKey, 32, 7, 20);
+		SimpleKeyDerivator skd(bSessionKey, 32, 6, 20);
 		
 		// printf("macKeySize: %d\n", skd.getClientMacKey().size());
 		

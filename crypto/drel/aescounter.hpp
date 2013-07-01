@@ -3,9 +3,9 @@
 #define DREL_AESCOUNTER_HPP
 
 #define DREL_AES_BLOCKLEN_BYTES 16
-#define DREL_AES_SALTLEN 7
-#define DREL_AES_IVLEN 8
-#define DREL_AES_PALEN 1
+#define DREL_AES_SALTLEN 6 // constant, derived form SRP session key at construction
+#define DREL_AES_IVLEN 8 // std::uint64_t
+#define DREL_AES_PALEN 2 // std::uint16_t
 
 #define DREL_AES_KEYLEN 32
 
