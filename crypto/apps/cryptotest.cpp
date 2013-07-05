@@ -43,6 +43,91 @@ void printVar(const char *szVarname, const unsigned char *data, unsigned int len
 	printf("\n");
 }
 
+int test_crypto(std::uint64_t seqNum, unsigned char *dataIn, std::size_t dataInLen, DatagramEncryptor &enc, DatagramDecryptor &dec) // throws
+{
+	if (dataInLen > MAX_DATA_LEN)
+	{
+		printf("data too big\n");
+		return -1;
+	}
+	
+	unsigned int encpacketLen;
+	unsigned char encpacket[enc.getOverheadLen() + MAX_DATA_LEN];
+	enc.encryptAndAuthenticate((unsigned char *)dataIn, dataInLen, seqNum, encpacket, &encpacketLen);
+	
+	// Decrypt
+	unsigned int decpacketLen;
+	unsigned char decpacket[dec.getOverheadLen() + MAX_DATA_LEN];
+		
+	dec.decryptAndVerifyMac(encpacket, encpacketLen, decpacket, &decpacketLen, seqNum);
+		
+	if (dataInLen != decpacketLen)
+	{
+		printf("enc/dec fail: different data length\n");
+		throw DragonSRP::DsrpException("Cryptotest: Failed");
+		return -1;
+	}
+	
+	std::cout << "encpacket: ";
+	DragonSRP::Conversion::printHex(encpacket, encpacketLen);
+	std::cout << std::endl;
+		
+	// replace with memcmp	
+	for (unsigned int i = 0; i < dataInLen; i++)
+	{
+	   	if (data[i] != decpacket[i])
+		{
+			throw DragonSRP::DsrpException("Cryptotest: enc/dec fail: decrypted data does not match original plaintext data");
+			printf("enc/dec fail: decrypted data does not match original plaintext data\n");
+			return -1;
+		}
+	}
+		
+	printf("decrypted text: %s\n", decpacket); // should check term zero;
+	printf("finished\n");
+}
+
+int main(int argc, char *argv[])
+{	
+	bytes bSessionKey;	
+	bSessionKey.assign(sessionKey, sessionKey + 128);
+	SimpleKeyDerivator skd(bSessionKey, 32, 6, 20);
+	DatagramEncryptor enc(skd.getClientEncryptionKey(), skd.getClientIV(), skd.getClientMacKey());
+	DatagramDecryptor dec(skd.getClientEncryptionKey(), skd.getClientIV(), skd.getClientMacKey());
+	
+	try 
+	{
+		test_crypto(1, data, sizeof(data), enc, dec);
+		test_crypto(2, data, sizeof(data), enc, dec);
+		test_crypto(3, data, sizeof(data), enc, dec);
+		
+		test_crypto(24653, data, sizeof(data), enc, dec);
+		test_crypto(10000000000, data, sizeof(data), enc, dec);
+	}
+	catch (DsrpException &e)
+	{
+		cout << "DsrpException: " << e.what() << endl;
+		return -1;
+	}
+	catch (AesException &e)
+	{
+		cout << "AESException: " << e.what() << endl;
+		return -1;
+	}
+	catch (exception& e)
+	{
+		cout << e.what() << endl;
+	}
+	catch (...)
+	{
+		cout << "unknown exception occured" << endl;
+		return -1;
+	}
+	
+	printf("enc/dec seems ok\n");
+}
+
+/*
 int main(int argc, char *argv[])
 {	
 	std::uint64_t seqNum = 1;
@@ -131,3 +216,4 @@ int main(int argc, char *argv[])
 	
 	printf("enc/dec seems ok\n");
 }
+* */

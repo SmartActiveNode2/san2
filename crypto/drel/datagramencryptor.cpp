@@ -29,30 +29,19 @@ namespace DragonSRP
 	// Assumes sizeof(out) >= plaintextLen + getOverheadLen()   [MTU + OVERHEAD]
 	void DatagramEncryptor::encryptAndAuthenticate(const unsigned char *plaintext, unsigned int plaintextLen, std::uint64_t sequenceNumber, unsigned char *out, unsigned int *outLen) // throws
 	{	
-		std::cout << " DatagramEncryptor::encryptAndAuthenticate: parameter sequenceNumber: " << sequenceNumber << std::endl;
-		
-		// encrpyt plaintext
-		aesCtr.encrypt(plaintext, out, plaintextLen, sequenceNumber);
+		aesCtr.encrypt(plaintext, out, plaintextLen, sequenceNumber); // encrpyt plaintext
 		
 		// append sequence number to plainetxt
 		std::uint64_t beSequencenumber = San2::Utils::Endian::san_u_htobe64(sequenceNumber);
-		std::cout << "DatagramEncryptor::encryptAndAuthenticate: beSequencenumber: " << beSequencenumber << std::endl;
 		memcpy(out + plaintextLen, &beSequencenumber, sizeof(std::uint64_t)); // set SEQ
 		
 		// calculate digest	
 		bytes digest;
 		digest.resize(hmac.outputLen());
-		
-		std::cout << "Encrypt: toHMAC: ";
-		Conversion::printHex(out, plaintextLen + sizeof(std::uint64_t));
-		std::cout << std::endl;
-		
 		hmac.hmac(out, plaintextLen + sizeof(std::uint64_t), &digest[0]);
 			
 		// append just digest (overwrite sequence number)
 		memcpy(out + plaintextLen, &digest[0], DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // could be avoided (optim.)
-	
-		
 		*outLen = plaintextLen + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
 	}
 

@@ -26,42 +26,18 @@ namespace DragonSRP
 	// Assumes that sizeof(dataOut) >= inLen + getOverheadLen() !!!
 	void DatagramDecryptor::decryptAndVerifyMac(const unsigned char *dataIn, unsigned int dataInLen, unsigned char *dataOut, unsigned int *dataOutLen, std::uint64_t expectedSequenceNumber)
 	{			
-		std::cout << " DatagramDecryptor::decryptAndVerifyMac: parameter expectedSequenceNumber: " << expectedSequenceNumber << std::endl;
-		
 		if (dataInLen <= DSRP_ENCPARAM_TRUNCDIGEST_SIZE) throw DsrpException("Malformed packet decryption attempt");
-		
-		std::cout << "Decrypt: dataInLen: " << dataInLen << std::endl;
-		std::cout << "Decrypt: dataIn: ";
-		Conversion::printHex(dataIn, dataInLen);
-		std::cout << std::endl;
 		
 		// First we need to verify the digest so we first compute the correct digest an then compare it
 		memcpy(dataOut, dataIn, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // dataOut = EncdataIn - digest;
-		
-		std::cout << "DatagramDecryptor::decryptAndVerifyMac: parameter expectedSequenceNumber###2: " << expectedSequenceNumber << std::endl;
-		
 		std::uint64_t beSequencenumber = San2::Utils::Endian::san_u_htobe64(expectedSequenceNumber);
-		std::cout << "DatagramDecryptor::decryptAndVerifyMac: beSequencenumber: " << beSequencenumber << std::endl;
 		memcpy(dataOut + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, &beSequencenumber, sizeof(std::uint64_t)); // append sequence number to dataOut
 
 		// Compute the real digest
 		bytes correctDigest;
 		correctDigest.resize(hmac.outputLen());		
-		
-		std::cout << "Decrypt: toHMAC: ";
-		Conversion::printHex(dataOut, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t));
-		std::cout << std::endl;
-
-		
+				
 		hmac.hmac(dataOut, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t), &correctDigest[0]);
-
-		std::cout << "Decrypt: CorrectDigest: ";
-		Conversion::printBytes(correctDigest);
-		std::cout << std::endl;
-		
-		std::cout << "Decrypt: ReceivedDigest: ";
-		Conversion::printHex(dataIn + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, DSRP_ENCPARAM_TRUNCDIGEST_SIZE);
-		std::cout << std::endl;
 
 		// Compare digests
 		if (memcmp(&correctDigest[0], dataIn + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, DSRP_ENCPARAM_TRUNCDIGEST_SIZE)) throw DsrpException("Mac signature inccorect. Possible attack detected.");
