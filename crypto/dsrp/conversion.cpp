@@ -99,12 +99,12 @@ namespace DragonSRP
 	  return result;
 	}
 
-	/*
-	void Conversion::print_hex(unsigned char *array, int len)
+	
+	void Conversion::printHex(const unsigned char *array, int len)
 	{
 	  for (int i = 0; i < len; i++) printf("%.2X", array[i]);
 	}
-	*/
+	
 
 	bytes Conversion::hexstring2bytes(const char *in)
 	{

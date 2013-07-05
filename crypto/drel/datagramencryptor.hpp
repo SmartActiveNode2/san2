@@ -2,6 +2,8 @@
 #ifndef DREL_DATAGRAMENCRYPTOR_HPP
 #define DREL_DATAGRAMENCRYPTOR_HPP
 
+#include <cstdint>
+
 #ifdef LINUX
 	#include <sys/types.h>
 	#include <inttypes.h>
@@ -32,7 +34,7 @@ namespace DragonSRP
 	{	
 		public:
 			DatagramEncryptor(const bytes &encryptionKey, const bytes &IV, const bytes &macKey);
-			void encryptAndAuthenticate(const unsigned char *plaintext, unsigned int plaintextLen, unsigned char *out, unsigned int *outLen); // throws
+			void encryptAndAuthenticate(const unsigned char *plaintext, unsigned int plaintextLen, std::uint64_t sequenceNumber, unsigned char *out, unsigned int *outLen); // throws
 			unsigned int getOverheadLen();
 			
 		private:	

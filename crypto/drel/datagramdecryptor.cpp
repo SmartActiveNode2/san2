@@ -1,8 +1,11 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
 
 #include "datagramdecryptor.hpp"
+#include "../dsrp/conversion.hpp"
+#include "utils/platform/basictypes.hpp"
 
 namespace DragonSRP
 {
@@ -17,41 +20,58 @@ namespace DragonSRP
 	
 	unsigned int DatagramDecryptor::getOverheadLen()
 	{
-		return DSRP_ENCPARAM_SEQ_SIZE + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
+		return sizeof(std::uint64_t) + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
 	}
 	
-	// Assumes that sizeof(data) >= inLen - getOverheadLen() 
-	void DatagramDecryptor::decryptAndVerifyMac(const unsigned char *in, unsigned int inLen, unsigned char *data, unsigned int *dataLen, uint64_t *seqNum)
+	// Assumes that sizeof(dataOut) >= inLen + getOverheadLen() !!!
+	void DatagramDecryptor::decryptAndVerifyMac(const unsigned char *dataIn, unsigned int dataInLen, unsigned char *dataOut, unsigned int *dataOutLen, std::uint64_t expectedSequenceNumber)
 	{			
-		if (inLen <= DSRP_ENCPARAM_SEQ_SIZE + DSRP_ENCPARAM_TRUNCDIGEST_SIZE) throw DsrpException("Malformed packet decryption attempt");
+		std::cout << " DatagramDecryptor::decryptAndVerifyMac: parameter expectedSequenceNumber: " << expectedSequenceNumber << std::endl;
+		
+		if (dataInLen <= DSRP_ENCPARAM_TRUNCDIGEST_SIZE) throw DsrpException("Malformed packet decryption attempt");
+		
+		std::cout << "Decrypt: dataInLen: " << dataInLen << std::endl;
+		std::cout << "Decrypt: dataIn: ";
+		Conversion::printHex(dataIn, dataInLen);
+		std::cout << std::endl;
 		
 		// First we need to verify the digest so we first compute the correct digest an then compare it
-
-		#ifdef WINDOWS
-			bytes correctDigest;
-			correctDigest.resize(hmac.outputLen());
-		#endif
-
-		#ifdef LINUX	
-			unsigned char correctDigest[hmac.outputLen()];
-			hmac.hmac(in, inLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, correctDigest);
-		#endif
+		memcpy(dataOut, dataIn, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // dataOut = EncdataIn - digest;
 		
-		// TODO: ===> memcmp()!!!!!!!
-		// Compare
+		std::cout << "DatagramDecryptor::decryptAndVerifyMac: parameter expectedSequenceNumber###2: " << expectedSequenceNumber << std::endl;
+		
+		std::uint64_t beSequencenumber = San2::Utils::Endian::san_u_htobe64(expectedSequenceNumber);
+		std::cout << "DatagramDecryptor::decryptAndVerifyMac: beSequencenumber: " << beSequencenumber << std::endl;
+		memcpy(dataOut + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, &beSequencenumber, sizeof(std::uint64_t)); // append sequence number to dataOut
 
-		for (int i = 0; i < DSRP_ENCPARAM_TRUNCDIGEST_SIZE; i++)
-		{
-			if (correctDigest[i] != in[(inLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE) + i]) throw DsrpException("Mac signature inccorect. Possible attack detected.");
-		}
+		// Compute the real digest
+		bytes correctDigest;
+		correctDigest.resize(hmac.outputLen());		
+		
+		std::cout << "Decrypt: toHMAC: ";
+		Conversion::printHex(dataOut, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t));
+		std::cout << std::endl;
+
+		
+		hmac.hmac(dataOut, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t), &correctDigest[0]);
+
+		std::cout << "Decrypt: CorrectDigest: ";
+		Conversion::printBytes(correctDigest);
+		std::cout << std::endl;
+		
+		std::cout << "Decrypt: ReceivedDigest: ";
+		Conversion::printHex(dataIn + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, DSRP_ENCPARAM_TRUNCDIGEST_SIZE);
+		std::cout << std::endl;
+
+		// Compare digests
+		if (memcmp(&correctDigest[0], dataIn + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, DSRP_ENCPARAM_TRUNCDIGEST_SIZE)) throw DsrpException("Mac signature inccorect. Possible attack detected.");
 				
-		*dataLen = inLen - (DSRP_ENCPARAM_SEQ_SIZE + DSRP_ENCPARAM_TRUNCDIGEST_SIZE);
+		// Set corret output length
+		*dataOutLen = dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
 		
-		memcpy(seqNum, in, DSRP_ENCPARAM_SEQ_SIZE); // Extract seqNum
-		
-		// Finally decrypt data	
-		// in -----decrypt-----> data
-		aesCtr.encrypt(&in[DSRP_ENCPARAM_SEQ_SIZE], data, *dataLen); // Possible optim. direct to &out[lenSize + seqSize] , // throws on error
+		// Finally decrypt data	 (dataIn -----decrypt-----> dataOut)
+		// Note that we reused the DataOut to save memory
+		aesCtr.encrypt(dataIn, dataOut, *dataOutLen, expectedSequenceNumber); // throws on error
 	}
 
 

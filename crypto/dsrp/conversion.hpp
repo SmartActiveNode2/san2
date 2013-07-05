@@ -30,6 +30,7 @@ namespace DragonSRP
 			static bytes hexstring2bytes(const char *in); // throws ConversionException
 			
 			static void printBytes(const bytes &in); // prints to stdout in hex
+			static void printHex(const unsigned char *array, int len);
 			
 			static bytes readBytesHex();
 			static bytes readBytesHexForce(const std::string &message);

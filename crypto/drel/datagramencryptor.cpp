@@ -1,9 +1,12 @@
 
 #include <string.h>
-
 #include <stdio.h>
+#include <iostream>
 
 #include "datagramencryptor.hpp"
+#include "../dsrp/conversion.hpp"
+#include "utils/platform/basictypes.hpp"
+
 
 // check if key persist aes_encrypt_key; !!!
 
@@ -20,38 +23,37 @@ namespace DragonSRP
 	
 	unsigned int DatagramEncryptor::getOverheadLen()
 	{
-		return DSRP_ENCPARAM_SEQ_SIZE + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
+		return sizeof(std::uint64_t) + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
 	}
 	
 	// Assumes sizeof(out) >= plaintextLen + getOverheadLen()   [MTU + OVERHEAD]
-	void DatagramEncryptor::encryptAndAuthenticate(const unsigned char *plaintext, unsigned int plaintextLen, unsigned char *out, unsigned int *outLen) // throws
-	{
-		uint64_t seqNum = aesCtr.getCurrentIV() + 1;
+	void DatagramEncryptor::encryptAndAuthenticate(const unsigned char *plaintext, unsigned int plaintextLen, std::uint64_t sequenceNumber, unsigned char *out, unsigned int *outLen) // throws
+	{	
+		std::cout << " DatagramEncryptor::encryptAndAuthenticate: parameter sequenceNumber: " << sequenceNumber << std::endl;
 		
-		memcpy(out, &seqNum, DSRP_ENCPARAM_SEQ_SIZE); // set SEQ
+		// encrpyt plaintext
+		aesCtr.encrypt(plaintext, out, plaintextLen, sequenceNumber);
 		
-		// SET ENC(DATA)
-		// in -----encrypt-----> encdata
-		// ---> seqNum
-		aesCtr.encrypt(plaintext, out + DSRP_ENCPARAM_SEQ_SIZE , plaintextLen); // Possible optim. direct to &out[lenSize + seqSize]
+		// append sequence number to plainetxt
+		std::uint64_t beSequencenumber = San2::Utils::Endian::san_u_htobe64(sequenceNumber);
+		std::cout << "DatagramEncryptor::encryptAndAuthenticate: beSequencenumber: " << beSequencenumber << std::endl;
+		memcpy(out + plaintextLen, &beSequencenumber, sizeof(std::uint64_t)); // set SEQ
 		
-		// SET DIGEST
-		// Add trunc digest
-
-		#ifdef WINDOWS
-			bytes digest;
-			digest.resize(hmac.outputLen());
-			hmac.hmac(out, DSRP_ENCPARAM_SEQ_SIZE + plaintextLen, &digest[0]);
-			memcpy(out + DSRP_ENCPARAM_SEQ_SIZE + plaintextLen, &digest[0], DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // could be avoided (optim.)
-		#endif
-
-		#ifdef LINUX
-			unsigned char digest[hmac.outputLen()];
-			hmac.hmac(out, DSRP_ENCPARAM_SEQ_SIZE + plaintextLen, digest);
-			memcpy(out + DSRP_ENCPARAM_SEQ_SIZE + plaintextLen, digest, DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // could be avoided (optim.)
-		#endif
+		// calculate digest	
+		bytes digest;
+		digest.resize(hmac.outputLen());
 		
-		*outLen = plaintextLen + DSRP_ENCPARAM_SEQ_SIZE + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
+		std::cout << "Encrypt: toHMAC: ";
+		Conversion::printHex(out, plaintextLen + sizeof(std::uint64_t));
+		std::cout << std::endl;
+		
+		hmac.hmac(out, plaintextLen + sizeof(std::uint64_t), &digest[0]);
+			
+		// append just digest (overwrite sequence number)
+		memcpy(out + plaintextLen, &digest[0], DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // could be avoided (optim.)
+	
+		
+		*outLen = plaintextLen + DSRP_ENCPARAM_TRUNCDIGEST_SIZE;
 	}
 
 

@@ -10,6 +10,7 @@
 #include "../drel/datagramdecryptor.hpp"
 #include "../drel/simplekeyderivator.hpp"
 #include "../drel/aesexception.hpp"
+#include "../dsrp/conversion.hpp"
 
 #define MAX_DATA_LEN 1500
 
@@ -44,6 +45,8 @@ void printVar(const char *szVarname, const unsigned char *data, unsigned int len
 
 int main(int argc, char *argv[])
 {	
+	std::uint64_t seqNum = 1;
+	
 	try {
 		bytes bSessionKey;
 		
@@ -70,7 +73,14 @@ int main(int argc, char *argv[])
 		unsigned int encpacketLen;
 		unsigned char encpacket[enc.getOverheadLen() + MAX_DATA_LEN];
 
-		enc.encryptAndAuthenticate((unsigned char *)data, dataLen, encpacket, &encpacketLen);
+		std::cout << "dataLen: " << dataLen << std::endl;
+		enc.encryptAndAuthenticate((unsigned char *)data, dataLen, seqNum, encpacket, &encpacketLen);
+		std::cout << "encpacketLen: " << encpacketLen << std::endl;
+		
+		
+		std::cout << "Cryptotest: encpacket: ";
+		Conversion::printHex(encpacket, encpacketLen);
+		std::cout << std::endl;
 		
 		printf("encpacketLen: %d\n", encpacketLen);
 		printVar("encpacket", encpacket, encpacketLen);
@@ -78,9 +88,8 @@ int main(int argc, char *argv[])
 		// Decrypt
 		unsigned int decpacketLen;
 		unsigned char decpacket[dec.getOverheadLen() + MAX_DATA_LEN];
-		uint64_t decseqnum;
 		
-		dec.decryptAndVerifyMac(encpacket, encpacketLen, decpacket, &decpacketLen, &decseqnum);
+		dec.decryptAndVerifyMac(encpacket, encpacketLen, decpacket, &decpacketLen, seqNum);
 		
 		if (dataLen != decpacketLen)
 		{

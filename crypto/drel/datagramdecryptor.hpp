@@ -31,7 +31,7 @@ namespace DragonSRP
 	{	
 		public:
 			DatagramDecryptor(const bytes &encryptionKey, const bytes &IV, const bytes &macKey);
-			void decryptAndVerifyMac(const unsigned char *in, unsigned int inLen, unsigned char *data, unsigned int *dataLen, uint64_t *seqNum); // throws
+			void decryptAndVerifyMac(const unsigned char *dataIn, unsigned int dataInLen, unsigned char *dataOut, unsigned int *dataOutLen, std::uint64_t expectedSequenceNumber); // throws
 			unsigned int getOverheadLen();
 
 		private:	

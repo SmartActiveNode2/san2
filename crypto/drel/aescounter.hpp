@@ -2,15 +2,10 @@
 #ifndef DREL_AESCOUNTER_HPP
 #define DREL_AESCOUNTER_HPP
 
-#define DREL_AES_BLOCKLEN_BYTES 16
-#define DREL_AES_SALTLEN 6 // constant, derived form SRP session key at construction
-#define DREL_AES_IVLEN 8 // std::uint64_t
-#define DREL_AES_PALEN 2 // std::uint16_t
-
-#define DREL_AES_KEYLEN 32
-
-// ( (DREL_AES_KEYLEN * DREL_AES_BLOCKLEN_BYTES) - 1)
-#define DREL_AES_MAXPACKETOCT 4095
+#define DREL_AES_BLOCKLEN_BYTES 16 // AES blocksize (constant, do not change)
+#define DREL_AESCOUNTER_SECRETIVLEN 6 // constant, derived form SRP session key at construction
+#define DREL_AES_KEYLEN 32 // 256 bit AES key
+#define DREL_AES_MAXPACKETOCT 65534 // maximum size of encrypted payload
 
 #include <cstdint>
 
@@ -29,30 +24,14 @@ namespace DragonSRP
 	class AesCounter
 	{
 		private:
+			unsigned char mSecretIV[DREL_AESCOUNTER_SECRETIVLEN]; // derived form SRP session key
+			unsigned char mKey[DREL_AES_KEYLEN]; // AES256 key
+			aes_encrypt_ctx aes_ctx[1]; // AES state (internal)
+			unsigned char ctr_buf[DREL_AES_BLOCKLEN_BYTES]; // counter buffer
 			
-			// Secret salt
-			unsigned char mSalt[DREL_AES_SALTLEN];
-		
-			//  Incremented initialization vector
-			//  starts with one
-			//  owerflow check needed
-
-			std::uint64_t mIv;
-			
-			// Packet counter
-			// starts with 1
-			// owerflow check needed - implemented in aes_custom_inc
-			
-			// AES256 key
-			unsigned char mKey[DREL_AES_KEYLEN];
-			
-			aes_encrypt_ctx aes_ctx[1];
-			unsigned char ctr_buf[DREL_AES_BLOCKLEN_BYTES];
-		
 		public:
-			AesCounter(const unsigned char *salt, int saltlen, const unsigned char *key, int keylen);
-			void encrypt(const unsigned char *datain, unsigned char *dataout, int len);
-			uint64_t getCurrentIV();
+			AesCounter(const unsigned char *secretIV, int secretIVlen, const unsigned char *key, int keylen);
+			void encrypt(const unsigned char *datain, unsigned char *dataout, int len, std::uint64_t sequenceNumber);
 	};
 }
 #endif
