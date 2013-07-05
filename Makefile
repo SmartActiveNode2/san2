@@ -131,6 +131,7 @@ OBJ-MAC  =  crypto/mac/hmac.o \
 OBJ-DREL =  crypto/drel/aescounter.o \
             crypto/drel/aesexception.o \
             crypto/drel/simplekeyderivator.o \
+            crypto/drel/hashkeyderivator.o \
             crypto/drel/datagramencryptor.o \
             crypto/drel/datagramdecryptor.o
 				
@@ -272,11 +273,11 @@ apptx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API
 apprx: utils cppl tcp stream comm rpc network interfaces $(OBJS-NODE) $(OBJS-API) $(OBJS-APPTX) node/cportmap.o node/cnode.o 
 	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-APPTX) $(OBJS-API) node/cportmap.o -o ./apptx $(LIBS) $(LDFLAGS)
 
-shellserver: utils cppl tcp stream comm rpc network interfaces dsrp $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLSERVER) $(OBJS-SHELL) $(OBJ-OSSL) node/cportmap.o node/cnode.o 
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLSERVER) $(OBJS-API) $(OBJS-SHELL) $(OBJ-DSRP) $(OBJ-OSSL) node/cportmap.o -o ./shell_server $(LIBS) $(LDFLAGS) $(LIBS-OSSL)
+shellserver: utils cppl tcp stream comm rpc network interfaces dsrp drel $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLSERVER) $(OBJS-SHELL) $(OBJ-OSSL) $(OBJ-AES) $(OBJ-MAC) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLSERVER) $(OBJS-API) $(OBJS-SHELL) $(OBJ-DSRP) $(OBJ-DREL) $(OBJ-OSSL) $(OBJ-AES) $(OBJ-MAC) node/cportmap.o -o ./shell_server $(LIBS) $(LDFLAGS) $(LIBS-OSSL)
 
-shellclient: utils cppl tcp stream comm rpc network interfaces dsrp $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLCLIENT) $(OBJS-SHELL) $(OBJ-OSSL) node/cportmap.o node/cnode.o 
-	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLCLIENT) $(OBJS-API) $(OBJS-SHELL) $(OBJ-DSRP) $(OBJ-OSSL) node/cportmap.o -o ./shell_client $(LIBS) $(LDFLAGS) $(LIBS-OSSL)
+shellclient: utils cppl tcp stream comm rpc network interfaces dsrp drel $(OBJS-NODE) $(OBJS-API) $(OBJS-SHELLCLIENT) $(OBJS-SHELL) $(OBJ-OSSL) $(OBJ-AES) $(OBJ-MAC) node/cportmap.o node/cnode.o 
+	$(CCC) $(OBJS-UTILS) $(OBJS-CPPL)  $(OBJS-TCP) $(OBJS-STREAM) $(OBJS-COMM) $(OBJS-RPC) $(OBJS-NETWORK) $(OBJS-INTERFACES) node/cnode.o $(OBJS-SHELLCLIENT) $(OBJS-API) $(OBJS-SHELL) $(OBJ-DSRP) $(OBJ-DREL) $(OBJ-OSSL) $(OBJ-AES) $(OBJ-MAC) node/cportmap.o -o ./shell_client $(LIBS) $(LDFLAGS) $(LIBS-OSSL)
 
 
 #tells how to make an *.o object file from an *.c file

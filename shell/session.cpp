@@ -5,12 +5,23 @@
 #include "utils/log.h"
 #include "messageconstructor.hpp"
 
+#include "crypto/dsrp/common.hpp"
+#include "crypto/dsrp/dsrpexception.hpp"
+
+#include "crypto/drel/hashkeyderivator.hpp"
+#include "crypto/drel/aesexception.hpp"
+#include "crypto/dsrp/conversion.hpp"
+
+#include "constants.hpp"
+
 Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort) :
 	StopWaitRx(connector, serverAddress, serverPort, clientAddress, clientPort),
 	m_state(SH_SRV_STATE_ZERO),
 	ng(DragonSRP::Ng::predefined(SH_SRP_KEYPAIR)),
 	math(hash, ng),
-	srpserver(lookup, math, random, true)
+	srpserver(lookup, math, random, true),
+	m_enc(NULL),
+	m_dec(NULL)
 {
 	// setup test user in the memory database
 	DragonSRP::bytes username = DragonSRP::Conversion::string2bytes(SH_TESTSRP_USERNAME);
@@ -33,6 +44,7 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 	San2::Utils::bytes currentM2;
 	DragonSRP::bytes currentSalt;
 	DragonSRP::bytes currentB;
+	San2::Utils::bytes encrpytedMessage;
 	
 	int ret;
 	
@@ -183,17 +195,66 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 			
 		case SH_SRV_STATE_BETA:
 			std::cout << "Yes I am in BETA state :)" << std::endl;
+			
+			ret = enc_parse_C_message(request, encrpytedMessage);
+			if (ret)
+			{
+				FILE_LOG(logDEBUG4) << "Session::processDatagram(): enc_parse_C_message failed (resteting state): " << ret;
+				resetState();
+				return false;
+			}
+			
+			try
+			{
+				initCrypto();
+				
+				if (processEncrpytedDatagram(sequenceNumber, request, response) == false)
+				{
+					FILE_LOG(logDEBUG4) << "Session::processDatagram(): processEncrpytedDatagram() failed (resteting state)";
+					resetState();
+					return false;
+				}	
+			}
+			catch (DragonSRP::DsrpException &e)
+			{
+				FILE_LOG(logWARNING) << "Session::processDatagram(): initCrypto() failed DsrpException (resetting state)" << e.what();
+				resetState();
+				return false;
+			}
+			catch (...)
+			{
+				FILE_LOG(logWARNING) << "Session::processDatagram(): initCrypto() failed (some exception) (resetting state)";
+				resetState();
+				return false;
+			}
+			
+			return true; // SUCCESS
 			break;
-		
 		case SH_SRV_STATE_FAULT:
 		default:
-		
 			break;
 	} // end of swith
 	
 	return true;
 }
 
+bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& encrpytedMessage, San2::Utils::bytes& encrpytedResponse)
+{
+	FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram";
+	
+	// Now we can decrypt the message
+
+	unsigned int decpacketLen;
+	unsigned char decpacket[m_dec->getOverheadLen() + SH_MAX_MSGLEN];
+		
+	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), decpacket, &decpacketLen, sequenceNumber);
+	
+	std::cout << "decpacket: ";
+	DragonSRP::Conversion::printHex(decpacket, decpacketLen);
+	std::cout << std::endl;
+	
+	return true;
+}
 
 int Session::getState()
 {
@@ -206,4 +267,48 @@ void Session::resetState()
 	m_srpUsername.clear();
     m_srpA.clear();	
     m_sessionK.clear();
+    
+    if (m_enc != NULL)
+    {
+		delete m_enc;
+		m_enc = NULL;
+	} 
+	
+	if (m_dec != NULL)
+    {
+		delete m_dec;
+		m_dec = NULL;
+	} 
+}
+
+void Session::initCrypto() // throws DsrpExpception
+{
+	if (m_enc != NULL && m_dec == NULL) throw DragonSRP::DsrpException("Session::initCrypto(): fatal");
+	if (m_enc == NULL && m_dec != NULL) throw DragonSRP::DsrpException("Session::initCrypto(): fatal");
+	
+	if (m_enc != NULL) return; // already initialized
+		
+	DragonSRP::HashKeyDerivator keydrv(m_sessionK, SH_AES256_KEYLEN, SH_IVLEN, SH_SHA1_OUTPUTLEN);
+		
+	// UsesClient keys!
+	m_enc =  new DragonSRP::DatagramEncryptor(keydrv.getServerEncryptionKey(), keydrv.getServerIV(), keydrv.getServerMacKey());
+		
+	// Uses server keys!
+	m_dec =  new DragonSRP::DatagramDecryptor(keydrv.getClientEncryptionKey(), keydrv.getClientIV(), keydrv.getClientMacKey());
+}
+
+
+Session::~Session()
+{
+	if (m_enc != NULL)
+    {
+		delete m_enc;
+		m_enc = NULL;
+	} 
+	
+	if (m_dec != NULL)
+    {
+		delete m_dec;
+		m_dec = NULL;
+	} 
 }

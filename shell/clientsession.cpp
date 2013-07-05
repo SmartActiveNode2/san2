@@ -4,6 +4,15 @@
 #include "clientsession.hpp"
 #include "messageconstructor.hpp"
 
+#include "crypto/dsrp/common.hpp"
+#include "crypto/dsrp/dsrpexception.hpp"
+#include "crypto/drel/datagramencryptor.hpp"
+#include "crypto/drel/datagramdecryptor.hpp"
+#include "crypto/drel/hashkeyderivator.hpp"
+#include "crypto/drel/aesexception.hpp"
+#include "crypto/dsrp/conversion.hpp"
+#include "constants.hpp"
+
 ClientSession::ClientSession(StopWaitTx &swtx) :
 	m_swtx(swtx),
 	ng(DragonSRP::Ng::predefined(SH_SRP_KEYPAIR)),
@@ -118,6 +127,81 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	San2::Utils::bytes::printBytes(K);
 	std::cout << std::endl;
 	std::cout << "Authentication SUCCESSFUL." << std::endl;
+	
+	
+	// ---------------------------------
+	
+	// Setup key derivator
+	DragonSRP::HashKeyDerivator keydrv(K, SH_AES256_KEYLEN, SH_IVLEN, SH_SHA1_OUTPUTLEN);
+	
+	// Oposite keys on server!
+	// UsesClient keys!
+	DragonSRP::DatagramEncryptor enc(keydrv.getClientEncryptionKey(), keydrv.getClientIV(), keydrv.getClientMacKey());
+	
+	// Uses server keys!
+	DragonSRP::DatagramDecryptor dec(keydrv.getServerEncryptionKey(), keydrv.getServerIV(), keydrv.getServerMacKey());
+	
+	std::uint64_t seqNum = m_swtx.getNextSequenceNumber(); // important
+	
+	San2::Utils::bytes message;
+	message = "This is a sample message";
+	
+	if (message.size() > SH_MAX_MSGLEN)
+	{
+		printf("message too big\n");
+		return -11;
+	}
+	
+	
+	unsigned int encpacketLen;
+	unsigned char encpacket[enc.getOverheadLen() + SH_MAX_MSGLEN];
+	
+	enc.encryptAndAuthenticate((unsigned char *)&message[0], message.size(), seqNum, encpacket, &encpacketLen); // throws
+	
+
+	San2::Utils::bytes encmessage;
+	encmessage.assign(encpacket, encpacket + encpacketLen);
+	rval = enc_construct_C_message(encmessage, request);
+	
+	if (rval)
+	{
+		printf("ClientSession::run:enc_construct_C_message failed: %d\n", rval);
+		return -12;
+	}
+	
+	if (m_swtx.sendReliableMessage(request, response) == false)
+	{
+		printf("sending C message failed\n");
+		return -13;
+	}
+	
+	San2::Utils::bytes encryptedResponse;
+	// parse message from server
+	rval = enc_parse_R_message(response, encryptedResponse, errorCode);
+	
+	if (rval)
+	{
+		printf("ClientSession::run:enc_parse_R_message failed: %d\n", rval);
+		return -14;
+	}
+	
+	if (errorCode != 0)
+	{
+		printf("ClientSession::run: R message errorcode is non zero: %d\n", errorCode);
+		return -15;
+	}
+	
+	// ok, now we have succesfully received some encrypted data, lets decrpyt them
+	// Decrypt
+	unsigned int decpacketLen;
+	unsigned char decpacket[dec.getOverheadLen() + SH_MAX_MSGLEN];
+		
+	dec.decryptAndVerifyMac(&encryptedResponse[0], encryptedResponse.size(), decpacket, &decpacketLen, seqNum);
+	
+	std::cout << "decpacket: ";
+	DragonSRP::Conversion::printHex(decpacket, decpacketLen);
+	std::cout << std::endl;
+	
 	return 0;
 }
 

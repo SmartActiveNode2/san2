@@ -25,6 +25,9 @@
 
 #include "protoconst.hpp"
 
+#include "crypto/drel/datagramencryptor.hpp"
+#include "crypto/drel/datagramdecryptor.hpp"
+
 // initial state
 #define SH_SRV_STATE_ZERO 0
 
@@ -51,9 +54,12 @@ public:
 	Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort);
 	
 	bool processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response);
+	bool processEncrpytedDatagram(SAN_UINT64 encrpytedMessage, const San2::Utils::bytes& request, San2::Utils::bytes& encrpytedResponse);
+	
 	int getState();
 	
 	void resetState();
+	~Session(); // do not call directly
 protected:
 
 private:
@@ -78,5 +84,10 @@ private:
 	DragonSRP::Ossl::OsslMathImpl math;
 	DragonSRP::SrpServer srpserver;
 	DragonSRP::SrpVerificator ver;
+	
+	DragonSRP::DatagramEncryptor *m_enc;
+	DragonSRP::DatagramDecryptor *m_dec;
 
+
+	void initCrypto(); // must be always private, called only by processDatagram(). Must be called in precise moment.
 };

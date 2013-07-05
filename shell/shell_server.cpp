@@ -91,8 +91,10 @@ int main(int argc, char *argv[])
 		{
 			case SAN2_WAITFORCAPSULE_SUCCESS:
 				portsok = rxcapsule.getPortsDS(toPort, fromPort);
+				printf("SRV #1\n");
 				ses = sman.getSession(rxcapsule.getSourceAddress(), fromPort);
-			
+				
+				printf("SRV #2\n");
 				if (portsok)
 				{
 					printf("got: rxcapsule, from port %ud", fromPort);
@@ -100,12 +102,15 @@ int main(int argc, char *argv[])
 					std::cout << "   to address " << San2::Utils::address2string(rxcapsule.getDestinationAddress()) << std::endl;
 				}
 				
+				printf("SRV #3\n");
+				
 				if (ses->incommingCapsule(rxcapsule) == false)
 				{
 					printf("Failed to generate response\n");
 					return -6;
 				}
 				
+				printf("SRV #4\n");
 				break;
 			case SAN2_WAITFORCAPSULE_TIMEOUT:
 				printf("got: timeout\n");
