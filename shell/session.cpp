@@ -204,13 +204,19 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 				return false;
 			}
 			
+			std::cout << "Server enc message: ";
+			San2::Utils::bytes::printBytes(encrpytedMessage);
+			std::cout << std::endl;
+			
 			try
 			{
-				initCrypto();
+				initCrypto(); // do not relocate! - srpSessionKey must be valid before calling
 				
-				if (processEncrpytedDatagram(sequenceNumber, request, response) == false)
+				FILE_LOG(logDEBUG4) << "initCrypto OK";
+				
+				if (processEncrpytedDatagram(sequenceNumber, encrpytedMessage, response) == false)
 				{
-					FILE_LOG(logDEBUG4) << "Session::processDatagram(): processEncrpytedDatagram() failed (resteting state)";
+					FILE_LOG(logDEBUG4) << "processEncrpytedDatagram() failed (resteting state)";
 					resetState();
 					return false;
 				}	
@@ -240,13 +246,15 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 
 bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& encrpytedMessage, San2::Utils::bytes& encrpytedResponse)
 {
-	FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram";
+	FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram seqnum:" << sequenceNumber;
 	
 	// Now we can decrypt the message
 
 	unsigned int decpacketLen;
 	unsigned char decpacket[m_dec->getOverheadLen() + SH_MAX_MSGLEN];
-		
+	
+	
+	FILE_LOG(logDEBUG4) <<  "Before decrpyting ....      ";	
 	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), decpacket, &decpacketLen, sequenceNumber);
 	
 	std::cout << "decpacket: ";
@@ -289,6 +297,32 @@ void Session::initCrypto() // throws DsrpExpception
 	if (m_enc != NULL) return; // already initialized
 		
 	DragonSRP::HashKeyDerivator keydrv(m_sessionK, SH_AES256_KEYLEN, SH_IVLEN, SH_SHA1_OUTPUTLEN);
+	
+	
+	std::cout << "srv enc:";
+	San2::Utils::bytes::printBytes(keydrv.getServerEncryptionKey());
+	std::cout << std::endl;
+	
+	std::cout << "srv IV():";
+	San2::Utils::bytes::printBytes(keydrv.getServerIV());
+	std::cout << std::endl;
+	
+	std::cout << "srv Mac():";
+	San2::Utils::bytes::printBytes(keydrv.getServerMacKey());
+	std::cout << std::endl;
+	
+	std::cout << "cli enc:";
+	San2::Utils::bytes::printBytes(keydrv.getClientEncryptionKey());
+	std::cout << std::endl;
+	
+	std::cout << "cli IV():";
+	San2::Utils::bytes::printBytes(keydrv.getClientIV());
+	std::cout << std::endl;
+	
+	std::cout << "cli Mac():";
+	San2::Utils::bytes::printBytes(keydrv.getClientMacKey());
+	std::cout << std::endl;
+	
 		
 	// UsesClient keys!
 	m_enc =  new DragonSRP::DatagramEncryptor(keydrv.getServerEncryptionKey(), keydrv.getServerIV(), keydrv.getServerMacKey());

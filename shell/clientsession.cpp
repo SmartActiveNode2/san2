@@ -134,6 +134,30 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	// Setup key derivator
 	DragonSRP::HashKeyDerivator keydrv(K, SH_AES256_KEYLEN, SH_IVLEN, SH_SHA1_OUTPUTLEN);
 	
+	std::cout << "srv enc:";
+	San2::Utils::bytes::printBytes(keydrv.getServerEncryptionKey());
+	std::cout << std::endl;
+	
+	std::cout << "srv IV():";
+	San2::Utils::bytes::printBytes(keydrv.getServerIV());
+	std::cout << std::endl;
+	
+	std::cout << "srv Mac():";
+	San2::Utils::bytes::printBytes(keydrv.getServerMacKey());
+	std::cout << std::endl;
+	
+	std::cout << "cli enc:";
+	San2::Utils::bytes::printBytes(keydrv.getClientEncryptionKey());
+	std::cout << std::endl;
+	
+	std::cout << "cli IV():";
+	San2::Utils::bytes::printBytes(keydrv.getClientIV());
+	std::cout << std::endl;
+	
+	std::cout << "cli Mac():";
+	San2::Utils::bytes::printBytes(keydrv.getClientMacKey());
+	std::cout << std::endl;
+	
 	// Oposite keys on server!
 	// UsesClient keys!
 	DragonSRP::DatagramEncryptor enc(keydrv.getClientEncryptionKey(), keydrv.getClientIV(), keydrv.getClientMacKey());
@@ -156,11 +180,17 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	unsigned int encpacketLen;
 	unsigned char encpacket[enc.getOverheadLen() + SH_MAX_MSGLEN];
 	
+	std::cout <<  "cli encryptedDatagram seqnum:" << seqNum << std::endl;
 	enc.encryptAndAuthenticate((unsigned char *)&message[0], message.size(), seqNum, encpacket, &encpacketLen); // throws
 	
 
 	San2::Utils::bytes encmessage;
 	encmessage.assign(encpacket, encpacket + encpacketLen);
+	
+	std::cout << "Client enc message: ";
+	San2::Utils::bytes::printBytes(encmessage);
+	std::cout << std::endl;
+	
 	rval = enc_construct_C_message(encmessage, request);
 	
 	if (rval)
