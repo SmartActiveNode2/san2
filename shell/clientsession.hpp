@@ -22,6 +22,14 @@
 #include "crypto/ossl/osslmathimpl.hpp"
 #include "crypto/ossl/osslrandom.hpp"
 
+#include "crypto/dsrp/common.hpp"
+#include "crypto/dsrp/dsrpexception.hpp"
+#include "crypto/drel/datagramencryptor.hpp"
+#include "crypto/drel/datagramdecryptor.hpp"
+#include "crypto/drel/hashkeyderivator.hpp"
+#include "crypto/drel/aesexception.hpp"
+#include "crypto/dsrp/conversion.hpp"
+#include "constants.hpp"
 #include "protoconst.hpp"
 
 class ClientSession
@@ -29,9 +37,9 @@ class ClientSession
 public:
 	ClientSession(StopWaitTx &swtx);
 	int run(std::string strUsername, std::string strPassword);
-	
-	bool processDecryptedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response);
 private:
+	int getShellServerResponse(DragonSRP::DatagramEncryptor& encryptor, DragonSRP::DatagramDecryptor& decryptor, const San2::Utils::bytes& shellRequest, San2::Utils::bytes& shellResponse);
+
 	StopWaitTx &m_swtx;
 	
 	DragonSRP::OsslSha1 hash;
