@@ -45,6 +45,7 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 	DragonSRP::bytes currentSalt;
 	DragonSRP::bytes currentB;
 	San2::Utils::bytes encrpytedMessage;
+	San2::Utils::bytes encryptedResponse;
 	
 	int ret;
 	
@@ -214,12 +215,15 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 				
 				FILE_LOG(logDEBUG4) << "initCrypto OK";
 				
-				if (processEncrpytedDatagram(sequenceNumber, encrpytedMessage, response) == false)
+				if (processEncrpytedDatagram(sequenceNumber, encrpytedMessage, encryptedResponse) == false)
 				{
 					FILE_LOG(logDEBUG4) << "processEncrpytedDatagram() failed (resteting state)";
 					resetState();
 					return false;
-				}	
+				}
+				
+				// TODO: Fix error code handling
+				ret = enc_construct_R_message(encryptedResponse, 0, response);
 			}
 			catch (DragonSRP::DsrpException &e)
 			{
@@ -245,14 +249,16 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 }
 
 bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& encrpytedMessage, San2::Utils::bytes& encrpytedResponse)
-{
-	FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram seqnum:" << sequenceNumber;
-	
-	// Now we can decrypt the message
-
+{	
+	// This is waste of memory, should be optimized or refactored in some way.
+	unsigned int encpacketLen;
+	unsigned char encpacket[m_enc->getOverheadLen() + SH_MAX_MSGLEN];
 	unsigned int decpacketLen;
 	unsigned char decpacket[m_dec->getOverheadLen() + SH_MAX_MSGLEN];
+	San2::Utils::bytes applicationRequest, applicationResponse;
 	
+	FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram seqnum:" << sequenceNumber;
+	if (encrpytedMessage.size() == 0) return false;
 	
 	FILE_LOG(logDEBUG4) <<  "Before decrpyting ....      ";	
 	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), decpacket, &decpacketLen, sequenceNumber);
@@ -261,6 +267,26 @@ bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Ut
 	DragonSRP::Conversion::printHex(decpacket, decpacketLen);
 	std::cout << std::endl;
 	
+	applicationRequest.assign(decpacket, decpacket + decpacketLen); // ugly, can be optimized
+	
+	if (processApplicationDatagram(sequenceNumber, applicationRequest, applicationResponse) == false)	
+	{
+		return false;
+	}
+	
+	if (applicationResponse.size() == 0) return false;
+	
+	// Now encrypt applicationResponse
+	m_enc->encryptAndAuthenticate((unsigned char *)&applicationResponse[0], applicationResponse.size(), sequenceNumber, encpacket, &encpacketLen); // throws
+	encrpytedResponse.assign(encpacket, encpacket + encpacketLen);
+	
+	return true;
+}
+
+// applicationReponse cannot be empty at function return
+bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& applicationRequest, San2::Utils::bytes& applicationResponse)
+{
+	applicationResponse = "This is sample response";
 	return true;
 }
 

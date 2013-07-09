@@ -54,7 +54,8 @@ public:
 	Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort);
 	
 	bool processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response);
-	bool processEncrpytedDatagram(SAN_UINT64 encrpytedMessage, const San2::Utils::bytes& request, San2::Utils::bytes& encrpytedResponse);
+	bool processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& encrpytedResponse);
+	bool processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& applicationRequest, San2::Utils::bytes& applicationResponse);
 	
 	int getState();
 	

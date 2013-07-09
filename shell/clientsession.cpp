@@ -229,7 +229,13 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	dec.decryptAndVerifyMac(&encryptedResponse[0], encryptedResponse.size(), decpacket, &decpacketLen, seqNum);
 	
 	std::cout << "decpacket: ";
-	DragonSRP::Conversion::printHex(decpacket, decpacketLen);
+	// DragonSRP::Conversion::printHex(decpacket, decpacketLen);
+	
+	for (int b = 0; b < decpacketLen; b++)
+	{
+		printf("%c", decpacket[b]);
+	}
+	
 	std::cout << std::endl;
 	
 	return 0;
