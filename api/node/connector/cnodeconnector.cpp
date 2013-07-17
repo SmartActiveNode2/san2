@@ -1,5 +1,5 @@
 
-
+#include <string>
 #include "cnodeconnector.hpp"
 #include "cppl/pipeclient.hpp"
 #include "utils/platform/sigignore.hpp"
@@ -12,6 +12,7 @@
 #include "interfaces/registerephemeralout.hpp"
 #include "interfaces/waitforcapsuleout.hpp"
 #include "interfaces/getaddressesout.hpp"
+#include "interfaces/getparameterout.hpp"
 
 #define SAN2_CNODECONNECTOR_MAXSINGLEREADSIZE 2048
 
@@ -79,7 +80,20 @@ bool CNodeConnector::connect()
 		return false;
 	}	
 
+	ret = m_rpci->registerSyncFunction([](){return new San2::Interfaces::GetAddressesOut;});
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeConnector::run(): registrer function FAILED";
+		return false;
+	}
 
+	ret = m_rpci->registerSyncFunction([](){return new San2::Interfaces::GetParameterOut;});
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeConnector::run(): registrer function FAILED";
+		return false;
+	}
+	
 	return true;
 }
 
@@ -119,6 +133,16 @@ unsigned int CNodeConnector::getInterfaceAddresses(std::list<San2::Network::SanA
 	San2::Interfaces::GetAddressesOut func;
 	if (m_rpci->invokeSyncFunction(func) == false) return -2;
 	return func.getAddresses(adrs);
+}
+
+int CNodeConnector::getParameter(std::string param, std::string &result)
+{
+	San2::Interfaces::GetParameterOut func;
+	func.setParameter(param);
+	bool x = m_rpci->invokeSyncFunction(func);
+	if (x == false) return -1;
+	result = func.getResult();
+	return 0;
 }
 	
 }} // ns

@@ -115,50 +115,17 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 		return -10;
 	}
 	
-	/*
-	std::cout << "Shared session key: ";
-	San2::Utils::bytes::printBytes(K);
-	std::cout << std::endl;
-	*/
-	
 	std::cout << "Authentication SUCCESSFUL." << std::endl;
-	
-	
-	// ---------------------------------
+		
+	// ==============================================================================
 	
 	// Setup key derivator
 	DragonSRP::HashKeyDerivator keydrv(K, SH_AES256_KEYLEN, SH_IVLEN, SH_SHA1_OUTPUTLEN);
 	
-	/*
-	std::cout << "srv enc:";
-	San2::Utils::bytes::printBytes(keydrv.getServerEncryptionKey());
-	std::cout << std::endl;
-	
-	std::cout << "srv IV():";
-	San2::Utils::bytes::printBytes(keydrv.getServerIV());
-	std::cout << std::endl;
-	
-	std::cout << "srv Mac():";
-	San2::Utils::bytes::printBytes(keydrv.getServerMacKey());
-	std::cout << std::endl;
-	
-	std::cout << "cli enc:";
-	San2::Utils::bytes::printBytes(keydrv.getClientEncryptionKey());
-	std::cout << std::endl;
-	
-	std::cout << "cli IV():";
-	San2::Utils::bytes::printBytes(keydrv.getClientIV());
-	std::cout << std::endl;
-	
-	std::cout << "cli Mac():";
-	San2::Utils::bytes::printBytes(keydrv.getClientMacKey());
-	std::cout << std::endl;
-	*/
 	
 	// Oposite keys on server!
-	// UsesClient keys!
+	// Uses client keys!
 	DragonSRP::DatagramEncryptor enc(keydrv.getClientEncryptionKey(), keydrv.getClientIV(), keydrv.getClientMacKey());
-	
 	// Uses server keys!
 	DragonSRP::DatagramDecryptor dec(keydrv.getServerEncryptionKey(), keydrv.getServerIV(), keydrv.getServerMacKey());
 	
@@ -166,9 +133,26 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	
 	
 	San2::Utils::bytes shellRequest, shellResponse;
-	shellRequest = "This is a sample message";
-	getShellServerResponse(enc, dec, shellRequest, shellResponse);
-	printf("decpacket: "); for (int b = 0; b < shellResponse.size(); b++) printf("%c", shellResponse[b]); printf("\n");
+	
+	while(1)
+	{
+		std::cin.getline(line, SH_TERMINAL_MAXLINLEN);
+		
+		if (strcmp(line, "exit") == 0)
+		{
+			return 0; // ??
+		}
+		
+		shellRequest = line;
+		getShellServerResponse(enc, dec, shellRequest, shellResponse);
+		printf("decpacket: "); for (unsigned int b = 0; b < shellResponse.size(); b++) printf("%c", shellResponse[b]); printf("\n");
+		
+	}
+	
+	
+	// shellRequest = "This is a sample message";
+	// getShellServerResponse(enc, dec, shellRequest, shellResponse);
+	// printf("decpacket: "); for (int b = 0; b < shellResponse.size(); b++) printf("%c", shellResponse[b]); printf("\n");
 	
 	return 0;
 }

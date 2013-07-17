@@ -16,6 +16,7 @@
 
 Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort) :
 	StopWaitRx(connector, serverAddress, serverPort, clientAddress, clientPort),
+	m_connector(connector),
 	m_state(SH_SRV_STATE_ZERO),
 	ng(DragonSRP::Ng::predefined(SH_SRP_KEYPAIR)),
 	math(hash, ng),
@@ -257,10 +258,10 @@ bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Ut
 	unsigned char decpacket[m_dec->getOverheadLen() + SH_MAX_MSGLEN];
 	San2::Utils::bytes applicationRequest, applicationResponse;
 	
-	FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram seqnum:" << sequenceNumber;
+	// FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram seqnum:" << sequenceNumber;
 	if (encrpytedMessage.size() == 0) return false;
 	
-	FILE_LOG(logDEBUG4) <<  "Before decrpyting ....      ";	
+	// FILE_LOG(logDEBUG4) <<  "Before decrpyting ....      ";	
 	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), decpacket, &decpacketLen, sequenceNumber);
 	
 	std::cout << "decpacket: ";
@@ -286,7 +287,15 @@ bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Ut
 // applicationReponse cannot be empty at function return
 bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& applicationRequest, San2::Utils::bytes& applicationResponse)
 {
-	applicationResponse = "This is sample response";
+	std::string result;
+	
+	if (m_connector.getParameter("hostname", result) != 0)
+	{
+		applicationResponse = "Shell server could not received hostname";
+	}
+	
+	applicationResponse = result;
+	
 	return true;
 }
 
@@ -324,7 +333,7 @@ void Session::initCrypto() // throws DsrpExpception
 		
 	DragonSRP::HashKeyDerivator keydrv(m_sessionK, SH_AES256_KEYLEN, SH_IVLEN, SH_SHA1_OUTPUTLEN);
 	
-	
+	/*
 	std::cout << "srv enc:";
 	San2::Utils::bytes::printBytes(keydrv.getServerEncryptionKey());
 	std::cout << std::endl;
@@ -348,7 +357,7 @@ void Session::initCrypto() // throws DsrpExpception
 	std::cout << "cli Mac():";
 	San2::Utils::bytes::printBytes(keydrv.getClientMacKey());
 	std::cout << std::endl;
-	
+	*/
 		
 	// UsesClient keys!
 	m_enc =  new DragonSRP::DatagramEncryptor(keydrv.getServerEncryptionKey(), keydrv.getServerIV(), keydrv.getServerMacKey());

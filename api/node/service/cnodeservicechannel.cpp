@@ -21,6 +21,7 @@
 #include "interfaces/registerin.hpp"
 #include "interfaces/registerephemeralin.hpp"
 #include "interfaces/getaddressesin.hpp"
+#include "interfaces/getparameterin.hpp"
 
 // rpc
 #include "rpc/crpcexecutor.hpp"
@@ -94,6 +95,14 @@ San2::Cppl::ErrorCode CNodeServiceChannel::receive() // required
 	}	
 	
 	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::GetAddressesIn(m_node);});
+
+	if (!ret)
+	{
+		FILE_LOG(logERROR) << "CNodeApiChannel::receive(): registrer function *FAILED*";
+		return San2::Cppl::ErrorCode::FAILURE;
+	}	
+	
+	ret = m_rpcexec->registerSyncFunction([this](){return new San2::Interfaces::GetParameterIn(m_node, m_portmap);});
 
 	if (!ret)
 	{

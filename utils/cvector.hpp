@@ -181,6 +181,18 @@ namespace San2
 				}    
 				
                 // ===== "SPECIALIZATION" to usigned char ======
+				static std::string bytes2string(const CVector<unsigned char> &in)
+				{
+					return std::string(&in[0], &in[0] + in.size());
+				}
+				
+				/*
+				std::string toString()
+				{
+					std::string str(&this[0], &this[0] + this.size());
+					return str;
+				}
+				* */
 
 				static CVector<unsigned char> array2bytes(const unsigned char *in, int len)
 				{

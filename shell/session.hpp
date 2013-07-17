@@ -64,6 +64,7 @@ public:
 protected:
 
 private:
+	San2::Api::CNodeConnector &m_connector;
 	unsigned int m_secondsValid;
 	
 	// session authenticated state
