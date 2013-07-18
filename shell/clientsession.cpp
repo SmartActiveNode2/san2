@@ -134,9 +134,18 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	
 	San2::Utils::bytes shellRequest, shellResponse;
 	
+	shellRequest = "hostname";
+	getShellServerResponse(enc, dec, shellRequest, shellResponse);
+	
+	std::string shell = San2::Utils::bytes::bytes2string(shellResponse) + ">";
+	
 	while(1)
 	{
+		std::cout << shell;
+		
 		std::cin.getline(line, SH_TERMINAL_MAXLINLEN);
+		
+		if (strlen(line) == 0) continue;
 		
 		if (strcmp(line, "exit") == 0)
 		{
@@ -145,8 +154,8 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 		
 		shellRequest = line;
 		getShellServerResponse(enc, dec, shellRequest, shellResponse);
-		printf("decpacket: "); for (unsigned int b = 0; b < shellResponse.size(); b++) printf("%c", shellResponse[b]); printf("\n");
 		
+		for (unsigned int b = 0; b < shellResponse.size(); b++) printf("%c", shellResponse[b]); printf("\n");
 	}
 	
 	

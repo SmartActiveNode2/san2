@@ -29,13 +29,20 @@ unsigned int GetParameterIn::getUniqueId() const
 
 bool GetParameterIn::operator()(void)
 {	
-	if (m_parameter.compare("hostname"))
+	if (m_parameter.compare("hello") == 0)
 	{
+		m_response = "Welcome to SAN node terminal";
+		return true;
+	}
+	
+	if (m_parameter.compare("hostname") == 0)
+	{
+		printf("HOSTNAME REQUEST\n\n\n");
 		m_response = m_node.getNodeName();
 		return true;
 	}
 	
-	if (m_parameter.compare("peers"))
+	if (m_parameter.compare("peers") == 0)
 	{
 	    std::set<std::shared_ptr<San2::Network::CNetInterface> > ifaces = m_node.getInterfaces();
        
@@ -48,10 +55,9 @@ bool GetParameterIn::operator()(void)
             m_response += statusToString(s->getRXstate());
             m_response += "   TX:";
             m_response += statusToString(s->getTXstate());
-            m_response += ">> iadr: ";
+            m_response += "\n>> iadr: ";
             m_response += San2::Utils::address2string(s->getInterfaceAddress()).c_str();
-            m_response += "\n";
-            m_response += ">> peer: ";
+            m_response += "\n>> peer: ";
             m_response += San2::Utils::address2string(s->getPeerAddress()).c_str();
             m_response += "\n\n";            
          }

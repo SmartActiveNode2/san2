@@ -287,15 +287,28 @@ bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Ut
 // applicationReponse cannot be empty at function return
 bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& applicationRequest, San2::Utils::bytes& applicationResponse)
 {
+	std::string strRequest = San2::Utils::bytes::bytes2string(applicationRequest);
 	std::string result;
 	
-	if (m_connector.getParameter("hostname", result) != 0)
+	if (strRequest.compare("hostname") == 0)
 	{
-		applicationResponse = "Shell server could not received hostname";
+		if (m_connector.getParameter("hostname", result) != 0)
+		{
+			applicationResponse = "Shell server could not received hostname";
+		}
 	}
 	
-	applicationResponse = result;
+	if (strRequest.compare("peers") == 0)
+	{
+		if (m_connector.getParameter("peers", result) != 0)
+		{
+			applicationResponse = "Shell server could not received peer addresses";
+		}
+	}
 	
+	
+	if (result.size() == 0) result = "Unknown command";
+	applicationResponse = result;
 	return true;
 }
 
