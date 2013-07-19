@@ -7,6 +7,9 @@ namespace San2
 {
     namespace Utils
     {
+		bool exapndHexSanAddress(std::string& strAddress);
+		bool getExpandedAddress(std::string strAddress, San2::Network::SanAddress &sanAddress);
+		
         bool string2address(const std::string & strAddress, San2::Network::SanAddress &sanAddress);
         std::string address2string(const San2::Network::SanAddress &sanAddress);
 

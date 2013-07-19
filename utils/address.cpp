@@ -6,6 +6,25 @@ namespace San2
 {
     namespace Utils
     {
+		bool exapndHexSanAddress(std::string& strAddress)
+		{
+			if (strAddress.length() == San2::Network::sanAddressSize * 2) return true; // 2 ... one byte is 2 hex digits
+			if (strAddress.length() >  San2::Network::sanAddressSize * 2) return false;
+			
+			unsigned int remainingSize = San2::Network::sanAddressSize * 2 - strAddress.length();
+			
+			std::string nullPrefix;
+			for (unsigned int i = 0; i < remainingSize; i++) nullPrefix += "0";
+			strAddress = nullPrefix + strAddress;
+			return true;
+		}
+		
+		bool getExpandedAddress(std::string strAddress, San2::Network::SanAddress &sanAddress)
+		{
+			if (exapndHexSanAddress(strAddress) == false) return false;
+			return string2address(strAddress, sanAddress);
+		}
+		
         // ugly conversion
         bool string2address(const std::string & strAddress, San2::Network::SanAddress &sanAddress)
         {

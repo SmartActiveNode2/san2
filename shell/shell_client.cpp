@@ -19,14 +19,48 @@
 
 #include "clientsession.hpp"
 
-#define PIPENAME "/tmp/sanode1api"
-#define SH_SRV_PORT 2201
-#define SH_SRV_ADDRESS "000000000000000000000000000000000000000000000000000000000000FF21"
 #define SH_CLI_ARQ_REPETITIONS 3
 #define SH_CLI_ARQ_TIMEOUTMSEC 3000
 
 int main(int argc, char *argv[])
 {
+	if (argc != 6)
+	{
+		printf("Usage:  ./shell_client <SanNodeApiAddress> <ShellServerSanAddress> <port> <user> <passwrod>\n");
+		printf("Example:./shell_client /tmp/sanode1api FF21 2201 san smartactivenode\n");
+		return -1;
+	}
+	
+	char *apiAddress = argv[1];
+	char *srvAddress = argv[2];
+	char *srvPort    = argv[3];
+	char *srpUser    = argv[4];
+	char *srpPass    = argv[5];
+	
+	// Parse and check srvAddress format
+	// we will prepend the address with zeroes to the correct address size length
+	San2::Network::SanAddress srvSanAddress;
+	if (San2::Utils::getExpandedAddress(std::string(srvAddress), srvSanAddress) == false)
+	{
+		printf("Invalid parameter provided: <ShellServerSanAddress>\n");
+		return -1;
+	}
+		
+	// Parse and check srvPort format
+	SAN_UINT16 srvIntPort;
+	if (sscanf(srvPort, "%u", &srvIntPort) != 1)
+	{
+		printf("Invalid parameter provided: <port>");
+		return -1;
+	}
+	
+	if (srvIntPort == 0)
+	{
+		printf("Port parameter must be a non zero value.\n");
+		return -1;
+	}
+	
+	
 	/*
 	if (enc_testA()) printf("enc_testA FAIL\n");
 	else printf("enc_testA success\n");
@@ -55,7 +89,7 @@ int main(int argc, char *argv[])
 	San2::Utils::bytes payload;
 	San2::Utils::bytes serializedCapsule;
 	San2::Network::CCapsule capsule;
-	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
+	San2::Api::CNodeConnector connector(apiAddress, 5000, 5000, 5000, 5000);
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
 	{
@@ -75,14 +109,7 @@ int main(int argc, char *argv[])
 	
 	if (port == 0) return -1;
 	
-	San2::Network::SanAddress serverAddress;
-	
-	if (San2::Utils::string2address(SH_SRV_ADDRESS, serverAddress) != true)
-	{
-		FILE_LOG(logDEBUG4) << "failed to parse destination address";
-		return -1;
-	}
-	
+		
 	San2::Network::SanAddress clientAddress;
 	std::list<San2::Network::SanAddress> adrs;
 	unsigned int addressCount = connector.getInterfaceAddresses(adrs);
@@ -96,27 +123,9 @@ int main(int argc, char *argv[])
 	clientAddress = *(adrs.cbegin());
 	std::cout << "Using source address: " << San2::Utils::address2string(clientAddress) << std::endl;
 	
-	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, serverAddress, SH_SRV_PORT, clientAddress, port);
-	
+	StopWaitTx swtx(SH_CLI_ARQ_REPETITIONS, SH_CLI_ARQ_TIMEOUTMSEC, connector, srvSanAddress, srvIntPort, clientAddress, port);
 	ClientSession cses(swtx);
-	cses.run("san", "smartactivenode");
-	
-	// go
-	
-	/*
-	for (int k = 0; k < 10; k++)
-	{
-		payload.append("Ahoj, jak se mas?");
-		San2::Utils::bytes response;
-		swtx.sendReliableMessage(payload, response);
-		
-		// print result
-		std::cout << "response:";
-		San2::Utils::bytes::printBytesAsString(response);
-		std::cout << std::endl;
-	}
-	*/
-	 
+	cses.run(srpUser, srpPass); // no threadining involved, just one thread in the whole program
 	return 0;
 }
 
