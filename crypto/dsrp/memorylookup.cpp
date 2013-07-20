@@ -26,4 +26,9 @@ namespace DragonSRP
 		std::pair<std::map<bytes, User>::iterator, bool> ret = db.insert(make_pair(user.getUsername(), user));
 		return ret.second;
 	}
+	
+	void MemoryLookup::clearDb()
+	{
+		db.clear();	
+	}
 }

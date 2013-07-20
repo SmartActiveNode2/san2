@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 	else printf("enc_testD success\n");
 	*/
 	
-	FILELog::ReportingLevel() = logDEBUG4;
+	FILELog::ReportingLevel() = logWARNING;
 	
 	San2::Utils::bytes payload;
 	San2::Utils::bytes serializedCapsule;

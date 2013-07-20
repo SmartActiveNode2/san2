@@ -51,7 +51,7 @@
 class Session : public StopWaitRx
 {
 public:
-	Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort);
+	Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort, DragonSRP::LookupInterface& lookup);
 	
 	bool processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response);
 	bool processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& encrpytedResponse);
@@ -81,9 +81,9 @@ private:
 	//SRP
 	DragonSRP::OsslSha1 hash; // We will use OpenSSL SHA1 implementation
 	DragonSRP::OsslRandom random; // We will use OpenSSL random number generator
-	DragonSRP::MemoryLookup lookup; // This stores users in memory (linked-list)
 	DragonSRP::Ng ng;
 	DragonSRP::Ossl::OsslMathImpl math;
+	DragonSRP::LookupInterface& m_lookup;
 	DragonSRP::SrpServer srpserver;
 	DragonSRP::SrpVerificator ver;
 	

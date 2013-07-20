@@ -18,7 +18,7 @@ namespace DragonSRP
 		public:
 			User getByName(bytes username); // throws DsrpException if user not found
 			bool userAdd(User user); // returns true on success
-			
+			void clearDb();
 		private:
 			std::map<bytes, User> db;
 	};

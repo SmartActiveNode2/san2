@@ -31,5 +31,5 @@ bool CStringUtils::stringToUint(const std::string &sNum, unsigned int &result)
     is >> result;
     return !is.fail();
 }
-
+ 
 }} // ns

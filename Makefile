@@ -145,7 +145,7 @@ OBJS-APPRX = api/apprx.o
 
 
 OBJS-SHELL = shell/session.o shell/stopwaitrx.o shell/stopwaittx.o shell/messageconstructor.o shell/clientsession.o
-OBJS-SHELLSERVER = shell/shell_server.o
+OBJS-SHELLSERVER = shell/shell_server.o shell/passwordloader.o
 OBJS-SHELLCLIENT = shell/shell_client.o
 
 

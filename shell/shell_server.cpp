@@ -16,8 +16,9 @@
 #include "utils/cvector.hpp"
 #include "session.hpp"
 #include "sessionmanager.hpp"
+#include "passwordloader.hpp"
 
-
+#define SH_SRV_PASSWORD_FILE "pass.pwd"
 #define PIPENAME "/tmp/sanode2api"
 
 #define APPLICATION_PORT 2201
@@ -33,6 +34,17 @@ int main(int argc, char *argv[])
 	San2::Network::CCapsule capsule;
 	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
 	
+	PasswordLoader pload;
+	
+	int userCount = pload.loadFromFile(SH_SRV_PASSWORD_FILE);
+	
+	printf("userCount: %d\n", userCount);
+	
+	if (userCount <= 0)
+	{
+		printf("No users found, please check \"pass.pwd\" file contents.\n");
+		return -1;
+	}
 	
 	
 	if (connector.open() != San2::Cppl::ErrorCode::SUCCESS)
@@ -71,7 +83,7 @@ int main(int argc, char *argv[])
 	serverAddress = *(adrs.cbegin());
 	std::cout << "Using source address (serverAddress): " << San2::Utils::address2string(serverAddress) << std::endl;
 	
-	SessionManager<Session> sman([serverAddress, &connector](const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort){return new Session(connector, serverAddress, APPLICATION_PORT, clientAddress, clientPort);}, SH_SRV_SESSION_TIMEOUT);
+	SessionManager<Session> sman([serverAddress, &connector, &pload](const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort){return new Session(connector, serverAddress, APPLICATION_PORT, clientAddress, clientPort, pload);}, SH_SRV_SESSION_TIMEOUT);
 	
 	while(1)
 	{

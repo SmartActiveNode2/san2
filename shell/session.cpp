@@ -14,17 +14,19 @@
 
 #include "constants.hpp"
 
-Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort) :
+Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanAddress& serverAddress, SAN_UINT16 serverPort, const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort, DragonSRP::LookupInterface& lookup) :
 	StopWaitRx(connector, serverAddress, serverPort, clientAddress, clientPort),
 	m_connector(connector),
 	m_state(SH_SRV_STATE_ZERO),
 	ng(DragonSRP::Ng::predefined(SH_SRP_KEYPAIR)),
 	math(hash, ng),
+	m_lookup(lookup),
 	srpserver(lookup, math, random, true),
 	m_enc(NULL),
 	m_dec(NULL)
 {
 	// setup test user in the memory database
+	/*
 	DragonSRP::bytes username = DragonSRP::Conversion::string2bytes(SH_TESTSRP_USERNAME);
 	DragonSRP::bytes verificator = DragonSRP::Conversion::hexstring2bytes(SH_TESTSRP_VERIFICATOR);
 	DragonSRP::bytes salt = DragonSRP::Conversion::hexstring2bytes(SH_TESTSRP_SALT);
@@ -35,6 +37,7 @@ Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanA
 	{
 		FILE_LOG(logERROR) << "Error: user already exists";
 	}
+	*/
 }
 
 bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response)
