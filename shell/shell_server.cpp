@@ -19,20 +19,57 @@
 #include "passwordloader.hpp"
 
 #define SH_SRV_PASSWORD_FILE "pass.pwd"
-#define PIPENAME "/tmp/sanode2api"
 
 #define APPLICATION_PORT 2201
 #define SH_SRV_SESSION_TIMEOUT 3600
 
 int main(int argc, char *argv[])
 {
+	if (argc < 2 || argc > 3)
+	{
+		printf("Usage:   ./shell_server <SanNodeApiAddress> [port=2201]\n");
+		printf("Example: ./shell_server /tmp/sanode2api 2201\n");
+		return -1;
+	}
+	
+	
+	SAN_UINT16 srvIntPort = APPLICATION_PORT;
+	unsigned int tmpPort;
+	
+	
+	char *srvApiAddress = argv[1]; 
+	char *srvPort       = argv[2];
+	
+	if (argc == 3) 
+	{
+		if (sscanf(srvPort, "%u", &tmpPort) != 1)
+		{
+			printf("Invalid parameter provided: <port>");
+			return -1;
+		}
+		
+		if (tmpPort > 65535)
+		{
+			printf("Port parameter must be from 1 to 65535\n");
+			return -1;
+		}
+		
+		srvIntPort = tmpPort;
+		
+		if (srvIntPort == 0)
+		{
+			printf("Port parameter must be a non zero value.\n");
+			return -1;
+		}
+	}
+	
 	FILELog::ReportingLevel() = logDEBUG4;
 	San2::Utils::bytes serializedCapsule;
 	
 	SAN_UINT16 fromPort, toPort;
 	San2::Utils::bytes payload;
 	San2::Network::CCapsule capsule;
-	San2::Api::CNodeConnector connector(PIPENAME, 5000, 5000, 5000, 5000);
+	San2::Api::CNodeConnector connector(srvApiAddress, 5000, 5000, 5000, 5000);
 	
 	PasswordLoader pload;
 	
@@ -59,7 +96,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
-	if (connector.registerPort(APPLICATION_PORT) == true)
+	if (connector.registerPort(srvIntPort) == true)
 	{
 		printf("port register: OK\n");
 	}
@@ -83,7 +120,7 @@ int main(int argc, char *argv[])
 	serverAddress = *(adrs.cbegin());
 	std::cout << "Using source address (serverAddress): " << San2::Utils::address2string(serverAddress) << std::endl;
 	
-	SessionManager<Session> sman([serverAddress, &connector, &pload](const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort){return new Session(connector, serverAddress, APPLICATION_PORT, clientAddress, clientPort, pload);}, SH_SRV_SESSION_TIMEOUT);
+	SessionManager<Session> sman([serverAddress, &connector, &pload, srvIntPort](const San2::Network::SanAddress& clientAddress, SAN_UINT16 clientPort){return new Session(connector, serverAddress, srvIntPort, clientAddress, clientPort, pload);}, SH_SRV_SESSION_TIMEOUT);
 	
 	while(1)
 	{

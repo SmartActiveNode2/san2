@@ -25,19 +25,7 @@ Session::Session(San2::Api::CNodeConnector &connector, const San2::Network::SanA
 	m_enc(NULL),
 	m_dec(NULL)
 {
-	// setup test user in the memory database
-	/*
-	DragonSRP::bytes username = DragonSRP::Conversion::string2bytes(SH_TESTSRP_USERNAME);
-	DragonSRP::bytes verificator = DragonSRP::Conversion::hexstring2bytes(SH_TESTSRP_VERIFICATOR);
-	DragonSRP::bytes salt = DragonSRP::Conversion::hexstring2bytes(SH_TESTSRP_SALT);
-		
-	DragonSRP::User u(username, verificator, salt);
-		
-	if (!lookup.userAdd(u)) // May throw ConversionException
-	{
-		FILE_LOG(logERROR) << "Error: user already exists";
-	}
-	*/
+
 }
 
 bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& request, San2::Utils::bytes& response)
