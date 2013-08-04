@@ -30,7 +30,7 @@ int CpplStreamRW::readSomeAppend(San2::Utils::bytes &data, unsigned int maxCount
 	if (ret != San2::Cppl::ErrorCode::SUCCESS)
 	{ 
         // TODO: logger
-		printf("FAIL: CpplStreamRW::readSomeAppend::1::::errcode:%d\n", San2::Cppl::errorCodeToInt(ret));
+		// printf("FAIL: CpplStreamRW::readSomeAppend::1::::errcode:%d\n", San2::Cppl::errorCodeToInt(ret));
 		return -1;
 	}
 	if (bytesRead <= 0)

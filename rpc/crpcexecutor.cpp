@@ -24,7 +24,7 @@ namespace San2
 			{
 				if (!(m_channel.recvData(functionId, b, m_timRX)))
 				{
-					 printf("FAIL: CRpcExecutor::run()::recvData()\n");
+					 //printf("FAIL: CRpcExecutor::run()::recvData()\n");
 					 break;
 				}
 				

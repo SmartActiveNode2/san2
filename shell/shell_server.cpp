@@ -165,7 +165,8 @@ int main(int argc, char *argv[])
 				printf("got: error capsule unpack\n");
 				break;	
 			case SAN2_WAITFORCAPSULE_ERROR_INVOKE_FAILED:	
-				printf("got: error INVOKE FAILED\n");
+				printf("Connection to San node was lost\n");
+				return -1;
 				break;	
 			case SAN2_WAITFORCAPSULE_ERROR:
 				printf("got: GENERAL ERROR\n");

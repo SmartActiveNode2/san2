@@ -98,7 +98,7 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 		
 		if (m_connector.sendCapsule(serializedCapsule) == false)
 		{
-			printf("StopWait::sendDatagram failed\n");
+			// printf("StopWait::sendDatagram failed\n");
 			return false;
 		}
 		

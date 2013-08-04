@@ -165,7 +165,10 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 		}
 		
 		shellRequest = line;
-		getShellServerResponse(enc, dec, shellRequest, shellResponse);
+		if (getShellServerResponse(enc, dec, shellRequest, shellResponse))
+		{
+			break;
+		}
 		
 		for (unsigned int b = 0; b < shellResponse.size(); b++) printf("%c", shellResponse[b]); printf("\n");
 	}
@@ -210,7 +213,7 @@ int ClientSession::getShellServerResponse(DragonSRP::DatagramEncryptor& encrypto
 	
 	if (m_swtx.sendReliableMessage(serverRequest, serverResponse) == false)
 	{
-		printf("ClientSession::getShellServerResponse:sending C message failed\n");
+		printf("Could not send message to terminal server\n");
 		return -3;
 	}
 	
