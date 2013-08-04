@@ -177,18 +177,12 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 				resetState();
 				return false;
 			}
-			
-			std::cout << "Shared session key: ";
-			San2::Utils::bytes::printBytes(m_sessionK);
-			std::cout << std::endl;
-			
+
 			// ok, change state
 			m_state = SH_SRV_STATE_BETA;
 			break;
 			
 		case SH_SRV_STATE_BETA:
-			std::cout << "Yes I am in BETA state :)" << std::endl;
-			
 			ret = enc_parse_C_message(request, encrpytedMessage);
 			if (ret)
 			{
@@ -196,10 +190,6 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 				resetState();
 				return false;
 			}
-			
-			std::cout << "Server enc message: ";
-			San2::Utils::bytes::printBytes(encrpytedMessage);
-			std::cout << std::endl;
 			
 			try
 			{
@@ -254,10 +244,6 @@ bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Ut
 	
 	// FILE_LOG(logDEBUG4) <<  "Before decrpyting ....      ";	
 	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), decpacket, &decpacketLen, sequenceNumber);
-	
-	std::cout << "decpacket: ";
-	DragonSRP::Conversion::printHex(decpacket, decpacketLen);
-	std::cout << std::endl;
 	
 	applicationRequest.assign(decpacket, decpacket + decpacketLen); // ugly, can be optimized
 	

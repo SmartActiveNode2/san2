@@ -42,12 +42,8 @@ bool StopWaitRx::incommingCapsule(San2::Network::CCapsule &rxcapsule)
 		return false;
 	}
 	
-	printf("inc00\n");
 	if (rxcapsuleData.size() < 9) return false;
-	printf("inc01\n");
 	if (rxcapsuleData[0] != 0x53) return false;
-	
-	printf("inc02\n");
 	
 	// extract sequence number
 	SAN_UINT64 rxseq = San2::Utils::CDataPack::unpackUint64(rxcapsuleData, 1);
@@ -60,7 +56,6 @@ bool StopWaitRx::incommingCapsule(San2::Network::CCapsule &rxcapsule)
 		return true;
 	}
 	
-	printf("inc03\n");
 	
 	// trim header
 	San2::Utils::bytes request;
@@ -79,7 +74,6 @@ bool StopWaitRx::incommingCapsule(San2::Network::CCapsule &rxcapsule)
 	dataOut += response;	
 	
 	m_expectedSeqNum++;
-	printf("inc04\n");
 	
 	txcapsule.setSourceAddress(m_serverAddress);
 	txcapsule.setDestinationAddress(m_clientAddress);
@@ -95,8 +89,6 @@ bool StopWaitRx::incommingCapsule(San2::Network::CCapsule &rxcapsule)
 		printf("StopWaitRx::incommingCapsule():m_connector.sendCapsule FALSE\n");
 		return false;
 	}
-	
-	printf("inc05\n");
 	
 	return ret;
 }

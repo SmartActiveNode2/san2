@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	FILELog::ReportingLevel() = logDEBUG4;
+	FILELog::ReportingLevel() = logWARNING;
 	San2::Utils::bytes serializedCapsule;
 	
 	SAN_UINT16 fromPort, toPort;
@@ -130,9 +130,7 @@ int main(int argc, char *argv[])
 		San2::Network::CCapsule txcapsule;
 		std::shared_ptr<Session> ses;
 		
-		printf("awaiting capsule\n");
 		SAN_INT32 rval = connector.waitForCapsule(rxcapsule, 50000);
-		printf("i have got a capsule\n");
 		
 		San2::Utils::bytes data;
 		
@@ -144,9 +142,11 @@ int main(int argc, char *argv[])
 				
 				if (portsok)
 				{
+					/*
 					printf("got: rxcapsule, from port %ud", fromPort);
 					std::cout << " from address " << San2::Utils::address2string(rxcapsule.getSourceAddress()) << std::endl;
 					std::cout << "   to address " << San2::Utils::address2string(rxcapsule.getDestinationAddress()) << std::endl;
+					*/
 				}
 				
 				if (ses->incommingCapsule(rxcapsule) == false)

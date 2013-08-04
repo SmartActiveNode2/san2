@@ -37,7 +37,6 @@ bool GetParameterIn::operator()(void)
 	
 	if (m_parameter.compare("hostname") == 0)
 	{
-		printf("HOSTNAME REQUEST\n\n\n");
 		m_response = m_node.getNodeName();
 		return true;
 	}

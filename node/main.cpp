@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	//ps.start();
 	//ps.join();
 	
-	FILELog::ReportingLevel() = logDEBUG4;
+	FILELog::ReportingLevel() = logWARNING;
 	FILE_LOG(logDEBUG3) << "logger working";
 	
 	if (argc != 2)

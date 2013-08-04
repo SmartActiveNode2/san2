@@ -73,18 +73,17 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 	San2::Utils::bytes serializedCapsule;
 	capsule.setDSdata(m_serverPort, m_clientPort, data);
 	
-	if (capsule.getDS() == true) printf("original DS (0) true\n");
-	else printf("original DS (0) false\n");
-	
 	capsule.setDestinationAddress(m_serverAddress);
 	capsule.setSourceAddress(m_clientAddress);	
 	capsule.pack(serializedCapsule);
 	
 	
+	/*
 	if (checkIfDS(serializedCapsule) == false)
 	{
 		printf("### checkIfDS FAILED !!!!!!!!!!\n");
 	}
+	* */
 	
 	unsigned int tries = m_repetitions;
 	
@@ -106,7 +105,7 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 		if (awaitDatagram(response, m_timeout) == false)
 		{
 			tries--;
-			printf("StopWait: DataSAN_UINT64 getNextSequenceNumber();gram lost; resending\n");
+			// printf("StopWait: DataSAN_UINT64 getNextSequenceNumber();gram lost; resending\n");
 			continue;
 		} 
 		
@@ -119,7 +118,7 @@ bool StopWaitTx::sendReliableMessage(const San2::Utils::bytes& request, San2::Ut
 		if (rxseq != m_expectedSeqNum)
 		{
 			tries--;
-			printf("StopWait: incomming sequence number missmatch\n");
+			// printf("StopWait: incomming sequence number missmatch\n");
 			continue;
 		}
 		San2::Utils::bytes data;

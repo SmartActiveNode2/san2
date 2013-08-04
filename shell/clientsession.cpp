@@ -52,6 +52,12 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 		return -3;
 	}
 	
+	if (errorCode == SH_ERRORCODE_USERNOTFOUND)
+	{
+		printf("User was not found in the servers database\n");
+		return -9;
+	}
+	
 	if (errorCode)
 	{
 		printf("ClientSession::run:enc_parse_P_message errorCode is non zero: %d\n", errorCode);
@@ -90,8 +96,14 @@ int ClientSession::run(std::string strUsername, std::string strPassword)
 	
 	if (rval)
 	{
-		printf("ClientSession::run:enc_parse_P_message failed: %d\n", rval);
+		printf("ClientSession::run:enc_parse_Q_message failed: %d\n", rval);
 		return -8;
+	}
+	
+	if (errorCode == SH_ERRORCODE_AUTHENTICATIONFAILED)
+	{
+		printf("Authentication FAILED - bad password\n");
+		return -9;
 	}
 	
 	if (errorCode)
