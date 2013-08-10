@@ -233,31 +233,22 @@ bool Session::processDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::byte
 
 bool Session::processEncrpytedDatagram(SAN_UINT64 sequenceNumber, const San2::Utils::bytes& encrpytedMessage, San2::Utils::bytes& encrpytedResponse)
 {	
-	// This is waste of memory, should be optimized or refactored in some way.
-	unsigned int encpacketLen;
-	unsigned char encpacket[m_enc->getOverheadLen() + SH_MAX_MSGLEN];
-	unsigned int decpacketLen;
-	unsigned char decpacket[m_dec->getOverheadLen() + SH_MAX_MSGLEN];
+	unsigned int encpacketLen, decpacketLen;
 	San2::Utils::bytes applicationRequest, applicationResponse;
 	
-	// FILE_LOG(logDEBUG4) <<  "Received encryptedDatagram seqnum:" << sequenceNumber;
 	if (encrpytedMessage.size() == 0) return false;
 	
-	// FILE_LOG(logDEBUG4) <<  "Before decrpyting ....      ";	
-	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), decpacket, &decpacketLen, sequenceNumber);
+	applicationRequest.resize(m_dec->getOverheadLen() + SH_MAX_MSGLEN);
+	m_dec->decryptAndVerifyMac(&encrpytedMessage[0], encrpytedMessage.size(), &applicationRequest[0], &decpacketLen, sequenceNumber);
+	applicationRequest.resize(decpacketLen);
 	
-	applicationRequest.assign(decpacket, decpacket + decpacketLen); // ugly, can be optimized
-	
-	if (processApplicationDatagram(sequenceNumber, applicationRequest, applicationResponse) == false)	
-	{
-		return false;
-	}
-	
+	if (processApplicationDatagram(sequenceNumber, applicationRequest, applicationResponse) == false) return false;
 	if (applicationResponse.size() == 0) return false;
 	
 	// Now encrypt applicationResponse
-	m_enc->encryptAndAuthenticate((unsigned char *)&applicationResponse[0], applicationResponse.size(), sequenceNumber, encpacket, &encpacketLen); // throws
-	encrpytedResponse.assign(encpacket, encpacket + encpacketLen);
+	encrpytedResponse.resize(m_enc->getOverheadLen() + SH_MAX_MSGLEN);
+	m_enc->encryptAndAuthenticate((unsigned char *)&applicationResponse[0], applicationResponse.size(), sequenceNumber, &encrpytedResponse[0], &encpacketLen); // throws
+	encrpytedResponse.resize(encpacketLen);
 	
 	return true;
 }

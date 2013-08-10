@@ -188,10 +188,7 @@ int ClientSession::getShellServerResponse(DragonSRP::DatagramEncryptor& encrypto
 	unsigned char errorCode;
 	San2::Utils::bytes encryptedRequest, serverRequest, serverResponse, encryptedResponse;
 	std::uint64_t sequenceNumber = m_swtx.getNextSequenceNumber(); // important
-	unsigned int encpacketLen;
-	unsigned char encpacket[encryptor.getOverheadLen() + SH_MAX_MSGLEN];
-	unsigned int decpacketLen;
-	unsigned char decpacket[decryptor.getOverheadLen() + SH_MAX_MSGLEN];
+	unsigned int encpacketLen, decpacketLen;
 	
 	shellResponse.clear();
 	
@@ -201,8 +198,10 @@ int ClientSession::getShellServerResponse(DragonSRP::DatagramEncryptor& encrypto
 		return -1;
 	}
 	
-	encryptor.encryptAndAuthenticate((unsigned char *)&shellRequest[0], shellRequest.size(), sequenceNumber, encpacket, &encpacketLen); // throws
-	encryptedRequest.assign(encpacket, encpacket + encpacketLen);
+	encryptedRequest.resize(encryptor.getOverheadLen() + SH_MAX_MSGLEN);
+	encryptor.encryptAndAuthenticate((unsigned char *)&shellRequest[0], shellRequest.size(), sequenceNumber, &encryptedRequest[0], &encpacketLen); // throws
+	encryptedRequest.resize(encpacketLen);
+	
 	rval = enc_construct_C_message(encryptedRequest, serverRequest);
 	
 	if (rval)
@@ -231,8 +230,9 @@ int ClientSession::getShellServerResponse(DragonSRP::DatagramEncryptor& encrypto
 		return -5;
 	}
 	
-	decryptor.decryptAndVerifyMac(&encryptedResponse[0], encryptedResponse.size(), decpacket, &decpacketLen, sequenceNumber);
-	shellResponse.assign(decpacket, decpacket + decpacketLen);
+	shellResponse.resize(decryptor.getOverheadLen() + SH_MAX_MSGLEN);
+	decryptor.decryptAndVerifyMac(&encryptedResponse[0], encryptedResponse.size(), &shellResponse[0], &decpacketLen, sequenceNumber);
+	shellResponse.resize(decpacketLen);
 	
 	return 0;
 }
