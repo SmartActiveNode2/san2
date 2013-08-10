@@ -36,8 +36,9 @@ namespace DragonSRP
 		// Compute the real digest
 		bytes correctDigest;
 		correctDigest.resize(hmac.outputLen());		
-				
-		hmac.hmac(dataOut, dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t), &correctDigest[0]);
+		
+		bytes toSign(dataOut, dataOut + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t));
+		hmac.hmac(toSign, correctDigest);		
 
 		// Compare digests
 		if (memcmp(&correctDigest[0], dataIn + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, DSRP_ENCPARAM_TRUNCDIGEST_SIZE)) throw DsrpException("Mac signature inccorect. Possible attack detected.");
