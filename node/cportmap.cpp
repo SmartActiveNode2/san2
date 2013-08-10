@@ -8,7 +8,8 @@
 
 namespace San2 { namespace Node {
 
-CPortmap::CPortmap()
+CPortmap::CPortmap() :
+	m_ephemeralPort(SAN2_BEGIN_EPHEMERAL_PORT)
 {
 	
 } 

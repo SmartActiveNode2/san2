@@ -66,6 +66,12 @@
     <ClCompile Include="..\..\crypto\ossl\osslsha512.cpp" />
     <ClCompile Include="..\..\interfaces\alivefuncin.cpp" />
     <ClCompile Include="..\..\interfaces\alivefuncout.cpp" />
+    <ClCompile Include="..\..\interfaces\getaddressesin.cpp" />
+    <ClCompile Include="..\..\interfaces\getaddressesout.cpp" />
+    <ClCompile Include="..\..\interfaces\getparameterin.cpp" />
+    <ClCompile Include="..\..\interfaces\getparameterout.cpp" />
+    <ClCompile Include="..\..\interfaces\registerephemeralin.cpp" />
+    <ClCompile Include="..\..\interfaces\registerephemeralout.cpp" />
     <ClCompile Include="..\..\interfaces\registerin.cpp" />
     <ClCompile Include="..\..\interfaces\registerout.cpp" />
     <ClCompile Include="..\..\interfaces\sendcapsulefuncin.cpp" />
@@ -150,6 +156,12 @@
     <ClInclude Include="..\..\crypto\ossl\osslsha512.hpp" />
     <ClInclude Include="..\..\interfaces\alivefuncin.hpp" />
     <ClInclude Include="..\..\interfaces\alivefuncout.hpp" />
+    <ClInclude Include="..\..\interfaces\getaddressesin.hpp" />
+    <ClInclude Include="..\..\interfaces\getaddressesout.hpp" />
+    <ClInclude Include="..\..\interfaces\getparameterin.hpp" />
+    <ClInclude Include="..\..\interfaces\getparameterout.hpp" />
+    <ClInclude Include="..\..\interfaces\registerephemeralin.hpp" />
+    <ClInclude Include="..\..\interfaces\registerephemeralout.hpp" />
     <ClInclude Include="..\..\interfaces\registerin.hpp" />
     <ClInclude Include="..\..\interfaces\registerout.hpp" />
     <ClInclude Include="..\..\interfaces\sendcapsulefuncin.hpp" />

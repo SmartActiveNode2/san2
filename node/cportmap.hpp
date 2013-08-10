@@ -40,7 +40,7 @@ namespace San2
 			
 			std::map<unsigned short int, San2::Utils::CProducerConsumer<std::shared_ptr<San2::Network::CCapsule> >*> mapPorts;
 			
-			unsigned short m_ephemeralPort = SAN2_BEGIN_EPHEMERAL_PORT;
+			unsigned short m_ephemeralPort;
 		};
 	}
 }

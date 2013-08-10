@@ -324,6 +324,24 @@
     <ClCompile Include="..\..\interfaces\waitforcapsuleout.cpp">
       <Filter>interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\interfaces\registerephemeralin.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\registerephemeralout.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\getparameterin.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\getparameterout.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\getaddressesin.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interfaces\getaddressesout.cpp">
+      <Filter>interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\comm\cpplstreamrw.hpp">
@@ -609,6 +627,24 @@
       <Filter>interfaces</Filter>
     </ClInclude>
     <ClInclude Include="..\..\interfaces\waitforcapsuleout.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\registerephemeralin.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\registerephemeralout.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\getparameterin.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\getparameterout.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\getaddressesin.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interfaces\getaddressesout.hpp">
       <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>
