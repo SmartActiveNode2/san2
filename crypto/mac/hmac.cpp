@@ -5,6 +5,7 @@
 #include "hmac.hpp"
 #include "../dsrp/conversion.hpp"
 #include "macexception.hpp"
+#include "utils/cvector.hpp"
 
 /***********************************************************************
  * RFC 2014 Page 3
@@ -43,35 +44,18 @@ namespace DragonSRP
 	
 	void Hmac::hmac(const bytes &data, bytes &mac)
 	{
-		bytes toHash, res;
-
-		toHash.reserve(ikeypad.size() + data.size());
-		Conversion::append(toHash, ikeypad);
-		Conversion::append(toHash, data);
+		San2::Utils::bytes toHash;
+		toHash = ikeypad;
+		toHash += data;
 		
-		res.resize(hash.outputLen());
-		hash.hash(&toHash[0], hash.outputLen(), &res[0]);
-	
-		mac.resize(hash.outputLen());
-		hmac(&data[0], data.size(), &mac[0]);
-	}
-	
-	
-	void Hmac::hmac(const unsigned char *in, unsigned int inLen, unsigned char *mac)
-	{
-		DragonSRP::bytes toHash;
-		toHash.resize(ikeypad.size() + inLen);
-		// unsigned char toHash[ikeypad.size() + inLen];
-		memcpy(&toHash[0], &ikeypad[0], ikeypad.size());
-		memcpy(&toHash[0] + ikeypad.size(), &in[0], inLen);
+		San2::Utils::bytes res(hash.outputLen());
+		hash.hash(&toHash[0], toHash.size(), &res[0]);
 		
-		DragonSRP::bytes res;
-		res.resize(hash.outputLen());
-
-		hash.hash(&toHash[0], ikeypad.size() + inLen, &res[0]);
-		memcpy(&toHash[0], &okeypad[0], okeypad.size());
-		memcpy(&toHash[0] + okeypad.size(), &res[0], hash.outputLen());
-		hash.hash(&toHash[0], okeypad.size() + hash.outputLen(), mac);
+		toHash = okeypad;
+		toHash += res;
+		
+		mac.resize(outputLen());
+		hash.hash(&toHash[0], toHash.size(), &mac[0]);
 	}
 	
 	unsigned int Hmac::outputLen()

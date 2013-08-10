@@ -34,11 +34,10 @@ namespace DragonSRP
 		memcpy(dataOut + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, &beSequencenumber, sizeof(std::uint64_t)); // append sequence number to dataOut
 
 		// Compute the real digest
+		bytes toCompute(dataOut, dataOut + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t));
 		bytes correctDigest;
-		correctDigest.resize(hmac.outputLen());		
-		
-		bytes toSign(dataOut, dataOut + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE + sizeof(std::uint64_t));
-		hmac.hmac(toSign, correctDigest);		
+				
+		hmac.hmac(toCompute, correctDigest);
 
 		// Compare digests
 		if (memcmp(&correctDigest[0], dataIn + dataInLen - DSRP_ENCPARAM_TRUNCDIGEST_SIZE, DSRP_ENCPARAM_TRUNCDIGEST_SIZE)) throw DsrpException("Mac signature inccorect. Possible attack detected.");

@@ -36,11 +36,9 @@ namespace DragonSRP
 		memcpy(out + plaintextLen, &beSequencenumber, sizeof(std::uint64_t)); // set SEQ
 		
 		// calculate digest	
+		bytes toCalculate(out, out + plaintextLen + sizeof(std::uint64_t));
 		bytes digest;
-		digest.resize(hmac.outputLen());
-	
-		bytes toSign(out, out + plaintextLen + sizeof(std::uint64_t));
-		hmac.hmac(toSign, digest);
+		hmac.hmac(toCalculate, digest);
 			
 		// append just digest (overwrite sequence number)
 		memcpy(out + plaintextLen, &digest[0], DSRP_ENCPARAM_TRUNCDIGEST_SIZE); // could be avoided (optim.)
