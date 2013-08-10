@@ -342,6 +342,9 @@
     <ClCompile Include="..\..\interfaces\getaddressesout.cpp">
       <Filter>interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\crypto\drel\hashkeyderivator.cpp">
+      <Filter>crypto\drel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\comm\cpplstreamrw.hpp">
@@ -646,6 +649,9 @@
     </ClInclude>
     <ClInclude Include="..\..\interfaces\getaddressesout.hpp">
       <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\crypto\drel\hashkeyderivator.hpp">
+      <Filter>crypto\drel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -39,6 +39,7 @@
     <ClCompile Include="..\..\crypto\drel\aesexception.cpp" />
     <ClCompile Include="..\..\crypto\drel\datagramdecryptor.cpp" />
     <ClCompile Include="..\..\crypto\drel\datagramencryptor.cpp" />
+    <ClCompile Include="..\..\crypto\drel\hashkeyderivator.cpp" />
     <ClCompile Include="..\..\crypto\drel\simplekeyderivator.cpp" />
     <ClCompile Include="..\..\crypto\dsrp\conversion.cpp" />
     <ClCompile Include="..\..\crypto\dsrp\conversionexception.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\..\crypto\drel\datagramdecryptor.hpp" />
     <ClInclude Include="..\..\crypto\drel\datagramencryptor.hpp" />
     <ClInclude Include="..\..\crypto\drel\encparams.hpp" />
+    <ClInclude Include="..\..\crypto\drel\hashkeyderivator.hpp" />
     <ClInclude Include="..\..\crypto\drel\simplekeyderivator.hpp" />
     <ClInclude Include="..\..\crypto\dsrp\common.hpp" />
     <ClInclude Include="..\..\crypto\dsrp\conversion.hpp" />

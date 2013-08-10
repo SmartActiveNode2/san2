@@ -56,21 +56,23 @@ namespace DragonSRP
 		hmac(&data[0], data.size(), &mac[0]);
 	}
 	
-	#ifdef LINUX
-		// Faster C99 linux version
+	
 	void Hmac::hmac(const unsigned char *in, unsigned int inLen, unsigned char *mac)
 	{
-		unsigned char toHash[ikeypad.size() + inLen];
-		memcpy(toHash, &ikeypad[0], ikeypad.size());
-		memcpy(toHash + ikeypad.size(), &in[0], inLen);
-		unsigned char res[hash.outputLen()];
-		hash.hash(toHash, ikeypad.size() + inLen, res);
-		memcpy(toHash, &okeypad[0], okeypad.size());
-		memcpy(toHash + okeypad.size(), &res[0], hash.outputLen());
-		hash.hash(toHash, okeypad.size() + hash.outputLen(), mac);
-	}
+		DragonSRP::bytes toHash;
+		toHash.resize(ikeypad.size() + inLen);
+		// unsigned char toHash[ikeypad.size() + inLen];
+		memcpy(&toHash[0], &ikeypad[0], ikeypad.size());
+		memcpy(&toHash[0] + ikeypad.size(), &in[0], inLen);
+		
+		DragonSRP::bytes res;
+		res.resize(hash.outputLen());
 
-	#endif
+		hash.hash(&toHash[0], ikeypad.size() + inLen, &res[0]);
+		memcpy(&toHash[0], &okeypad[0], okeypad.size());
+		memcpy(&toHash[0] + okeypad.size(), &res[0], hash.outputLen());
+		hash.hash(&toHash[0], okeypad.size() + hash.outputLen(), mac);
+	}
 	
 	unsigned int Hmac::outputLen()
 	{
