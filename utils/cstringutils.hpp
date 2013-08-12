@@ -22,6 +22,8 @@ namespace San2
             static std::string uintToString(unsigned int num);
             static bool stringToUint(const std::string &sNum, unsigned int &result);
 
+			static std::string ulongToString(unsigned long num);
+
 			// trim from start
 			static inline std::string &ltrim(std::string &s) 
 			{

@@ -41,6 +41,24 @@ bool GetParameterIn::operator()(void)
 		return true;
 	}
 	
+	if (m_parameter.compare("uptime") == 0)
+	{
+		unsigned long uptimeSec = m_node.getUptimeSec();
+		
+		unsigned long uptimeDays = (uptimeSec - (uptimeSec % 86400)) / 86400;
+		uptimeSec %= 86400; 
+		unsigned long uptimeHours = (uptimeSec - (uptimeSec % 3600)) / 3600;
+		uptimeSec %= 3600; 
+		unsigned long uptimeMin = (uptimeSec - (uptimeSec % 60)) / 60;
+		uptimeSec %= 60; 
+		
+		std::string tmp;
+		
+		tmp = San2::Utils::CStringUtils::ulongToString(uptimeDays) + "d " + San2::Utils::CStringUtils::ulongToString(uptimeHours) + "h " + San2::Utils::CStringUtils::ulongToString(uptimeMin) + "m " + San2::Utils::CStringUtils::ulongToString(uptimeSec) + "s";
+		m_response = tmp;
+		return true;
+	}
+	
 	if (m_parameter.compare("peers") == 0)
 	{
 	    std::set<std::shared_ptr<San2::Network::CNetInterface> > ifaces = m_node.getInterfaces();

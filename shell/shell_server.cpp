@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 				}
 				break;
 			case SAN2_WAITFORCAPSULE_TIMEOUT:
-				printf("got: timeout\n");
+				//printf("got: timeout\n");
 				break;
 			case SAN2_WAITFORCAPSULE_ERROR_INVALID_RESPONSE:
 				printf("got: error invalid response\n");

@@ -41,6 +41,8 @@ namespace San2
             //   >> changes to CNode interface list does not affect return value
             //   >> changes to interfaces themselves are shared between copy and CNode
             std::set<std::shared_ptr<San2::Network::CNetInterface> > getInterfaces();
+            unsigned long getStartupTime();
+			unsigned long getUptimeSec();
 		protected:
 		 
 		private:
@@ -53,6 +55,8 @@ namespace San2
             std::string m_apiAddress;
             
             San2::Node::CPortmap m_portmap;
+            
+            unsigned long startupTime;
             
             CNode& self(){return *this;}
 		};

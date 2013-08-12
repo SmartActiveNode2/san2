@@ -267,6 +267,14 @@ bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::
 		}
 	}
 	
+	if (strRequest.compare("uptime") == 0)
+	{
+		if (m_connector.getParameter("uptime", result) != 0)
+		{
+			applicationResponse = "Shell server could not receive uptime";
+		}
+	}
+	
 	if (strRequest.compare("peers") == 0)
 	{
 		if (m_connector.getParameter("peers", result) != 0)

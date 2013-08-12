@@ -25,6 +25,13 @@ std::string CStringUtils::uintToString(unsigned int num)
     return oss.str();
 }
 
+std::string CStringUtils::ulongToString(unsigned long num)
+{
+	std::ostringstream oss;
+    oss << num;
+    return oss.str();
+}
+
 bool CStringUtils::stringToUint(const std::string &sNum, unsigned int &result)
 {
     std::istringstream is(sNum);

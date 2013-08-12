@@ -14,7 +14,8 @@ OBJS-UTILS = utils/cthread.o \
 			 utils/hex.o \
 			 utils/address.o \
 			 utils/cstringutils.o \
-			 utils/platform/sigignore.o
+			 utils/platform/sigignore.o \
+			 utils/time.o
 
 OBJS-CPPL = cppl/helper.o \
             cppl/pipeclient.o \

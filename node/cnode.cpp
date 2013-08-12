@@ -5,6 +5,7 @@
 #include "cppl/pipeserver.hpp"
 #include "cnode.hpp"
 #include "utils/log.h"
+#include "utils/time.hpp"
 
 #define TIME_CON 2000
 #define TIME_RX  2000
@@ -24,7 +25,8 @@ CNode::CNode(unsigned int inputQueueMaxSize, std::string nodeName, unsigned int 
 	m_apiAddress(apiAddress),
 	m_inputQueue(inputQueueMaxSize),
 	m_timePOP(timePOP),
-	m_nodeName(nodeName)
+	m_nodeName(nodeName),
+	startupTime(San2::Utils::getSeconds())
 {
 
 }
@@ -222,6 +224,16 @@ std::set<std::shared_ptr<San2::Network::CNetInterface> > CNode::getInterfaces()
 {
     std::lock_guard<std::mutex> lock(m_mutexInterfaces);
     return m_interfaces;
+}
+
+unsigned long CNode::getStartupTime()
+{
+	return startupTime;
+}
+
+unsigned long CNode::getUptimeSec()
+{
+	return San2::Utils::getSeconds() - startupTime;
 }
 
 }} // ns
