@@ -259,6 +259,12 @@ bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::
 	std::string strRequest = San2::Utils::bytes::bytes2string(applicationRequest);
 	std::string result;
 	
+	if (strRequest.compare("help") == 0)
+	{
+		applicationResponse = "peers | uptime | version | hostname";
+	}
+	
+	
 	if (strRequest.compare("hostname") == 0)
 	{
 		if (m_connector.getParameter("hostname", result) != 0)
@@ -275,6 +281,17 @@ bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::
 		}
 	}
 	
+	if (strRequest.compare("version") == 0)
+	{
+		if (m_connector.getParameter("version", result) != 0)
+		{
+			applicationResponse = "Shell server could not receive SAN Node version";
+		}
+		
+		result += "\nShell server version 1.0";
+		applicationResponse = result;
+	}
+	
 	if (strRequest.compare("peers") == 0)
 	{
 		if (m_connector.getParameter("peers", result) != 0)
@@ -282,7 +299,6 @@ bool Session::processApplicationDatagram(SAN_UINT64 sequenceNumber, const San2::
 			applicationResponse = "Shell server could not received peer addresses";
 		}
 	}
-	
 	
 	if (result.size() == 0) result = "Unknown command";
 	applicationResponse = result;

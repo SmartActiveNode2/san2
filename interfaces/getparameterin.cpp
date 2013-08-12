@@ -3,6 +3,9 @@
 #include <assert.h>
 #include <set>
 #include <memory>
+#include <sys/time.h>
+#include <sys/resource.h>
+
 #include "getparameterin.hpp"
 #include "utils/cdatapack.hpp"
 #include "network/ccapsule.hpp"
@@ -56,6 +59,12 @@ bool GetParameterIn::operator()(void)
 		
 		tmp = San2::Utils::CStringUtils::ulongToString(uptimeDays) + "d " + San2::Utils::CStringUtils::ulongToString(uptimeHours) + "h " + San2::Utils::CStringUtils::ulongToString(uptimeMin) + "m " + San2::Utils::CStringUtils::ulongToString(uptimeSec) + "s";
 		m_response = tmp;
+		return true;
+	}
+	
+	if (m_parameter.compare("version") == 0)
+	{
+		m_response = "SAN Node v1.0";
 		return true;
 	}
 	
