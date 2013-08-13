@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "santest", "santest", "{BCBE
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell_server", "shell_server\shell_server.vcxproj", "{282BA3EE-6BEA-4FAB-BC66-AE3084D88AA2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell_client", "shell_client\shell_client.vcxproj", "{0A8411ED-1CA2-40DC-9280-14B731C02DBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -206,6 +208,17 @@ Global
 		{282BA3EE-6BEA-4FAB-BC66-AE3084D88AA2}.Release|Win32.ActiveCfg = Release|Win32
 		{282BA3EE-6BEA-4FAB-BC66-AE3084D88AA2}.Release|Win32.Build.0 = Release|Win32
 		{282BA3EE-6BEA-4FAB-BC66-AE3084D88AA2}.Release|x64.ActiveCfg = Release|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Debug|Win32.Build.0 = Debug|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Debug|x64.ActiveCfg = Debug|x64
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Debug|x64.Build.0 = Debug|x64
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Release|Win32.ActiveCfg = Release|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Release|Win32.Build.0 = Release|Win32
+		{0A8411ED-1CA2-40DC-9280-14B731C02DBC}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -224,5 +237,8 @@ Global
 		{66900281-8729-4C77-9A1E-C8A583AB4EAD} = {D20C24E4-23DA-4F2B-9C4C-9943889D858C}
 		{AA45055A-F3E4-4B30-8203-FFBC01E2FC5F} = {2D151BA4-2FE0-48C1-AD34-BE0F95746192}
 		{E276ED9C-534E-4CE2-99E7-65E86FE7E9C8} = {2D151BA4-2FE0-48C1-AD34-BE0F95746192}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

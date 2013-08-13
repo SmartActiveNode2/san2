@@ -9,8 +9,6 @@ rpc_server
 rpc_client
 tcprpc_server
 tcprpc_client
-shell_server
-shell_client
 sanode
 crypto/aes/rfc3686
 crypto/apps/benchmark

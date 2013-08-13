@@ -104,6 +104,7 @@
     <ClCompile Include="..\..\utils\cthread.cpp" />
     <ClCompile Include="..\..\utils\hex.cpp" />
     <ClCompile Include="..\..\utils\platform\sleep.cpp" />
+    <ClCompile Include="..\..\utils\time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\api\node\connector\cnodeconnector.hpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="..\..\utils\log.h" />
     <ClInclude Include="..\..\utils\platform\basictypes.hpp" />
     <ClInclude Include="..\..\utils\platform\sleep.hpp" />
+    <ClInclude Include="..\..\utils\time.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D57D6A15-FE5F-42F8-BD92-FDAA3958444A}</ProjectGuid>
@@ -293,6 +295,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/F 2097152 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

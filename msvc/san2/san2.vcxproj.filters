@@ -345,6 +345,9 @@
     <ClCompile Include="..\..\crypto\drel\hashkeyderivator.cpp">
       <Filter>crypto\drel</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\utils\time.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\comm\cpplstreamrw.hpp">
@@ -652,6 +655,9 @@
     </ClInclude>
     <ClInclude Include="..\..\crypto\drel\hashkeyderivator.hpp">
       <Filter>crypto\drel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\time.hpp">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

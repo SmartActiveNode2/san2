@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\shell\clientsession.cpp" />
+    <ClCompile Include="..\..\shell\messageconstructor.cpp" />
+    <ClCompile Include="..\..\shell\passwordloader.cpp" />
+    <ClCompile Include="..\..\shell\session.cpp" />
+    <ClCompile Include="..\..\shell\shell_client.cpp" />
+    <ClCompile Include="..\..\shell\stopwaitrx.cpp" />
+    <ClCompile Include="..\..\shell\stopwaittx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\shell\clientsession.hpp" />
+    <ClInclude Include="..\..\shell\constants.hpp" />
+    <ClInclude Include="..\..\shell\messageconstructor.hpp" />
+    <ClInclude Include="..\..\shell\passwordloader.hpp" />
+    <ClInclude Include="..\..\shell\protoconst.hpp" />
+    <ClInclude Include="..\..\shell\session.hpp" />
+    <ClInclude Include="..\..\shell\sessionmanager.hpp" />
+    <ClInclude Include="..\..\shell\stopwaitrx.hpp" />
+    <ClInclude Include="..\..\shell\stopwaittx.hpp" />
+  </ItemGroup>
+</Project>

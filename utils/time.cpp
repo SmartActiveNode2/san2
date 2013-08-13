@@ -1,7 +1,9 @@
 
 #include "time.hpp"
 #include <stdlib.h>
+#ifdef LINUX
 #include <sys/time.h>
+#endif
 
 namespace San2 { namespace Utils {
 

@@ -3,8 +3,12 @@
 #include <assert.h>
 #include <set>
 #include <memory>
-#include <sys/time.h>
-#include <sys/resource.h>
+
+#ifdef LINUX
+	#include <sys/time.h>
+	#include <sys/resource.h>
+#endif
+
 
 #include "getparameterin.hpp"
 #include "utils/cdatapack.hpp"
